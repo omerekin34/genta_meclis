@@ -1,0 +1,84 @@
+export const defaultCopy = {
+  home: {
+    heroCta: "Başvurular Açıldı",
+    sessionEyebrow: "Oturum",
+    sessionTitle: "Üç gün, bir meclis.",
+    sessionBody:
+      "14–16 Kasım 2026 tarihlerinde, toplam 3 gün boyunca Pendik İTO Şehit Ahmet Aslanhan Anadolu İmam Hatip Lisesi ev sahipliğinde toplanıyoruz. Başvurular 1 Kasım 2026 tarihine kadar açıktır. Delege katılım ücreti 800₺.",
+    countdownLabel: "Meclise kalan süre",
+    gathered: "Meclis toplandı.",
+    aboutEyebrow: "Meclis",
+    aboutTitle: "Söz, usul ve temsil.",
+    aboutCta: "Hakkımızda",
+    commissionsEyebrow: "Dokuz komisyon",
+    commissionsTitle: "Komisyonlar",
+    commissionsCta: "Tümünü gör",
+    applyTitle: "Başvurular\naçıldı",
+    applyText:
+      "Bireysel delege veya okul delegasyonu olarak yerinizi ayırın. Tercih ettiğiniz komisyonu başvuru formunda belirtin.",
+    applyCta: "Başvuru formuna git",
+    sponsorsEyebrow: "Destekleyenler",
+    sponsorsTitle: "Sponsorlar",
+  },
+  pages: {
+    aboutEyebrow: "Hakkımızda",
+    aboutTitle: "Bir meclis simülasyonu.",
+    aboutMission: "Misyonumuz",
+    aboutVision: "Vizyonumuz",
+    aboutPurpose: "Amaç ve 2026 oturumu",
+    commissionsEyebrow: "Komisyonlar",
+    commissionsTitle: "Dokuz masa, tek meclis.",
+    commissionsText:
+      "Her komisyon kendi gündemini çalışır, metnini olgunlaştırır ve genel kurula taşır. Karttan komisyonun konusuna ve medya alanına geçebilirsiniz.",
+    sponsorsEyebrow: "Sponsorlar",
+    sponsorsTitle: "Destekleyen kurumlara teşekkürler.",
+    sponsorsText:
+      "Meclis, bu buluşmayı mümkün kılan kurumların katkısıyla hazırlanır. Logolar anlaşmalar netleştikçe bu duvarda yerini alır.",
+    contactEyebrow: "İletişim",
+    contactTitle: "Yazın, soralım.",
+    contactText: "Başvuru, delegasyon veya program hakkında kısa bir not bırakın.",
+    contactPhone: "Telefon",
+    contactMail: "E-posta",
+    contactMailNote: "Notunuz için buradayız.",
+    contactAddress: "Adres",
+    contactDirections: "Yol tarifi al",
+    contactWhatsapp: "WhatsApp",
+    contactFast: "En hızlı iletişim",
+    contactMap: "Haritada aç",
+    contactFormTitle: "Bize yazın",
+    contactFormHint: "Başvuru, delegasyon veya program hakkında yazın. Gönder, notunuzu e-posta taslağı olarak açar.",
+    contactSubmit: "Gönder",
+    applyEyebrow: "Başvuru",
+    applyTitle: "Başvurular açıldı.",
+    applyText: "Bireysel delege veya okul delegasyonu olarak başvurun. Son tarih 1 Kasım 2026. Katılım ücreti 800₺.",
+  },
+  frame: {
+    applyCta: "Başvuru Yap",
+    deadlineCaption: "Başvuru son tarihi",
+    groupLabel: "Gruba katıl",
+    expiredLabel: "Süre doldu",
+    footerMark: "Meclis",
+    footerDisclaimer:
+      "Gençlerin yasama sürecini deneyimlediği bir meclis simülasyonudur. Resmî bir devlet kurumu değildir.",
+    feePrefix: "Katılım ücreti",
+    columnInstitution: "Kurum",
+    columnPages: "Sayfalar",
+    columnPeople: "Koordinasyon",
+    factDate: "Tarih",
+    factPlace: "Yer",
+    factDeadline: "Son başvuru",
+    whatsappCommunity: "WhatsApp topluluğu",
+    whatsappGreeting: "Merhaba, GENTA Meclisi hakkında yazıyorum.",
+    whatsappTitle: "Bir sorunuz mu var?",
+    whatsappAsk: "Hazır sorular",
+    whatsappWho: "Kime yazılsın",
+    whatsappOwn: "Kendi sorumu yazayım",
+  },
+} as const;
+
+export type CopyGroup = Record<string, string>;
+export type SiteCopy = {
+  home: { [Key in keyof typeof defaultCopy.home]: string };
+  pages: { [Key in keyof typeof defaultCopy.pages]: string };
+  frame: { [Key in keyof typeof defaultCopy.frame]: string };
+};

@@ -1,0 +1,701 @@
+{
+  "site": {
+    "name": "GENTA",
+    "title": "Genç Tartışmacılar Meclisi",
+    "edition": "2026",
+    "datesLabel": "14 · 15 · 16 Kasım 2026",
+    "datesShort": "14–16 Kasım 2026",
+    "durationLabel": "Toplam 3 gün",
+    "highlightedDays": [
+      14,
+      15,
+      16
+    ],
+    "monthLabel": "Kasım",
+    "city": "İstanbul / Pendik",
+    "venue": "Pendik İTO Şehit Ahmet Aslanhan Anadolu İmam Hatip Lisesi",
+    "venueShort": "Pendik İTO Şehit Ahmet Aslanhan AİHL",
+    "email": "gentameclis@gmail.com",
+    "instagram": "https://www.instagram.com/gentameclis/",
+    "instagramLabel": "@gentameclis",
+    "fee": "800₺",
+    "applicationDeadlineLabel": "1 Kasım 2026",
+    "applicationDeadlineIso": "2026-11-01T23:59:59+03:00",
+    "eventStartIso": "2026-11-14T09:00:00+03:00",
+    "headerOffset": "7.25rem",
+    "communityJoinMessage": "Merhaba, GENTA Meclisi WhatsApp grubuna ve topluluğuna katılmak istiyorum."
+  },
+  "coordinators": [
+    {
+      "id": "coord-1",
+      "name": "Metin Oktay Tüylü",
+      "role": "Genel Koordinatör",
+      "phone": "+90 536 329 67 26",
+      "tel": "+905363296726",
+      "whatsapp": "905363296726"
+    },
+    {
+      "id": "coord-2",
+      "name": "Ömer Asaf Ertaş",
+      "role": "Genel Koordinatör",
+      "phone": "+90 551 656 96 93",
+      "tel": "+905516569693",
+      "whatsapp": "905516569693"
+    }
+  ],
+  "navItems": [
+    {
+      "href": "/",
+      "label": "Ana Sayfa"
+    },
+    {
+      "href": "/hakkimizda",
+      "label": "Hakkımızda"
+    },
+    {
+      "href": "/komisyonlar",
+      "label": "Komisyonlar"
+    },
+    {
+      "href": "/basvuru",
+      "label": "Başvuru"
+    },
+    {
+      "href": "/sponsorlar",
+      "label": "Sponsorlar"
+    },
+    {
+      "href": "/iletisim",
+      "label": "İletişim"
+    }
+  ],
+  "practicalNotes": [
+    {
+      "id": "note-1",
+      "title": "Süre",
+      "text": "Etkinlik 14, 15 ve 16 Kasım 2026 tarihlerinde toplam 3 gün sürecektir."
+    },
+    {
+      "id": "note-2",
+      "title": "Yer",
+      "text": "Pendik İTO Şehit Ahmet Aslanhan Anadolu İmam Hatip Lisesinde gerçekleştirilecektir."
+    },
+    {
+      "id": "note-3",
+      "title": "Kıyafet",
+      "text": "Kıyafet kuralları vardır. Ayrıntılar süreç içinde paylaşılacaktır."
+    },
+    {
+      "id": "note-4",
+      "title": "Sertifika",
+      "text": "Etkinliğin sonunda katılım sertifikası verilecektir."
+    },
+    {
+      "id": "note-5",
+      "title": "Ücret",
+      "text": "Delege katılım ücreti 800₺."
+    },
+    {
+      "id": "note-6",
+      "title": "Konaklama",
+      "text": "Konaklama imkânı mevcuttur."
+    }
+  ],
+  "whatsappQuestions": [
+    "Etkinlik ne zaman ve nerede yapılacak?",
+    "Katılım ücreti ne kadar?",
+    "Konaklama imkânı var mı?",
+    "Kıyafet kuralı var mı?",
+    "Katılım sertifikası veriliyor mu?",
+    "Bireysel başvuru nasıl yapılır?",
+    "Delegasyon olarak nasıl başvururuz?",
+    "Başvuru için son tarih nedir?"
+  ],
+  "about": {
+    "lead": "GENTA, gençlerin yasama ritmini, söz sırasını ve gerekçeli tartışmayı bir meclis düzeninde deneyimlemesi için kurulan bir simülasyondur.",
+    "mission": "Genç Tartışmacılar Meclis Simülasyonu olarak misyonumuz, gençleri demokratik tartışma kültürüyle buluşturarak araştıran, sorgulayan, etkili iletişim kurabilen ve ortak akıl üretebilen bireyler yetiştirmektir. Katılımcılarımıza fikirlerini özgürce ifade edebilecekleri, farklı görüşleri saygıyla değerlendirebilecekleri ve çözüm odaklı düşünme becerilerini geliştirebilecekleri nitelikli bir simülasyon ortamı sunmayı amaçlıyoruz.",
+    "vision": "Genç Tartışmacılar Meclis Simülasyonu olarak vizyonumuz, farklı görüşlere saygı duyan, eleştirel düşünebilen, etkili iletişim kurabilen ve çözüm odaklı bakış açısı geliştirebilen gençleri bir araya getirerek, tartışma kültürünü güçlendiren ve geleceğin bilinçli, sorumluluk sahibi liderlerinin yetişmesine katkı sağlayan örnek bir platform olmaktır.",
+    "purpose": [
+      {
+        "id": "purpose-1",
+        "text": "Katılımcılar bireysel delege ya da okul delegasyonu olarak komisyonlara dağılır. Komisyon, konu başlığını çalışır; genel kurulda ise metin söz alır, düzeltilir ve oylanır."
+      },
+      {
+        "id": "purpose-2",
+        "text": "2026 oturumu 14, 15 ve 16 Kasım tarihlerinde İstanbul’un Pendik ilçesinde toplanır. Ev sahibi okul, Pendik İTO Şehit Ahmet Aslanhan Anadolu İmam Hatip Lisesi’dir. Program bir devlet kurumu değildir; gençlerin yasama sürecini öğrenmesi için tasarlanmış bir simülasyondur."
+      }
+    ],
+    "values": [
+      {
+        "id": "value-1",
+        "title": "Usul",
+        "text": "Söz sırası, süre ve saygı tartışmanın önkoşuludur. Kürsü, sesi yükseltenin değil sırası gelenin yeridir."
+      },
+      {
+        "id": "value-2",
+        "title": "Gerekçe",
+        "text": "Bir görüş, tekrar ile değil dayanak ile ağırlık kazanır. İddia, kaynak ve karşı görüşle birlikte gelir."
+      },
+      {
+        "id": "value-3",
+        "title": "Temsil",
+        "text": "Delege, yalnızca kendi cümlesini değil taşıdığı sözün sorumluluğunu da üstlenir."
+      }
+    ]
+  },
+  "commissions": [
+    {
+      "slug": "tbmm",
+      "name": "TBMM Genel Kurulu",
+      "fullName": "Türkiye Büyük Millet Meclisi Genel Kurul Simülasyonu",
+      "summary": "Komisyon metinlerinin görüşüldüğü, düzeltildiği ve oylandığı nihai kürsü.",
+      "description": "Genel kurul, komisyonlardan gelen metinlerin bütün meclise açıldığı yerdir. Delegeler söz alır, önerge verir ve oturumun usulüne göre oy kullanır. Bu komisyon, meclis ritminin tamamını görmek isteyen katılımcılar içindir.",
+      "agenda": [
+        "Genel kurul içtüzüğü ve söz alma düzeni",
+        "Komisyon raporlarının okunması ve düzeltilmesi",
+        "Gençlik politikalarında öncelik sırası üzerine kapanış oylaması"
+      ],
+      "icon": "parliament",
+      "media": [
+        {
+          "id": "tbmm-1",
+          "kind": "image",
+          "caption": "Açılış karesi"
+        },
+        {
+          "id": "tbmm-2",
+          "kind": "image",
+          "caption": "Komisyon masası"
+        },
+        {
+          "id": "tbmm-3",
+          "kind": "image",
+          "caption": "Söz alma anı"
+        },
+        {
+          "id": "tbmm-4",
+          "kind": "image",
+          "caption": "Kapanış karesi"
+        },
+        {
+          "id": "tbmm-5",
+          "kind": "video",
+          "caption": "Oturum kaydı"
+        },
+        {
+          "id": "tbmm-6",
+          "kind": "video",
+          "caption": "Kısa değerlendirme"
+        }
+      ]
+    },
+    {
+      "slug": "saglik",
+      "name": "Sağlık Komisyonu",
+      "fullName": "Sağlık, Aile, Çalışma ve Sosyal İşler Komisyonu",
+      "summary": "Koruyucu sağlık, gençlik ruh sağlığı ve sosyal politika başlıklarını çalışır.",
+      "description": "Sağlık komisyonu, gençlerin doğrudan etkilendiği sağlık ve sosyal politika başlıklarında çözüm metni hazırlar. Tartışma, hizmete erişim, okul sağlığı ve istihdama geçiş etrafında yürür.",
+      "agenda": [
+        "Okullarda koruyucu sağlık hizmetleri",
+        "Gençlerin ruh sağlığı desteğine erişimi",
+        "Eğitimden istihdama geçişte sosyal politika"
+      ],
+      "icon": "health",
+      "media": [
+        {
+          "id": "saglik-1",
+          "kind": "image",
+          "caption": "Açılış karesi"
+        },
+        {
+          "id": "saglik-2",
+          "kind": "image",
+          "caption": "Komisyon masası"
+        },
+        {
+          "id": "saglik-3",
+          "kind": "image",
+          "caption": "Söz alma anı"
+        },
+        {
+          "id": "saglik-4",
+          "kind": "image",
+          "caption": "Kapanış karesi"
+        },
+        {
+          "id": "saglik-5",
+          "kind": "video",
+          "caption": "Oturum kaydı"
+        },
+        {
+          "id": "saglik-6",
+          "kind": "video",
+          "caption": "Kısa değerlendirme"
+        }
+      ]
+    },
+    {
+      "slug": "adalet",
+      "name": "Adalet Komisyonu",
+      "fullName": "Adalet Komisyonu",
+      "summary": "Hukuka erişim, hak arama kültürü ve gençlerin adaletle ilişkisi.",
+      "description": "Adalet komisyonu, hukukun gündelik hayattaki karşılığını konuşur. Amaç, cezalandırma ayrıntısı üretmek değil; hak arama yollarını, adli yardıma erişimi ve uzlaşı usullerini anlamaktır.",
+      "agenda": [
+        "Gençlerin adli yardıma erişimi",
+        "Okullarda hak okuryazarlığı",
+        "Uyuşmazlıklarda arabuluculuk ve uzlaşı"
+      ],
+      "icon": "justice",
+      "media": [
+        {
+          "id": "adalet-1",
+          "kind": "image",
+          "caption": "Açılış karesi"
+        },
+        {
+          "id": "adalet-2",
+          "kind": "image",
+          "caption": "Komisyon masası"
+        },
+        {
+          "id": "adalet-3",
+          "kind": "image",
+          "caption": "Söz alma anı"
+        },
+        {
+          "id": "adalet-4",
+          "kind": "image",
+          "caption": "Kapanış karesi"
+        },
+        {
+          "id": "adalet-5",
+          "kind": "video",
+          "caption": "Oturum kaydı"
+        },
+        {
+          "id": "adalet-6",
+          "kind": "video",
+          "caption": "Kısa değerlendirme"
+        }
+      ]
+    },
+    {
+      "slug": "milli-egitim",
+      "name": "Millî Eğitim Komisyonu",
+      "fullName": "Millî Eğitim, Kültür, Gençlik ve Spor Komisyonu",
+      "summary": "Eğitimde fırsat eşitliği, kültür politikaları ve gençlik programları.",
+      "description": "Millî Eğitim komisyonu, okulun yalnızca ders değil bir kamusal alan olduğu kabulüyle çalışır. Müfredatta tartışma kültürü, kültürel mirasa erişim ve okul sporları gündemin omurgasıdır.",
+      "agenda": [
+        "Müfredatta müzakere ve tartışma kültürü",
+        "Kültürel mirasa eşit erişim",
+        "Okul sporları ve gençlik programları"
+      ],
+      "icon": "education",
+      "media": [
+        {
+          "id": "egitim-1",
+          "kind": "image",
+          "caption": "Açılış karesi"
+        },
+        {
+          "id": "egitim-2",
+          "kind": "image",
+          "caption": "Komisyon masası"
+        },
+        {
+          "id": "egitim-3",
+          "kind": "image",
+          "caption": "Söz alma anı"
+        },
+        {
+          "id": "egitim-4",
+          "kind": "image",
+          "caption": "Kapanış karesi"
+        },
+        {
+          "id": "egitim-5",
+          "kind": "video",
+          "caption": "Oturum kaydı"
+        },
+        {
+          "id": "egitim-6",
+          "kind": "video",
+          "caption": "Kısa değerlendirme"
+        }
+      ]
+    },
+    {
+      "slug": "milli-savunma",
+      "name": "Millî Savunma Komisyonu",
+      "fullName": "Millî Savunma Komisyonu",
+      "summary": "Savunma politikalarının sivil denetimi ve güvenlik okuryazarlığı.",
+      "description": "Bu komisyon bir harekât masası değildir. Gençler, savunma ve güvenlik politikalarının demokratik denetimini, şeffaflığı ve afetlerde sivil savunma bilincini sivil bir dille tartışır.",
+      "agenda": [
+        "Güvenlik politikalarında demokratik denetim ve şeffaflık",
+        "Afetlerde sivil savunma bilinci",
+        "Gençlerin kamu güvenliği tartışmasındaki yeri"
+      ],
+      "icon": "defense",
+      "media": [
+        {
+          "id": "savunma-1",
+          "kind": "image",
+          "caption": "Açılış karesi"
+        },
+        {
+          "id": "savunma-2",
+          "kind": "image",
+          "caption": "Komisyon masası"
+        },
+        {
+          "id": "savunma-3",
+          "kind": "image",
+          "caption": "Söz alma anı"
+        },
+        {
+          "id": "savunma-4",
+          "kind": "image",
+          "caption": "Kapanış karesi"
+        },
+        {
+          "id": "savunma-5",
+          "kind": "video",
+          "caption": "Oturum kaydı"
+        },
+        {
+          "id": "savunma-6",
+          "kind": "video",
+          "caption": "Kısa değerlendirme"
+        }
+      ]
+    },
+    {
+      "slug": "disisleri",
+      "name": "Dışişleri Komisyonu",
+      "fullName": "Dışişleri Komisyonu",
+      "summary": "Diplomasi, kamu diplomasisi ve çok taraflı ilişkiler.",
+      "description": "Dışişleri komisyonu, uluslararası gündemi gençlerin sözüne açar. Müzakere burada bir protokol ezberi değil, karşı tarafı anlayarak konum almaktır.",
+      "agenda": [
+        "Gençlik diplomasisi ve değişim programları",
+        "İklim müzakerelerinde ortak sorumluluk",
+        "Kültürel diplomasi ve uluslararası temsil"
+      ],
+      "icon": "diplomacy",
+      "media": [
+        {
+          "id": "disisleri-1",
+          "kind": "image",
+          "caption": "Açılış karesi"
+        },
+        {
+          "id": "disisleri-2",
+          "kind": "image",
+          "caption": "Komisyon masası"
+        },
+        {
+          "id": "disisleri-3",
+          "kind": "image",
+          "caption": "Söz alma anı"
+        },
+        {
+          "id": "disisleri-4",
+          "kind": "image",
+          "caption": "Kapanış karesi"
+        },
+        {
+          "id": "disisleri-5",
+          "kind": "video",
+          "caption": "Oturum kaydı"
+        },
+        {
+          "id": "disisleri-6",
+          "kind": "video",
+          "caption": "Kısa değerlendirme"
+        }
+      ]
+    },
+    {
+      "slug": "icisleri",
+      "name": "İçişleri Komisyonu",
+      "fullName": "İçişleri Komisyonu",
+      "summary": "Yerel yönetimler, afet koordinasyonu ve güvenli kentler.",
+      "description": "İçişleri komisyonu, kentin gündelik işleyişini ve vatandaş katılımını ele alır. Tartışma, gençlik alanları, afet yönetimi ve yerel karar süreçlerine katılım üzerinde durur.",
+      "agenda": [
+        "Afet yönetiminde yerel koordinasyon",
+        "Güvenli kentler ve gençlik mekânları",
+        "Yerel kararlara vatandaş katılımı"
+      ],
+      "icon": "interior",
+      "media": [
+        {
+          "id": "icisleri-1",
+          "kind": "image",
+          "caption": "Açılış karesi"
+        },
+        {
+          "id": "icisleri-2",
+          "kind": "image",
+          "caption": "Komisyon masası"
+        },
+        {
+          "id": "icisleri-3",
+          "kind": "image",
+          "caption": "Söz alma anı"
+        },
+        {
+          "id": "icisleri-4",
+          "kind": "image",
+          "caption": "Kapanış karesi"
+        },
+        {
+          "id": "icisleri-5",
+          "kind": "video",
+          "caption": "Oturum kaydı"
+        },
+        {
+          "id": "icisleri-6",
+          "kind": "video",
+          "caption": "Kısa değerlendirme"
+        }
+      ]
+    },
+    {
+      "slug": "diyanet",
+      "name": "Diyanet İşleri Komisyonu",
+      "fullName": "Diyanet İşleri Komisyonu",
+      "summary": "Din hizmetleri, toplumsal dayanışma ve birlikte yaşama.",
+      "description": "Diyanet komisyonu, inanç hizmetleri ile toplumsal dayanışmayı aynı ciddiyetle konuşur. Çerçeve; gençlere yönelik manevi danışmanlık, yardımlaşma ve farklı inançlara saygıdır.",
+      "agenda": [
+        "Gençlere yönelik manevi danışmanlık",
+        "Toplumsal dayanışma ve yardımlaşma",
+        "İnanç özgürlüğü ve birlikte yaşama"
+      ],
+      "icon": "faith",
+      "media": [
+        {
+          "id": "diyanet-1",
+          "kind": "image",
+          "caption": "Açılış karesi"
+        },
+        {
+          "id": "diyanet-2",
+          "kind": "image",
+          "caption": "Komisyon masası"
+        },
+        {
+          "id": "diyanet-3",
+          "kind": "image",
+          "caption": "Söz alma anı"
+        },
+        {
+          "id": "diyanet-4",
+          "kind": "image",
+          "caption": "Kapanış karesi"
+        },
+        {
+          "id": "diyanet-5",
+          "kind": "video",
+          "caption": "Oturum kaydı"
+        },
+        {
+          "id": "diyanet-6",
+          "kind": "video",
+          "caption": "Kısa değerlendirme"
+        }
+      ]
+    },
+    {
+      "slug": "plan-butce",
+      "name": "Plan ve Bütçe Komisyonu",
+      "fullName": "Plan ve Bütçe Komisyonu",
+      "summary": "Kamu kaynaklarının önceliği ve gençlik harcamalarının görünürlüğü.",
+      "description": "Plan ve Bütçe, bir temenniyi kaleme değil kaynağa bağlar. Komisyon, eğitim ve gençlik başlıklarının bütçede nasıl göründüğünü, önceliğin nasıl kurulduğunu ve harcamanın nasıl anlatıldığını tartışır.",
+      "agenda": [
+        "Gençlik ve eğitim harcamalarında öncelik",
+        "Kaynakların şeffaf anlatımı",
+        "Yerel gençlik programlarının finansmanı"
+      ],
+      "icon": "budget",
+      "media": [
+        {
+          "id": "butce-1",
+          "kind": "image",
+          "caption": "Açılış karesi"
+        },
+        {
+          "id": "butce-2",
+          "kind": "image",
+          "caption": "Komisyon masası"
+        },
+        {
+          "id": "butce-3",
+          "kind": "image",
+          "caption": "Söz alma anı"
+        },
+        {
+          "id": "butce-4",
+          "kind": "image",
+          "caption": "Kapanış karesi"
+        },
+        {
+          "id": "butce-5",
+          "kind": "video",
+          "caption": "Oturum kaydı"
+        },
+        {
+          "id": "butce-6",
+          "kind": "video",
+          "caption": "Kısa değerlendirme"
+        }
+      ]
+    }
+  ],
+  "sponsors": [
+    {
+      "id": "ana",
+      "name": "Ana Sponsor",
+      "note": "Meclisin çatısını taşıyan kurum.",
+      "mark": "laurel"
+    },
+    {
+      "id": "destekci",
+      "name": "Resmi Destekçi",
+      "note": "Programın kurumsal paydaşı.",
+      "mark": "columns"
+    },
+    {
+      "id": "egitim",
+      "name": "Eğitim Paydaşı",
+      "note": "Okul ve öğrenim desteği.",
+      "mark": "quill"
+    },
+    {
+      "id": "medya",
+      "name": "Medya Sponsoru",
+      "note": "Duyuru ve yayın desteği.",
+      "mark": "ring"
+    },
+    {
+      "id": "konaklama",
+      "name": "Konaklama Sponsoru",
+      "note": "Misafir delegasyonların ev sahibi.",
+      "mark": "bridge"
+    },
+    {
+      "id": "ikram",
+      "name": "İkram Sponsoru",
+      "note": "Oturum sofrasının destekçisi.",
+      "mark": "diamond"
+    }
+  ],
+  "preferences": [
+    {
+      "value": "Sağlık Komisyonu",
+      "label": "Sağlık"
+    },
+    {
+      "value": "Adalet Komisyonu",
+      "label": "Adalet"
+    },
+    {
+      "value": "Milli Eğitim Komisyonu",
+      "label": "Milli Eğitim"
+    },
+    {
+      "value": "Milli Savunma Komisyonu",
+      "label": "Milli Savunma"
+    },
+    {
+      "value": "Anayasa Komisyonu",
+      "label": "Anayasa"
+    },
+    {
+      "value": "Dışişleri Komisyonu",
+      "label": "Dışişleri"
+    },
+    {
+      "value": "İçişleri Komisyonu",
+      "label": "İçişleri"
+    },
+    {
+      "value": "Dinişleri Komisyonu",
+      "label": "Dinişleri"
+    },
+    {
+      "value": "Türk Devletleri Komisyonu",
+      "label": "Türk Devletleri"
+    }
+  ],
+  "copy": {
+    "home": {
+      "heroCta": "Başvurular Açıldı",
+      "sessionEyebrow": "Oturum",
+      "sessionTitle": "Üç gün, bir meclis.",
+      "sessionBody": "14–16 Kasım 2026 tarihlerinde, toplam 3 gün boyunca Pendik İTO Şehit Ahmet Aslanhan Anadolu İmam Hatip Lisesi ev sahipliğinde toplanıyoruz. Başvurular 1 Kasım 2026 tarihine kadar açıktır. Delege katılım ücreti 800₺.",
+      "countdownLabel": "Meclise kalan süre",
+      "gathered": "Meclis toplandı.",
+      "aboutEyebrow": "Meclis",
+      "aboutTitle": "Söz, usul ve temsil.",
+      "aboutCta": "Hakkımızda",
+      "commissionsEyebrow": "Dokuz komisyon",
+      "commissionsTitle": "Komisyonlar",
+      "commissionsCta": "Tümünü gör",
+      "applyTitle": "Başvurular\naçıldı",
+      "applyText": "Bireysel delege veya okul delegasyonu olarak yerinizi ayırın. Tercih ettiğiniz komisyonu başvuru formunda belirtin.",
+      "applyCta": "Başvuru formuna git",
+      "sponsorsEyebrow": "Destekleyenler",
+      "sponsorsTitle": "Sponsorlar"
+    },
+    "pages": {
+      "aboutEyebrow": "Hakkımızda",
+      "aboutTitle": "Bir meclis simülasyonu.",
+      "aboutMission": "Misyonumuz",
+      "aboutVision": "Vizyonumuz",
+      "aboutPurpose": "Amaç ve 2026 oturumu",
+      "commissionsEyebrow": "Komisyonlar",
+      "commissionsTitle": "Dokuz masa, tek meclis.",
+      "commissionsText": "Her komisyon kendi gündemini çalışır, metnini olgunlaştırır ve genel kurula taşır. Karttan komisyonun konusuna ve medya alanına geçebilirsiniz.",
+      "sponsorsEyebrow": "Sponsorlar",
+      "sponsorsTitle": "Destekleyen kurumlara teşekkürler.",
+      "sponsorsText": "Meclis, bu buluşmayı mümkün kılan kurumların katkısıyla hazırlanır. Logolar anlaşmalar netleştikçe bu duvarda yerini alır.",
+      "contactEyebrow": "İletişim",
+      "contactTitle": "Yazın, soralım.",
+      "contactText": "Başvuru, delegasyon veya program hakkında kısa bir not bırakın.",
+      "contactPhone": "Telefon",
+      "contactMail": "E-posta",
+      "contactMailNote": "Notunuz için buradayız.",
+      "contactAddress": "Adres",
+      "contactDirections": "Yol tarifi al",
+      "contactWhatsapp": "WhatsApp",
+      "contactFast": "En hızlı iletişim",
+      "contactMap": "Haritada aç",
+      "contactFormTitle": "Bize yazın",
+      "contactFormHint": "Başvuru, delegasyon veya program hakkında yazın. Gönder, notunuzu e-posta taslağı olarak açar.",
+      "contactSubmit": "Gönder",
+      "applyEyebrow": "Başvuru",
+      "applyTitle": "Başvurular açıldı.",
+      "applyText": "Bireysel delege veya okul delegasyonu olarak başvurun. Son tarih 1 Kasım 2026. Katılım ücreti 800₺."
+    },
+    "frame": {
+      "applyCta": "Başvuru Yap",
+      "deadlineCaption": "Başvuru son tarihi",
+      "groupLabel": "Topluluğa Katıl",
+      "expiredLabel": "Süre doldu",
+      "footerMark": "Meclis",
+      "footerDisclaimer": "Gençlerin yasama sürecini deneyimlediği bir meclis simülasyonudur. Resmî bir devlet kurumu değildir.",
+      "feePrefix": "Katılım ücreti",
+      "columnInstitution": "Kurum",
+      "columnPages": "Sayfalar",
+      "columnPeople": "Koordinasyon",
+      "factDate": "Tarih",
+      "factPlace": "Yer",
+      "factDeadline": "Son başvuru",
+      "whatsappCommunity": "WhatsApp topluluğu",
+      "whatsappGreeting": "Merhaba, GENTA Meclisi hakkında yazıyorum.",
+      "whatsappTitle": "Bir sorunuz mu var?",
+      "whatsappAsk": "Hazır sorular",
+      "whatsappWho": "Kime yazılsın",
+      "whatsappOwn": "Kendi sorumu yazayım"
+    }
+  }
+}
