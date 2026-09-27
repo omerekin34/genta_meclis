@@ -16,7 +16,7 @@ export function TopBar() {
             href={site.instagram}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex size-9 items-center justify-center gap-2 text-white/85 transition-colors duration-500 hover:text-white sm:w-auto sm:justify-start sm:px-1"
+            className="inline-flex size-8 items-center justify-center gap-2 text-white/85 transition-colors duration-500 hover:text-white sm:size-9 sm:w-auto sm:justify-start sm:px-1"
             aria-label={`Instagram ${site.instagramLabel}`}
           >
             <InstagramIcon className="size-4 sm:size-3.5" />
@@ -26,7 +26,7 @@ export function TopBar() {
           </a>
           <a
             href={`mailto:${site.email}`}
-            className="inline-flex size-9 items-center justify-center gap-2 text-white/85 transition-colors duration-500 hover:text-white sm:w-auto sm:justify-start sm:px-1"
+            className="inline-flex size-8 items-center justify-center gap-2 text-white/85 transition-colors duration-500 hover:text-white sm:size-9 sm:w-auto sm:justify-start sm:px-1"
             aria-label={`E-posta ${site.email}`}
           >
             <MailIcon className="size-4 sm:size-3.5" />
@@ -38,7 +38,7 @@ export function TopBar() {
             href={communityJoinHref}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex size-9 items-center justify-center gap-2 text-white/85 transition-colors duration-500 hover:text-white sm:w-auto sm:justify-start sm:px-1"
+            className="inline-flex size-8 items-center justify-center gap-2 text-white/85 transition-colors duration-500 hover:text-white sm:size-9 sm:w-auto sm:justify-start sm:px-1"
             aria-label="WhatsApp grubuna ve topluluğuna katılma isteği gönder"
           >
             <WhatsAppIcon className="size-4 sm:size-3.5" />
@@ -48,7 +48,7 @@ export function TopBar() {
           </a>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
           <p className="text-right leading-none">
             <span className="block font-display text-[8px] tracking-[0.12em] whitespace-nowrap text-white/60 uppercase sm:text-[10px] sm:tracking-[0.18em]">
               {copy.frame.deadlineCaption}
@@ -60,13 +60,10 @@ export function TopBar() {
           {clock.expired ? (
             <span className="font-display text-[11px] tracking-[0.12em] uppercase">{copy.frame.expiredLabel}</span>
           ) : (
-            <ol className="flex items-center gap-1.5 sm:gap-2" aria-label="Başvuruya kalan süre">
+            <ol className="flex items-center gap-1 sm:gap-2" aria-label="Başvuruya kalan süre">
               {clock.parts.map((part) => (
-                <li
-                  key={part.label}
-                  className={`min-w-7 text-center sm:min-w-8 ${part.short === "sn" ? "hidden sm:block" : ""}`}
-                >
-                  <span className="block font-display text-sm font-semibold tabular-nums sm:text-base">
+                <li key={part.label} className="min-w-6 text-center sm:min-w-8">
+                  <span className="block font-display text-[13px] font-semibold tabular-nums sm:text-base">
                     {clock.ready ? part.value : "—"}
                   </span>
                   <span className="block font-display text-[8px] tracking-[0.14em] text-white/55 uppercase">
