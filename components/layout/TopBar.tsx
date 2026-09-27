@@ -48,12 +48,12 @@ export function TopBar() {
           </a>
         </div>
 
-        <div className="flex shrink-0 items-center gap-3">
-          <p className="hidden text-right leading-tight sm:block">
-            <span className="block font-display text-[10px] tracking-[0.18em] text-white/60 uppercase">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <p className="text-right leading-none">
+            <span className="block font-display text-[8px] tracking-[0.12em] whitespace-nowrap text-white/60 uppercase sm:text-[10px] sm:tracking-[0.18em]">
               {copy.frame.deadlineCaption}
             </span>
-            <span className="block font-display text-[11px] text-white/90">
+            <span className="mt-1 block font-display text-[10px] whitespace-nowrap text-white/95 sm:text-[11px]">
               {site.applicationDeadlineLabel}
             </span>
           </p>
@@ -62,7 +62,10 @@ export function TopBar() {
           ) : (
             <ol className="flex items-center gap-1.5 sm:gap-2" aria-label="Başvuruya kalan süre">
               {clock.parts.map((part) => (
-                <li key={part.label} className="min-w-7 text-center sm:min-w-8">
+                <li
+                  key={part.label}
+                  className={`min-w-7 text-center sm:min-w-8 ${part.short === "sn" ? "hidden sm:block" : ""}`}
+                >
                   <span className="block font-display text-sm font-semibold tabular-nums sm:text-base">
                     {clock.ready ? part.value : "—"}
                   </span>

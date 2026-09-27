@@ -23,7 +23,10 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${site.name}`,
     },
     description: `${site.title} ${site.edition}. ${site.datesShort}, ${site.city}. ${site.venue}.`,
-    icons: { icon: "/brand/logo.png" },
+    icons: {
+      icon: "/brand/icon.png",
+      apple: "/apple-icon.png",
+    },
   };
 }
 
