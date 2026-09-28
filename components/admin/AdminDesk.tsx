@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState, type Dispatch, type FormEvent, type ReactNode, type SetStateAction } from "react";
+import { useEffect, useMemo, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { iconNames, type IconName } from "@/data/commissions";
 import { sponsorMarks, type SponsorMark } from "@/data/sponsors";
@@ -24,7 +24,6 @@ const sections = [
   ["metinler", "Metinler"],
   ["whatsapp", "WhatsApp soruları"],
   ["basvuru", "Başvuru komisyonları"],
-  ["sifre", "Şifre"],
 ] as const;
 
 type SectionId = (typeof sections)[number][0];
@@ -266,17 +265,11 @@ export function AdminDesk({ initial }: { initial: Content }) {
               {sections.find(([id]) => id === section)?.[1]}
             </p>
             <p className="text-sm text-ink/55">
-              {section === "gelen"
-                ? "Formdan gelen kayıtlar."
-                : section === "sifre"
-                  ? "Giriş şifreni buradan değiştirirsin."
-                  : dirty
-                    ? "Kaydedilmemiş değişiklik var."
-                    : "Kayıt güncel."}
+              {section === "gelen" ? "Formdan gelen kayıtlar." : dirty ? "Kaydedilmemiş değişiklik var." : "Kayıt güncel."}
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-end gap-2">
-            {section === "gelen" || section === "sifre"
+            {section === "gelen"
               ? null
               : adds.map((action) => (
               <button
@@ -288,12 +281,12 @@ export function AdminDesk({ initial }: { initial: Content }) {
                 {action.label}
               </button>
             ))}
-            {section === "gelen" || section === "sifre" ? null : (
+            {section === "gelen" ? null : (
               <button type="button" onClick={resetAll} className="text-sm text-ink/55 hover:text-brand">
                 İlk metinlere dön
               </button>
             )}
-            {section === "gelen" || section === "sifre" ? null : (
+            {section === "gelen" ? null : (
               <button
                 type="button"
                 onClick={save}
@@ -324,7 +317,6 @@ export function AdminDesk({ initial }: { initial: Content }) {
           {section === "metinler" ? <CopyPanel draft={draft} setDraft={setDraft} /> : null}
           {section === "whatsapp" ? <QuestionsPanel draft={draft} setDraft={setDraft} /> : null}
           {section === "basvuru" ? <PreferencesPanel draft={draft} setDraft={setDraft} /> : null}
-          {section === "sifre" ? <PasswordPanel /> : null}
         </div>
       </div>
     </div>
@@ -698,82 +690,6 @@ function StatsPanel({ draft, setDraft }: PanelProps) {
         ))}
       </List>
     </div>
-  );
-}
-
-function PasswordPanel() {
-  const [current, setCurrent] = useState("");
-  const [next, setNext] = useState("");
-  const [again, setAgain] = useState("");
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-  const [pending, setPending] = useState(false);
-
-  async function submit(event: FormEvent) {
-    event.preventDefault();
-    setPending(true);
-    setMessage("");
-    setError("");
-    const response = await fetch("/api/admin/password", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ current, next, again }),
-    });
-    const body = (await response.json().catch(() => null)) as { error?: string } | null;
-    setPending(false);
-    if (!response.ok) {
-      setError(body?.error ?? "Şifre değişmedi.");
-      return;
-    }
-    setCurrent("");
-    setNext("");
-    setAgain("");
-    setMessage("Şifre değişti. Bir sonraki girişte yeni şifreyi kullan.");
-  }
-
-  return (
-    <form onSubmit={(event) => void submit(event)} className="space-y-4 rounded-3xl border border-brand/10 bg-white p-5">
-      <p className="text-sm leading-6 text-ink/60">
-        İstediğin zaman buradan değiştirirsin. Şu anki şifreyi yazman gerekir. Kayıt olunca hemen geçerli olur.
-      </p>
-      <PasswordField label="Şu anki şifre" value={current} onChange={setCurrent} autoComplete="current-password" />
-      <PasswordField label="Yeni şifre" value={next} onChange={setNext} autoComplete="new-password" />
-      <PasswordField label="Yeni şifre tekrar" value={again} onChange={setAgain} autoComplete="new-password" />
-      {error ? <p className="text-sm text-brand">{error}</p> : null}
-      {message ? <p className="text-sm text-ink/70">{message}</p> : null}
-      <button
-        type="submit"
-        disabled={pending}
-        className="rounded-full bg-brand px-5 py-2.5 font-display text-[12px] font-semibold tracking-[0.12em] text-white uppercase disabled:opacity-40"
-      >
-        {pending ? "Kaydediliyor" : "Şifreyi değiştir"}
-      </button>
-    </form>
-  );
-}
-
-function PasswordField({
-  label,
-  value,
-  onChange,
-  autoComplete,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  autoComplete: string;
-}) {
-  return (
-    <label className="block">
-      <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">{label}</span>
-      <input
-        type="password"
-        value={value}
-        autoComplete={autoComplete}
-        onChange={(event) => onChange(event.target.value)}
-        className="mt-2 w-full rounded-2xl border border-brand/15 bg-ivory px-4 py-3 text-ink outline-none focus:border-brand"
-      />
-    </label>
   );
 }
 
