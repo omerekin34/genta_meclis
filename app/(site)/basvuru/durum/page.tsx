@@ -5,17 +5,17 @@ import { Container } from "@/components/layout/Container";
 import { PageHero } from "@/components/layout/PageHero";
 
 export const metadata: Metadata = {
-  title: "Başvuru durumu",
-  description: "GENTA başvuru takip numarasıyla onay sonucunu görün.",
+  title: "Başvuru sorgulama",
+  description: "GENTA başvuru takip numarasını sakla ve onay sonucunu bu sayfadan gör.",
 };
 
 export default function ApplicationStatusPage() {
   return (
     <>
       <PageHero
-        eyebrow="Başvuru"
-        title="Kaydın nerede?"
-        description="Takip numaranı yaz. Onaylanırsa burada kayıt tamamlandı ve Kabul görürsün."
+        eyebrow="Sorgulama"
+        title="Başvurunu sorgula."
+        description="Burası formdan ayrı durur. Gönderince verilen takip numarasını sakla. Onaylanırsa burada kayıt tamamlandı ve Kabul görürsün."
       />
       <section className="bg-ivory py-16 sm:py-24">
         <Container className="max-w-xl">

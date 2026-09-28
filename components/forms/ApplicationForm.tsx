@@ -34,6 +34,7 @@ export function ApplicationForm() {
   const [sent, setSent] = useState(false);
   const [pending, setPending] = useState(false);
   const [receipt, setReceipt] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const [seenPreset, setSeenPreset] = useState(preset);
   if (preset !== seenPreset) {
@@ -157,15 +158,35 @@ export function ApplicationForm() {
             <p className="font-display text-xs tracking-[0.28em] text-brand/60 uppercase">Teşekkürler</p>
             <h2 className="mt-3 font-display text-3xl font-semibold text-brand">Başvurunuz alındı.</h2>
             <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-ink/75">
-              {summary ? `${summary} için ` : ""}kayıt onaya alındı. Sonuç bu takip numarasıyla görünür. Onaylanırsa sayfada Kabul yazar.
+              {summary ? `${summary} için ` : ""}kayıt onaya alındı. Sonuç yalnızca aşağıdaki takip numarasıyla görünür.
             </p>
-            <p className="mx-auto mt-6 max-w-md break-all font-display text-sm tracking-wide text-brand">{receipt}</p>
-            <Link
-              href={`/basvuru/durum?kod=${receipt}`}
-              className="mt-6 inline-flex rounded-full bg-brand px-6 py-3 text-sm font-medium text-white"
-            >
-              Durumu gör
-            </Link>
+            <div className="mx-auto mt-8 max-w-lg rounded-3xl border border-brand/20 bg-ivory px-5 py-6 text-left">
+              <p className="font-display text-[11px] font-semibold tracking-[0.16em] text-brand uppercase">Bu numarayı sakla</p>
+              <p className="mt-3 text-sm leading-7 text-ink/80">
+                Çok önemli. Bu kod başvurunun tek anahtarıdır. Ekran görüntüsü al veya bir yere yaz. Onaylanırsa sorgulama sayfasında Kabul görürsün.
+              </p>
+              <p className="mt-4 break-all rounded-2xl bg-white px-4 py-4 text-center font-display text-sm tracking-wide text-brand">{receipt}</p>
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  className="rounded-full border border-brand px-5 py-3 text-sm text-brand"
+                  onClick={() => {
+                    void navigator.clipboard.writeText(receipt).then(() => {
+                      setCopied(true);
+                      window.setTimeout(() => setCopied(false), 2000);
+                    });
+                  }}
+                >
+                  {copied ? "Kopyalandı" : "Numarayı kopyala"}
+                </button>
+                <Link
+                  href={`/basvuru/durum?kod=${receipt}`}
+                  className="inline-flex items-center justify-center rounded-full bg-brand px-5 py-3 text-sm font-medium text-white"
+                >
+                  Sorgulama sayfasına git
+                </Link>
+              </div>
+            </div>
             <button
               type="button"
               className="mt-8 font-display text-xs tracking-[0.18em] text-brand uppercase"
@@ -213,10 +234,11 @@ export function ApplicationForm() {
               </p>
             ) : null}
             <p className="text-sm leading-6 text-ink/55">
-              Gönder, başvuruyu onaya alır.{" "}
+              Gönderince bir takip numarası verilir. Onu sakla. Sonucu{" "}
               <Link href="/basvuru/durum" className="text-brand">
-                Durumunu sorgula
-              </Link>
+                başvuru sorgulama
+              </Link>{" "}
+              sayfasından görürsün.
             </p>
           </motion.form>
         )}

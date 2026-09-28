@@ -67,6 +67,10 @@
     {
       "href": "/iletisim",
       "label": "İletişim"
+    },
+    {
+      "href": "/basvuru/durum",
+      "label": "Sorgulama"
     }
   ],
   "practicalNotes": [
