@@ -8,15 +8,15 @@ import { whatsAppHref } from "@/data/site";
 
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { site } = getContent();
+  const { site } = await getContent();
   return {
     title: "İletişim",
     description: `${site.venue}, ${site.city}. ${site.email}`,
   };
 }
 
-export default function ContactPage() {
-  const { site, coordinators, copy } = getContent();
+export default async function ContactPage() {
+  const { site, coordinators, copy } = await getContent();
   const whatsAppNote = copy.frame.whatsappGreeting;
   const mapQuery = `${site.venue}, ${site.city}`;
   const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&z=15&output=embed`;

@@ -8,9 +8,10 @@ import { getContent } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
 
-export default function SiteLayout({ children }: { children: ReactNode }) {
+export default async function SiteLayout({ children }: { children: ReactNode }) {
+  const content = await getContent();
   return (
-    <ContentProvider content={getContent()}>
+    <ContentProvider content={content}>
       <a
         href="#icerik"
         className="absolute top-0 left-4 z-[90] -translate-y-full bg-white px-4 py-2 font-display text-sm text-brand focus:translate-y-4"

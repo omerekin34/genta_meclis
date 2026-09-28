@@ -1,5 +1,5 @@
-import { existsSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
-import path from "node:path";
+import { cache } from "react";
+import { adminClient } from "@/lib/supabase-admin";
 import { about } from "@/data/about";
 import { commissions, iconNames, type IconName } from "@/data/commissions";
 import { sponsorMarks, sponsors, type SponsorMark } from "@/data/sponsors";
@@ -7,7 +7,7 @@ import { communityJoinMessage, coordinators, navItems, practicalNotes, site, wha
 import { defaultCopy } from "./site-copy";
 import type { Commission, Content, Coordinator, HomeStat, Sponsor, StatSource } from "./content-types";
 
-const file = path.join(process.cwd(), "data", "content.json");
+const settingsId = "live";
 
 const activityStart = new Date("2026-09-28T00:00:00+03:00");
 
@@ -291,16 +291,23 @@ function fillCopy<T extends Record<string, string>>(value: unknown, fallback: T)
   return next;
 }
 
-export function getContent(): Content {
-  if (!existsSync(file)) return defaultContent();
-  try {
-    return normalizeContent(JSON.parse(readFileSync(file, "utf8")));
-  } catch {
-    return defaultContent();
+function storageMessage(error: { message?: string; code?: string }) {
+  const message = error.message ?? "";
+  if (error.code === "PGRST205" || /schema cache|does not exist|Could not find the table/i.test(message)) {
+    return "site_settings tablosu yok. Supabase SQL editöründe şemayı bir kez çalıştır.";
   }
+  return "Kayıt tamamlanamadı.";
 }
 
-export function saveContent(value: unknown) {
+export const getContent = cache(async (): Promise<Content> => {
+  const supabase = adminClient();
+  if (!supabase) return defaultContent();
+  const { data, error } = await supabase.from("site_settings").select("document").eq("id", settingsId).maybeSingle();
+  if (error || data?.document == null) return defaultContent();
+  return normalizeContent(data.document);
+});
+
+export async function saveContent(value: unknown) {
   const content = normalizeContent(value);
   const slugs = content.commissions.map((item) => item.slug.trim());
   if (slugs.some((slug) => !slug)) throw new Error("Komisyon adresi boş olamaz.");
@@ -311,11 +318,21 @@ export function saveContent(value: unknown) {
   if (content.navItems.some((item) => !item.href.trim() || !item.label.trim())) {
     throw new Error("Menüde boş bağlantı bırakılamaz.");
   }
-  writeFileSync(file, `${JSON.stringify(content, null, 2)}\n`, "utf8");
+  const supabase = adminClient();
+  if (!supabase) throw new Error("Supabase bağlantısı henüz yok.");
+  const { error } = await supabase.from("site_settings").upsert({
+    id: settingsId,
+    document: content,
+    updated_at: new Date().toISOString(),
+  });
+  if (error) throw new Error(storageMessage(error));
   return content;
 }
 
-export function resetContent() {
-  if (existsSync(file)) unlinkSync(file);
+export async function resetContent() {
+  const supabase = adminClient();
+  if (!supabase) throw new Error("Supabase bağlantısı henüz yok.");
+  const { error } = await supabase.from("site_settings").delete().eq("id", settingsId);
+  if (error) throw new Error(storageMessage(error));
   return defaultContent();
 }

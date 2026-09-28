@@ -5,8 +5,8 @@ import { SponsorMarkIcon } from "./SponsorMark";
 
 const sequence = [0, 1] as const;
 
-export function SponsorMarquee() {
-  const { sponsors } = getContent();
+export async function SponsorMarquee() {
+  const { sponsors } = await getContent();
   return (
     <div className="overflow-hidden">
       <div className="sponsor-track flex w-max items-start py-2">

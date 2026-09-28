@@ -5,8 +5,8 @@ import { withDerived } from "@/lib/live";
 import { LogoMark } from "./Logo";
 import { InstagramIcon, MailIcon, WhatsAppIcon } from "./SocialIcons";
 
-export function Footer() {
-  const { site, navItems, coordinators, communityJoinHref, copy } = withDerived(getContent());
+export async function Footer() {
+  const { site, navItems, coordinators, communityJoinHref, copy } = withDerived(await getContent());
   const facts = [
     { label: copy.frame.factDate, value: site.datesShort },
     { label: copy.frame.factPlace, value: site.city },

@@ -7,5 +7,5 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
   if (!(await isAuthed())) redirect("/admin/giris");
-  return <AdminDesk initial={getContent()} />;
+  return <AdminDesk initial={await getContent()} />;
 }

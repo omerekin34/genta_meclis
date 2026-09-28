@@ -1,4 +1,4 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { adminClient } from "@/lib/supabase-admin";
 import type {
   ApplicationKind,
   ApplicationRecord,
@@ -9,15 +9,6 @@ import type {
 } from "@/lib/application-types";
 
 export type { ApplicationKind, ApplicationRecord, ApplicationStatus };
-
-function adminClient(): SupabaseClient | null {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) return null;
-  return createClient(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-}
 
 function text(value: unknown) {
   return typeof value === "string" ? value.trim() : "";

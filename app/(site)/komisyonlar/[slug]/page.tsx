@@ -13,13 +13,15 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return getContent().commissions.map((commission) => ({ slug: commission.slug }));
+export async function generateStaticParams() {
+  const content = await getContent();
+  return content.commissions.map((commission) => ({ slug: commission.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const commission = getContent().commissions.find((item) => item.slug === slug);
+  const content = await getContent();
+  const commission = content.commissions.find((item) => item.slug === slug);
   if (!commission) return { title: "Komisyon" };
   return {
     title: commission.name,
@@ -29,7 +31,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CommissionPage({ params }: PageProps) {
   const { slug } = await params;
-  const commission = getContent().commissions.find((item) => item.slug === slug);
+  const content = await getContent();
+  const commission = content.commissions.find((item) => item.slug === slug);
   if (!commission) notFound();
 
   return (

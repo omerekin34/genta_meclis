@@ -10,8 +10,8 @@ export const metadata: Metadata = {
     "GENTA Genç Tartışmacılar Meclisi’nin amacı, misyonu ve vizyonu. 14–16 Kasım 2026, İstanbul Pendik.",
 };
 
-export default function AboutPage() {
-  const { about, copy } = getContent();
+export default async function AboutPage() {
+  const { about, copy } = await getContent();
   return (
     <>
       <PageHero eyebrow={copy.pages.aboutEyebrow} title={copy.pages.aboutTitle} description={about.lead} />

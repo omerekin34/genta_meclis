@@ -10,8 +10,8 @@ export const metadata: Metadata = {
   description: "GENTA 2026’yı destekleyen kurumlara teşekkür.",
 };
 
-export default function SponsorsPage() {
-  const { sponsors, copy } = getContent();
+export default async function SponsorsPage() {
+  const { sponsors, copy } = await getContent();
   return (
     <>
       <PageHero

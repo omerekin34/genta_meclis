@@ -7,15 +7,15 @@ import { PageHero } from "@/components/layout/PageHero";
 import { getContent } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { site } = getContent();
+  const { site } = await getContent();
   return {
     title: "Başvuru",
     description: `GENTA ${site.edition} bireysel ve delegasyon başvuru formu. ${site.datesShort}, ${site.city}.`,
   };
 }
 
-export default function ApplicationPage() {
-  const { copy } = getContent();
+export default async function ApplicationPage() {
+  const { copy } = await getContent();
   return (
     <>
       <PageHero eyebrow={copy.pages.applyEyebrow} title={copy.pages.applyTitle} description={copy.pages.applyText} />

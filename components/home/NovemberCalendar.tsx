@@ -4,8 +4,8 @@ const weekdays = ["Pzt", "Sal", "Çar", "Per", "Cu", "Cts", "Pzr"];
 const startOffset = 6;
 const cells = [...Array.from({ length: startOffset }, () => null), ...Array.from({ length: 30 }, (_, i) => i + 1)];
 
-export function NovemberCalendar() {
-  const { site } = getContent();
+export async function NovemberCalendar() {
+  const { site } = await getContent();
   const highlighted = new Set<number>(site.highlightedDays);
 
   return (

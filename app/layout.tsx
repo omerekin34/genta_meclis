@@ -16,7 +16,7 @@ const montserrat = Montserrat({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { site } = getContent();
+  const { site } = await getContent();
   return {
     title: {
       default: `${site.name} | ${site.title} ${site.edition}`,

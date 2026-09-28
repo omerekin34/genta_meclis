@@ -1,7 +1,7 @@
 import { getContent } from "@/lib/content";
 
-export function PracticalNotes() {
-  const notes = getContent().practicalNotes;
+export async function PracticalNotes() {
+  const notes = (await getContent()).practicalNotes;
   return (
     <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {notes.map((note) => (

@@ -2,8 +2,8 @@ import { Reveal } from "@/components/motion/Reveal";
 import { getContent } from "@/lib/content";
 import { CommissionCard } from "./CommissionCard";
 
-export function CommissionGrid() {
-  const { commissions } = getContent();
+export async function CommissionGrid() {
+  const { commissions } = await getContent();
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {commissions.map((commission, index) => (

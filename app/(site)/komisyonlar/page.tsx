@@ -10,8 +10,8 @@ export const metadata: Metadata = {
     "GENTA 2026’nın dokuz komisyonu: TBMM, Sağlık, Adalet, Millî Eğitim, Millî Savunma, Dışişleri, İçişleri, Diyanet ve Plan ve Bütçe.",
 };
 
-export default function CommissionsPage() {
-  const { copy } = getContent();
+export default async function CommissionsPage() {
+  const { copy } = await getContent();
   return (
     <>
       <PageHero

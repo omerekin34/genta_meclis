@@ -19,7 +19,7 @@ function shownValue(stat: HomeStat, applications: number, commissions: number) {
 }
 
 export async function HomeSections() {
-  const { site, about, copy, stats, commissions } = getContent();
+  const { site, about, copy, stats, commissions } = await getContent();
   const applications = await countApplications();
   return (
     <>
