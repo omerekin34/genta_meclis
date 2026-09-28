@@ -8,8 +8,10 @@ import { iconNames, type IconName } from "@/data/commissions";
 import { sponsorMarks, type SponsorMark } from "@/data/sponsors";
 import { InstagramIcon, MailIcon, WhatsAppIcon } from "@/components/layout/SocialIcons";
 import type { Content } from "@/lib/content-types";
+import { ApplicationsPanel } from "./ApplicationsPanel";
 
 const sections = [
+  ["gelen", "Gelen başvurular"],
   ["genel", "Genel"],
   ["kisiler", "Koordinatörler"],
   ["sosyal", "Sosyal"],
@@ -252,10 +254,14 @@ export function AdminDesk({ initial }: { initial: Content }) {
             <p className="font-display text-lg font-semibold text-brand">
               {sections.find(([id]) => id === section)?.[1]}
             </p>
-            <p className="text-sm text-ink/55">{dirty ? "Kaydedilmemiş değişiklik var." : "Kayıt güncel."}</p>
+            <p className="text-sm text-ink/55">
+              {section === "gelen" ? "Formdan gelen kayıtlar." : dirty ? "Kaydedilmemiş değişiklik var." : "Kayıt güncel."}
+            </p>
           </div>
           <div className="flex flex-wrap items-center justify-end gap-2">
-            {adds.map((action) => (
+            {section === "gelen"
+              ? null
+              : adds.map((action) => (
               <button
                 key={action.label}
                 type="button"
@@ -265,23 +271,28 @@ export function AdminDesk({ initial }: { initial: Content }) {
                 {action.label}
               </button>
             ))}
-            <button type="button" onClick={resetAll} className="text-sm text-ink/55 hover:text-brand">
-              İlk metinlere dön
-            </button>
-            <button
-              type="button"
-              onClick={save}
-              disabled={pending || !dirty}
-              className="rounded-full bg-brand px-5 py-2.5 font-display text-[12px] font-semibold tracking-[0.12em] text-white uppercase transition-colors duration-500 hover:bg-brand-deep disabled:opacity-40"
-            >
-              {pending ? "Kaydediliyor" : "Kaydet"}
-            </button>
+            {section === "gelen" ? null : (
+              <button type="button" onClick={resetAll} className="text-sm text-ink/55 hover:text-brand">
+                İlk metinlere dön
+              </button>
+            )}
+            {section === "gelen" ? null : (
+              <button
+                type="button"
+                onClick={save}
+                disabled={pending || !dirty}
+                className="rounded-full bg-brand px-5 py-2.5 font-display text-[12px] font-semibold tracking-[0.12em] text-white uppercase transition-colors duration-500 hover:bg-brand-deep disabled:opacity-40"
+              >
+                {pending ? "Kaydediliyor" : "Kaydet"}
+              </button>
+            )}
           </div>
         </header>
 
         <div className="mx-auto max-w-3xl px-6 py-8">
           {error ? <p className="mb-4 rounded-2xl bg-brand/10 px-4 py-3 text-sm text-brand">{error}</p> : null}
           {message ? <p className="mb-4 rounded-2xl bg-white px-4 py-3 text-sm text-ink/70">{message}</p> : null}
+          {section === "gelen" ? <ApplicationsPanel /> : null}
           {section === "genel" ? <GeneralPanel draft={draft} patchSite={patchSite} setDraft={setDraft} /> : null}
           {section === "kisiler" ? <PeoplePanel draft={draft} setDraft={setDraft} /> : null}
           {section === "sosyal" ? <SocialPanel draft={draft} patchSite={patchSite} /> : null}
