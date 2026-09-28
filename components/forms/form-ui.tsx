@@ -26,7 +26,8 @@ export function Question({
     <div
       role="group"
       aria-labelledby={labelId}
-      className="w-full min-w-0 rounded-xl border border-black/5 bg-white px-5 py-5 shadow-[0_1px_2px_rgba(44,20,18,0.04)]"
+      data-invalid={error ? "true" : undefined}
+      className={`w-full min-w-0 rounded-xl border bg-white px-5 py-5 shadow-[0_1px_2px_rgba(44,20,18,0.04)] ${error ? "border-brand/40" : "border-black/5"}`}
     >
       <p id={labelId} className="text-[15px] leading-6 font-semibold break-words text-ink">
         {label}
@@ -137,7 +138,7 @@ export function RankedCommissions({
 
 export function MiniField({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return (
-    <label className="block">
+    <label className="block" data-invalid={error ? "true" : undefined}>
       <span className="mb-2 block text-sm font-medium text-ink/80">{label}</span>
       {children}
       {error ? (

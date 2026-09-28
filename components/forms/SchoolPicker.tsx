@@ -84,14 +84,26 @@ export function SchoolPicker({
           setOpen(true);
           setActive(0);
         }}
+        onBlur={(event) => {
+          const next = event.currentTarget.value.trim();
+          if (next !== value) onChange(next);
+        }}
         onChange={(event) => {
-          setQuery(event.target.value);
+          const next = event.target.value;
+          setQuery(next);
           setOpen(true);
           setActive(0);
-          if (!event.target.value.trim()) onChange("");
+          onChange(next.trim());
         }}
         onKeyDown={(event) => {
-          if (!open && (event.key === "ArrowDown" || event.key === "Enter")) {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            if (open && options[active]) choose(options[active]);
+            else onChange(query.trim());
+            setOpen(false);
+            return;
+          }
+          if (!open && event.key === "ArrowDown") {
             setOpen(true);
             return;
           }
@@ -102,10 +114,6 @@ export function SchoolPicker({
           if (event.key === "ArrowUp") {
             event.preventDefault();
             setActive((current) => Math.max(current - 1, 0));
-          }
-          if (event.key === "Enter" && open && options[active]) {
-            event.preventDefault();
-            choose(options[active]);
           }
           if (event.key === "Escape") setOpen(false);
         }}

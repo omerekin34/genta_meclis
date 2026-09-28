@@ -83,26 +83,37 @@ export function ApplicationForm() {
   async function submit(event: FormEvent) {
     event.preventDefault();
     const next = mode === "bireysel" ? validateIndividual(individual) : validateDelegation(delegation);
-    setErrors(next);
-    if (Object.keys(next).length > 0) return;
-
-    setPending(true);
-    const response = await fetch("/api/basvuru", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        kind: mode,
-        payload: mode === "bireysel" ? individual : delegation,
-      }),
-    });
-    const body = (await response.json().catch(() => null)) as { error?: string; id?: string } | null;
-    setPending(false);
-    if (!response.ok || !body?.id) {
-      setErrors({ form: body?.error ?? "Başvuru kaydedilemedi." });
+    if (Object.keys(next).length > 0) {
+      setErrors({ ...next, form: "Gönderilemedi. Kırmızı uyarıları tamamlayın." });
+      window.setTimeout(() => {
+        document.querySelector("[data-invalid='true']")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 0);
       return;
     }
-    setReceipt(body.id);
-    setSent(true);
+    setErrors({});
+
+    setPending(true);
+    try {
+      const response = await fetch("/api/basvuru", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kind: mode,
+          payload: mode === "bireysel" ? individual : delegation,
+        }),
+      });
+      const body = (await response.json().catch(() => null)) as { error?: string; id?: string } | null;
+      if (!response.ok || !body?.id) {
+        setErrors({ form: body?.error ?? "Başvuru kaydedilemedi." });
+        return;
+      }
+      setReceipt(body.id);
+      setSent(true);
+    } catch {
+      setErrors({ form: "Başvuru kaydedilemedi. Bağlantıyı kontrol edip yeniden deneyin." });
+    } finally {
+      setPending(false);
+    }
   }
 
   return (
@@ -196,7 +207,11 @@ export function ApplicationForm() {
                 Formu temizle
               </button>
             </div>
-            {errors.form ? <p className="text-sm text-brand">{errors.form}</p> : null}
+            {errors.form ? (
+              <p className="text-sm text-brand" role="alert">
+                {errors.form}
+              </p>
+            ) : null}
             <p className="text-sm leading-6 text-ink/55">
               Gönder, başvuruyu onaya alır.{" "}
               <Link href="/basvuru/durum" className="text-brand">
