@@ -216,6 +216,17 @@ export async function lookupApplicationStatus(id: string): Promise<
   return { error: "Bu takip numarasıyla kayıt bulunamadı." as const };
 }
 
+export async function countApplications() {
+  const supabase = adminClient();
+  if (!supabase) return 0;
+  const [individuals, delegations] = await Promise.all([
+    supabase.from("individual_applications").select("id", { count: "exact", head: true }),
+    supabase.from("delegation_applications").select("id", { count: "exact", head: true }),
+  ]);
+  if (individuals.error || delegations.error) return 0;
+  return (individuals.count ?? 0) + (delegations.count ?? 0);
+}
+
 export async function updateApplicationStatus(id: string, kind: ApplicationKind, status: ApplicationStatus) {
   const supabase = adminClient();
   if (!supabase) return { error: "Supabase bağlantısı henüz yok." as const };

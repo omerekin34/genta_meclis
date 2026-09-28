@@ -7,12 +7,13 @@ import { useRouter } from "next/navigation";
 import { iconNames, type IconName } from "@/data/commissions";
 import { sponsorMarks, type SponsorMark } from "@/data/sponsors";
 import { InstagramIcon, MailIcon, WhatsAppIcon } from "@/components/layout/SocialIcons";
-import type { Content } from "@/lib/content-types";
+import type { Content, StatSource } from "@/lib/content-types";
 import { ApplicationsPanel } from "./ApplicationsPanel";
 
 const sections = [
   ["gelen", "Gelen başvurular"],
   ["genel", "Genel"],
+  ["istatistik", "İstatistikler"],
   ["kisiler", "Koordinatörler"],
   ["sosyal", "Sosyal"],
   ["menu", "Menü"],
@@ -169,6 +170,13 @@ export function AdminDesk({ initial }: { initial: Content }) {
     setDraft((current) => ({ ...current, whatsappQuestions: [...current.whatsappQuestions, ""] }));
   }
 
+  function addStat() {
+    setDraft((current) => ({
+      ...current,
+      stats: [...current.stats, { id: uid("stat"), label: "Yeni sayı", caption: "", value: 0, source: "manual" }],
+    }));
+  }
+
   function addPreference() {
     setDraft((current) => ({
       ...current,
@@ -196,7 +204,9 @@ export function AdminDesk({ initial }: { initial: Content }) {
                   ? [{ label: "Ekle", run: addQuestion }]
                   : section === "basvuru"
                     ? [{ label: "Ekle", run: addPreference }]
-                    : [];
+                    : section === "istatistik"
+                      ? [{ label: "Ekle", run: addStat }]
+                      : [];
 
   async function logout() {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -294,6 +304,7 @@ export function AdminDesk({ initial }: { initial: Content }) {
           {message ? <p className="mb-4 rounded-2xl bg-white px-4 py-3 text-sm text-ink/70">{message}</p> : null}
           {section === "gelen" ? <ApplicationsPanel /> : null}
           {section === "genel" ? <GeneralPanel draft={draft} patchSite={patchSite} setDraft={setDraft} /> : null}
+          {section === "istatistik" ? <StatsPanel draft={draft} setDraft={setDraft} /> : null}
           {section === "kisiler" ? <PeoplePanel draft={draft} setDraft={setDraft} /> : null}
           {section === "sosyal" ? <SocialPanel draft={draft} patchSite={patchSite} /> : null}
           {section === "menu" ? <MenuPanel draft={draft} setDraft={setDraft} /> : null}
@@ -609,6 +620,72 @@ function AboutPanel({ draft, setDraft }: PanelProps) {
                 }))
               }
             />
+          </Card>
+        ))}
+      </List>
+    </div>
+  );
+}
+
+const sourceLabel: Record<StatSource, string> = {
+  manual: "Elle yazılan sayı",
+  applications: "Başvuru kayıtları",
+  commissions: "Komisyon listesi",
+  activity: "Faaliyet yılı",
+};
+
+function StatsPanel({ draft, setDraft }: PanelProps) {
+  function patch(id: string, next: Partial<Content["stats"][number]>) {
+    setDraft((current) => ({
+      ...current,
+      stats: current.stats.map((item) => (item.id === id ? { ...item, ...next } : item)),
+    }));
+  }
+
+  return (
+    <div className="space-y-4">
+      <p className="text-sm leading-6 text-ink/60">
+        Ana sayfada süre, yer ve kıyafet kartlarının altında görünür. Sayılar ekrana gelince artarak dolar. Başvuru kayıtları ve komisyon listesi seçilirse sayı kendiliğinden güncellenir.
+      </p>
+      <List>
+        {draft.stats.map((stat, index) => (
+          <Card
+            key={stat.id}
+            onUp={() => setDraft((current) => ({ ...current, stats: move(current.stats, index, -1) }))}
+            onDown={() => setDraft((current) => ({ ...current, stats: move(current.stats, index, 1) }))}
+            onDelete={() => setDraft((current) => ({ ...current, stats: current.stats.filter((item) => item.id !== stat.id) }))}
+          >
+            <TextField label="Başlık" value={stat.label} onChange={(value) => patch(stat.id, { label: value })} />
+            <TextField label="Alt yazı" value={stat.caption} onChange={(value) => patch(stat.id, { caption: value })} />
+            <label className="block">
+              <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Sayı nereden gelsin</span>
+              <select
+                value={stat.source}
+                onChange={(event) => patch(stat.id, { source: event.target.value as StatSource })}
+                className="mt-2 w-full rounded-2xl border border-brand/15 bg-ivory px-4 py-3 text-ink outline-none focus:border-brand"
+              >
+                {(Object.keys(sourceLabel) as StatSource[]).map((source) => (
+                  <option key={source} value={source}>
+                    {sourceLabel[source]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {stat.source === "manual" ? (
+              <TextField
+                label="Sayı"
+                value={String(stat.value)}
+                onChange={(value) => patch(stat.id, { value: Math.max(0, Math.round(Number(value.replace(/\D/g, "")) || 0)) })}
+              />
+            ) : (
+              <p className="text-sm leading-6 text-ink/55">
+                {stat.source === "applications"
+                  ? "Sitedeki sayı, gelen bireysel ve delegasyon başvurularının toplamıdır. Yeni kayıt geldikçe artar."
+                  : stat.source === "activity"
+                    ? "28 Eylül 2026’dan itibaren sayılır. İlk yıl 1’dir, her yıl dönümünde 1 artar."
+                    : "Sitedeki sayı, komisyon listesindeki kurul adedidir. Komisyon ekleyince artar."}
+              </p>
+            )}
           </Card>
         ))}
       </List>

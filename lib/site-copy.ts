@@ -43,7 +43,7 @@ export const defaultCopy = {
     contactAddress: "Adres",
     contactDirections: "Yol tarifi al",
     contactWhatsapp: "WhatsApp",
-    contactFast: "En hızlı iletişim",
+    contactFast: "Önerilen kanaldır. Dönüş burada daha hızlı sağlanır.",
     contactMap: "Haritada aç",
     contactFormTitle: "Bize yazın",
     contactFormHint: "Başvuru, delegasyon veya program hakkında yazın. Gönder, notunuzu e-posta taslağı olarak açar.",

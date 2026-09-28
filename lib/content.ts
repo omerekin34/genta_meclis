@@ -5,9 +5,32 @@ import { commissions, iconNames, type IconName } from "@/data/commissions";
 import { sponsorMarks, sponsors, type SponsorMark } from "@/data/sponsors";
 import { communityJoinMessage, coordinators, navItems, practicalNotes, site, whatsappQuestions } from "@/data/site";
 import { defaultCopy } from "./site-copy";
-import type { Commission, Content, Coordinator, Sponsor } from "./content-types";
+import type { Commission, Content, Coordinator, HomeStat, Sponsor, StatSource } from "./content-types";
 
 const file = path.join(process.cwd(), "data", "content.json");
+
+const activityStart = new Date("2026-09-28T00:00:00+03:00");
+
+export function activityYears(now = new Date()) {
+  let years = now.getFullYear() - activityStart.getFullYear();
+  const anniversary = new Date(activityStart);
+  anniversary.setFullYear(now.getFullYear());
+  if (now.getTime() < anniversary.getTime()) years -= 1;
+  return Math.max(1, years + 1);
+}
+
+const defaultStats: HomeStat[] = [
+  { id: "basvuru", label: "Başvuru", caption: "Gönderilen kayıt", value: 0, source: "applications" },
+  { id: "kurul", label: "Kurul", caption: "Komisyon masası", value: 9, source: "commissions" },
+  { id: "etkinlik", label: "Etkinlik", caption: "Aktif oturum", value: 1, source: "manual" },
+  { id: "yil", label: "Faaliyet yılı", caption: "28 Eylül 2026’dan beri", value: 1, source: "activity" },
+];
+
+const statSources: StatSource[] = ["manual", "applications", "commissions", "activity"];
+
+function asStatSource(value: unknown): StatSource {
+  return statSources.includes(value as StatSource) ? (value as StatSource) : "manual";
+}
 
 const defaultPreferences = [
   { value: "Sağlık Komisyonu", label: "Sağlık" },
@@ -78,6 +101,7 @@ export function defaultContent(): Content {
       title: note.title,
       text: note.text,
     })),
+    stats: defaultStats.map((item) => ({ ...item })),
     whatsappQuestions: [...whatsappQuestions],
     about: {
       lead: about.lead,
@@ -205,6 +229,19 @@ export function normalizeContent(value: unknown): Content {
           return { id: text(note.id) || `note-${index + 1}`, title: text(note.title), text: text(note.text) };
         })
       : fallback.practicalNotes,
+    stats: Array.isArray(row.stats)
+      ? row.stats.map((item, index) => {
+          const stat = item && typeof item === "object" ? (item as Record<string, unknown>) : {};
+          const value = Number(stat.value);
+          return {
+            id: text(stat.id) || `stat-${index + 1}`,
+            label: text(stat.label),
+            caption: text(stat.caption),
+            value: Number.isFinite(value) && value >= 0 ? Math.round(value) : 0,
+            source: asStatSource(stat.source),
+          };
+        })
+      : fallback.stats,
     whatsappQuestions: Array.isArray(row.whatsappQuestions)
       ? row.whatsappQuestions.map((item) => text(item)).filter(Boolean)
       : fallback.whatsappQuestions,

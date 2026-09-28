@@ -22,6 +22,16 @@ export type PracticalNote = {
   text: string;
 };
 
+export type StatSource = "manual" | "applications" | "commissions" | "activity";
+
+export type HomeStat = {
+  id: string;
+  label: string;
+  caption: string;
+  value: number;
+  source: StatSource;
+};
+
 export type AboutValue = {
   id: string;
   title: string;
@@ -66,6 +76,7 @@ export type Content = {
   coordinators: Coordinator[];
   navItems: NavItem[];
   practicalNotes: PracticalNote[];
+  stats: HomeStat[];
   whatsappQuestions: string[];
   about: {
     lead: string;
