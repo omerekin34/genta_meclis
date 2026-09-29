@@ -3,20 +3,10 @@
 import { useMemo, useState } from "react";
 import { CommissionIcon } from "@/components/commissions/CommissionIcon";
 import { Reveal } from "@/components/motion/Reveal";
-import type { IconName } from "@/data/commissions";
 import type { TeamMember } from "@/lib/content-types";
+import type { TeamCategory, TeamGroup } from "@/lib/team";
 
-export type TeamGroup = {
-  key: string;
-  title: string;
-  eyebrow?: string;
-  icon?: IconName;
-  lead: boolean;
-  category: string;
-  members: TeamMember[];
-};
-
-export type TeamCategory = { value: string; label: string };
+export type { TeamCategory, TeamGroup };
 
 function fold(value: string) {
   return value
@@ -97,7 +87,15 @@ function GroupHeading({ group }: { group: TeamGroup }) {
   );
 }
 
-export function TeamDirectory({ groups, categories }: { groups: TeamGroup[]; categories: TeamCategory[] }) {
+export function TeamDirectory({
+  groups,
+  categories,
+  empty = "Ekip bilgileri yakında burada.",
+}: {
+  groups: TeamGroup[];
+  categories: TeamCategory[];
+  empty?: string;
+}) {
   const [category, setCategory] = useState("");
   const [query, setQuery] = useState("");
 
@@ -122,7 +120,7 @@ export function TeamDirectory({ groups, categories }: { groups: TeamGroup[]; cat
       .filter((group) => group.members.length > 0);
   }, [groups, category, query]);
 
-  if (total === 0) return <p className="text-center text-base text-ink/70">Ekip bilgileri yakında burada.</p>;
+  if (total === 0) return <p className="text-center text-base text-ink/70">{empty}</p>;
 
   const chipClass = (active: boolean) =>
     `inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors duration-200 ${

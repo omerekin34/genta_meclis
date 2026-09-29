@@ -1,69 +1,76 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { PageHero } from "@/components/layout/PageHero";
-import { TeamDirectory, type TeamCategory, type TeamGroup } from "@/components/team/TeamDirectory";
+import { Reveal } from "@/components/motion/Reveal";
 import { getContent } from "@/lib/content";
-import { teamAcademicGroup, teamLeadGroup, teamUnits } from "@/lib/content-types";
+import { teamAcademicHref, teamOrgHref } from "@/lib/content-types";
 
 export const metadata: Metadata = {
-  title: "Ekibimiz",
-  description: "GENTA 2026 Genç Tartışmacılar Meclisi’ni hazırlayan ekip: görevleri ve okulları.",
+  title: "Ekipler",
+  description: "GENTA 2026 akademik ekibi ve organizasyon ekibi.",
 };
 
-const otherGroup = "diger";
-
-const categories: TeamCategory[] = [
-  { value: teamLeadGroup, label: "Genel Koordinasyon" },
-  { value: teamAcademicGroup, label: "Akademik Ekip" },
-  ...teamUnits.map((unit) => ({ value: unit.value, label: unit.short })),
-  { value: otherGroup, label: "Diğer" },
-];
-
-export default async function TeamPage() {
-  const { team, copy, commissions } = await getContent();
-  const members = team.filter((member) => member.name);
-  const known = new Set<string>([
-    teamLeadGroup,
-    teamAcademicGroup,
-    ...teamUnits.map((unit) => unit.value),
-    ...commissions.map((commission) => commission.slug),
-  ]);
-  const of = (group: string) => members.filter((member) => member.group === group);
-
-  const groups: TeamGroup[] = [
-    { key: teamLeadGroup, title: "Genel Koordinasyon", lead: true, category: teamLeadGroup, members: of(teamLeadGroup) },
-    { key: teamAcademicGroup, title: "Akademik Ekip", lead: false, category: teamAcademicGroup, members: of(teamAcademicGroup) },
-    ...commissions.map((commission) => ({
-      key: commission.slug,
-      title: commission.name,
-      eyebrow: "Akademik Ekip",
-      icon: commission.icon,
-      lead: false,
-      category: teamAcademicGroup,
-      members: of(commission.slug),
-    })),
-    ...teamUnits.map((unit) => ({
-      key: unit.value,
-      title: unit.label,
-      lead: false,
-      category: unit.value,
-      members: of(unit.value),
-    })),
+export default async function TeamHubPage() {
+  const { copy } = await getContent();
+  const branches = [
     {
-      key: otherGroup,
-      title: "Ekip",
-      lead: false,
-      category: otherGroup,
-      members: members.filter((member) => !known.has(member.group)),
+      href: teamAcademicHref,
+      eyebrow: copy.pages.academicEyebrow,
+      title: copy.pages.academicTitle,
+      text: copy.pages.academicText,
+      invert: true,
     },
-  ].filter((group) => group.members.length > 0);
+    {
+      href: teamOrgHref,
+      eyebrow: copy.pages.orgEyebrow,
+      title: copy.pages.orgTitle,
+      text: copy.pages.orgText,
+      invert: false,
+    },
+  ];
 
   return (
     <>
       <PageHero eyebrow={copy.pages.teamEyebrow} title={copy.pages.teamTitle} description={copy.pages.teamText} />
       <section className="bg-ivory py-16 sm:py-24">
         <Container>
-          <TeamDirectory groups={groups} categories={categories} />
+          <div className="grid gap-5 md:grid-cols-2">
+            {branches.map((branch, index) => (
+              <Reveal key={branch.href} delay={index * 0.08} className="h-full">
+                <Link
+                  href={branch.href}
+                  className={`group flex h-full flex-col p-8 transition-all duration-700 hover:-translate-y-1.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:p-10 ${
+                    branch.invert
+                      ? "bg-brand text-white hover:shadow-[0_22px_40px_-28px_rgba(108,17,16,0.7)]"
+                      : "border border-brand/15 bg-paper text-brand hover:border-brand/30 hover:shadow-[0_22px_40px_-28px_rgba(108,17,16,0.7)]"
+                  }`}
+                >
+                  <p
+                    className={`font-display text-[11px] tracking-[0.28em] uppercase ${
+                      branch.invert ? "text-white/70" : "text-brand/60"
+                    }`}
+                  >
+                    {branch.eyebrow}
+                  </p>
+                  <h2 className="mt-4 font-display text-2xl leading-snug font-semibold sm:text-3xl">{branch.title}</h2>
+                  <p className={`mt-5 flex-1 text-base leading-8 ${branch.invert ? "text-white/80" : "text-ink/80"}`}>
+                    {branch.text}
+                  </p>
+                  <span
+                    className={`mt-8 inline-flex items-center gap-2 font-display text-[12px] font-semibold tracking-[0.16em] uppercase ${
+                      branch.invert ? "text-white" : "text-brand"
+                    }`}
+                  >
+                    Ekipten devam et
+                    <span className="transition-transform duration-700 group-hover:translate-x-1.5" aria-hidden="true">
+                      →
+                    </span>
+                  </span>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
         </Container>
       </section>
     </>

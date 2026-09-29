@@ -5,9 +5,15 @@ import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/motion/Reveal";
 import { SponsorMarquee } from "@/components/sponsors/SponsorMarquee";
 import { getContent } from "@/lib/content";
-import { teamLeadGroup } from "@/lib/content-types";
+import { teamAcademicGroup, teamAcademicHref, teamLeadGroup, teamOrgHref, teamOrgLeadGroup } from "@/lib/content-types";
 import { Countdown } from "./Countdown";
 import { NovemberCalendar } from "./NovemberCalendar";
+
+function teamPreviewHref(group: string) {
+  if (group === teamOrgLeadGroup) return teamOrgHref;
+  if (group === teamAcademicGroup) return teamAcademicHref;
+  return "/ekibimiz";
+}
 
 function initials(name: string) {
   const parts = name.split(/\s+/).filter(Boolean);
@@ -18,9 +24,16 @@ function initials(name: string) {
 export async function HomeSections() {
   const { site, about, copy, team } = await getContent();
   const named = team.filter((member) => member.name);
-  const leads = (named.some((member) => member.group === teamLeadGroup)
-    ? named.filter((member) => member.group === teamLeadGroup)
-    : named
+  const presidents = [
+    ...named.filter((member) => member.group === teamAcademicGroup),
+    ...named.filter((member) => member.group === teamOrgLeadGroup),
+  ];
+  const leads = (
+    presidents.length > 0
+      ? presidents
+      : named.some((member) => member.group === teamLeadGroup)
+        ? named.filter((member) => member.group === teamLeadGroup)
+        : named
   ).slice(0, 4);
   return (
     <>
@@ -93,22 +106,33 @@ export async function HomeSections() {
                 {copy.home.teamTitle}
               </h2>
               <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-ink/80 lg:mx-0">{copy.home.teamText}</p>
-              <Link
-                href="/ekibimiz"
-                className="group mx-auto mt-8 inline-flex w-full max-w-xs items-center justify-center gap-3 border border-brand bg-brand px-6 py-3.5 font-display text-[12px] font-semibold tracking-[0.16em] text-white uppercase transition-all duration-700 hover:-translate-y-1 hover:bg-brand-deep hover:shadow-[0_16px_32px_-18px_rgba(108,17,16,0.65)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 lg:mx-0 lg:w-auto"
-              >
-                {copy.home.teamCta}
-                <span className="transition-transform duration-700 group-hover:translate-x-1.5" aria-hidden="true">
-                  →
-                </span>
-              </Link>
+              <div className="mx-auto mt-8 flex w-full max-w-xs flex-col gap-3 lg:mx-0 lg:max-w-none lg:flex-row">
+                <Link
+                  href={teamAcademicHref}
+                  className="group inline-flex w-full items-center justify-center gap-3 border border-brand bg-brand px-6 py-3.5 font-display text-[12px] font-semibold tracking-[0.16em] text-white uppercase transition-all duration-700 hover:-translate-y-1 hover:bg-brand-deep hover:shadow-[0_16px_32px_-18px_rgba(108,17,16,0.65)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 lg:w-auto"
+                >
+                  {copy.home.teamAcademicCta}
+                  <span className="transition-transform duration-700 group-hover:translate-x-1.5" aria-hidden="true">
+                    →
+                  </span>
+                </Link>
+                <Link
+                  href={teamOrgHref}
+                  className="group inline-flex w-full items-center justify-center gap-3 border border-brand/30 bg-white px-6 py-3.5 font-display text-[12px] font-semibold tracking-[0.16em] text-brand uppercase transition-all duration-700 hover:-translate-y-1 hover:border-brand hover:bg-brand hover:text-white hover:shadow-[0_16px_32px_-18px_rgba(108,17,16,0.65)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 lg:w-auto"
+                >
+                  {copy.home.teamOrgCta}
+                  <span className="transition-transform duration-700 group-hover:translate-x-1.5" aria-hidden="true">
+                    →
+                  </span>
+                </Link>
+              </div>
             </Reveal>
             {leads.length > 0 ? (
               <div className="flex flex-wrap justify-center gap-4 sm:gap-5">
                 {leads.map((member, index) => (
                   <Reveal key={member.id} delay={0.08 + index * 0.06} className="w-[calc((100%-1rem)/2)] max-w-60 sm:w-56">
                     <Link
-                      href="/ekibimiz"
+                      href={teamPreviewHref(member.group)}
                       className="group flex h-full flex-col overflow-hidden border border-brand/12 bg-white text-center transition-all duration-700 hover:-translate-y-1.5 hover:border-brand/30 hover:shadow-[0_22px_40px_-28px_rgba(108,17,16,0.7)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                     >
                       <div className="flex aspect-square items-center justify-center overflow-hidden bg-brand">

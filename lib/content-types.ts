@@ -13,14 +13,29 @@ export type Coordinator = {
 
 export const teamLeadGroup = "genel";
 export const teamAcademicGroup = "akademik";
+export const teamOrgLeadGroup = "organizasyon";
+export const teamCommissionCategory = "komisyon-baskanlari";
 
 export const teamUnits = [
-  { value: "lojistik", label: "Lojistik Ekibi", short: "Lojistik" },
-  { value: "halkla-iliskiler", label: "Halkla İlişkiler Ekibi", short: "Halkla İlişkiler" },
-  { value: "sosyal-medya", label: "Sosyal Medya Ekibi", short: "Sosyal Medya" },
   { value: "tasarim", label: "Tasarım Ekibi", short: "Tasarım" },
+  { value: "halkla-iliskiler", label: "Halkla İlişkiler Ekibi", short: "Halkla İlişkiler" },
+  { value: "lojistik", label: "Lojistik Ekibi", short: "Lojistik" },
+  { value: "sosyal-medya", label: "Sosyal Medya Ekibi", short: "Sosyal Medya" },
   { value: "basin", label: "Basın Ekibi", short: "Basın" },
 ] as const;
+
+export const teamHubHref = "/ekibimiz";
+export const teamAcademicHref = "/ekibimiz/akademik";
+export const teamOrgHref = "/ekibimiz/organizasyon";
+
+export const teamNavItems = [
+  { href: teamAcademicHref, label: "Akademik" },
+  { href: teamOrgHref, label: "Organizasyon" },
+] as const;
+
+export function isTeamNavHref(href: string) {
+  return href === teamHubHref || href.startsWith(`${teamHubHref}/`);
+}
 
 export type TeamMember = {
   id: string;

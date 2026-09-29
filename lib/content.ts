@@ -5,7 +5,8 @@ import { commissions, iconNames, type IconName } from "@/data/commissions";
 import { sponsorMarks, sponsors, type SponsorMark } from "@/data/sponsors";
 import { communityJoinMessage, coordinators, navItems, practicalNotes, site, whatsappQuestions } from "@/data/site";
 import { defaultCopy } from "./site-copy";
-import { teamLeadGroup, type Commission, type Content, type Coordinator, type HomeStat, type Sponsor, type StatSource } from "./content-types";
+import { teamAcademicGroup, teamLeadGroup, teamOrgLeadGroup, type Commission, type Content, type Coordinator, type HomeStat, type NavItem, type Sponsor, type StatSource } from "./content-types";
+import { collapseTeamNav } from "./team";
 
 const settingsId = "live";
 
@@ -103,7 +104,7 @@ export function defaultContent(): Content {
       school: "",
       photo: "",
     })),
-    navItems: navItems.map((item) => ({ href: item.href, label: item.label })),
+    navItems: collapseTeamNav(navItems.map((item) => ({ href: item.href, label: item.label }))),
     practicalNotes: practicalNotes.map((note, index) => ({
       id: `note-${index + 1}`,
       title: note.title,
@@ -241,17 +242,27 @@ export function normalizeContent(value: unknown): Content {
             id: text(member.id) || `team-${index + 1}`,
             name: text(member.name),
             role: text(member.role),
-            group: text(member.group) || (/genel koordinat/i.test(text(member.role)) ? teamLeadGroup : ""),
+            group:
+              text(member.group) ||
+              (/organizasyon başkan/i.test(text(member.role))
+                ? teamOrgLeadGroup
+                : /akademik başkan/i.test(text(member.role))
+                  ? teamAcademicGroup
+                  : /genel koordinat/i.test(text(member.role))
+                    ? teamLeadGroup
+                    : ""),
             school: text(member.school),
             photo: text(member.photo),
           };
         })
       : fallback.team,
     navItems: Array.isArray(row.navItems)
-      ? row.navItems.map((item) => {
-          const nav = item && typeof item === "object" ? (item as Record<string, unknown>) : {};
-          return { href: text(nav.href, "/"), label: text(nav.label) };
-        })
+      ? collapseTeamNav(
+          row.navItems.map((item) => {
+            const nav = item && typeof item === "object" ? (item as Record<string, unknown>) : {};
+            return { href: text(nav.href, "/"), label: text(nav.label) } satisfies NavItem;
+          }),
+        )
       : fallback.navItems,
     practicalNotes: Array.isArray(row.practicalNotes)
       ? row.practicalNotes.map((item, index) => {

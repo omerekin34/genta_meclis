@@ -9,7 +9,7 @@ import { sponsorMarks, type SponsorMark } from "@/data/sponsors";
 import { InstagramIcon, MailIcon, WhatsAppIcon } from "@/components/layout/SocialIcons";
 import { CommissionIcon } from "@/components/commissions/CommissionIcon";
 import { SchoolPicker } from "@/components/forms/SchoolPicker";
-import { teamAcademicGroup, teamLeadGroup, teamUnits, type Content } from "@/lib/content-types";
+import { teamAcademicGroup, teamLeadGroup, teamOrgLeadGroup, teamUnits, type Content } from "@/lib/content-types";
 import { ApplicationsPanel } from "./ApplicationsPanel";
 
 const sections = [
@@ -958,7 +958,8 @@ function AgendaEditor({
 
 function teamGroupLabel(group: string, commissions: Content["commissions"]) {
   if (group === teamLeadGroup) return "Genel Koordinasyon";
-  if (group === teamAcademicGroup) return "Akademik Ekip";
+  if (group === teamAcademicGroup) return "Akademik Başkanı";
+  if (group === teamOrgLeadGroup) return "Organizasyon Başkanı";
   const unit = teamUnits.find((item) => item.value === group);
   if (unit) return unit.label;
   const commission = commissions.find((item) => item.slug === group);
@@ -981,9 +982,8 @@ function moveWithinGroup(list: Content["team"], id: string, direction: -1 | 1) {
 function TeamGroupOptions({ commissions }: { commissions: Content["commissions"] }) {
   return (
     <>
-      <option value={teamLeadGroup}>Genel Koordinasyon (en üstte)</option>
       <optgroup label="Akademik">
-        <option value={teamAcademicGroup}>Akademik Ekip</option>
+        <option value={teamAcademicGroup}>Akademik Başkanı</option>
         {commissions.map((commission) => (
           <option key={commission.slug} value={commission.slug}>
             {commission.name || "Adsız komisyon"}
@@ -991,12 +991,14 @@ function TeamGroupOptions({ commissions }: { commissions: Content["commissions"]
         ))}
       </optgroup>
       <optgroup label="Organizasyon">
+        <option value={teamOrgLeadGroup}>Organizasyon Başkanı</option>
         {teamUnits.map((unit) => (
           <option key={unit.value} value={unit.value}>
             {unit.label}
           </option>
         ))}
       </optgroup>
+      <option value={teamLeadGroup}>Genel Koordinasyon</option>
       <option value="">Diğer ekip</option>
     </>
   );
@@ -1022,7 +1024,7 @@ function TeamPanel({
   return (
     <div className="space-y-4">
       <p className="text-sm leading-6 text-ink/60">
-        Ekibimiz sayfasında Genel Koordinasyon en üstte durur. Altında Akademik Ekip ve komisyonlar, ardından Lojistik, Halkla İlişkiler, Sosyal Medya, Tasarım ve Basın ekipleri kendi satırlarında yan yana dizilir. Okul için birkaç harf yaz, listeden seç. Değişiklikten sonra Kaydet’e bas.
+        Ekip iki sayfaya ayrılır. Akademik sayfada Akademik Başkanı ve komisyon başkanları durur. Organizasyon sayfada Organizasyon Başkanı ile Tasarım, Halkla İlişkiler, Lojistik, Sosyal Medya ve Basın ekipleri durur. Okul için birkaç harf yaz, listeden seç. Değişiklikten sonra Kaydet’e bas.
       </p>
       <div className="flex flex-wrap items-center gap-3 rounded-3xl border border-brand/10 bg-white p-4">
         <label className="flex min-w-0 flex-1 items-center gap-3">
@@ -1033,9 +1035,8 @@ function TeamPanel({
             className="min-w-0 flex-1 rounded-2xl border border-brand/15 bg-ivory px-4 py-2.5 text-sm"
           >
             <option value="__all">Tüm ekip ({draft.team.length})</option>
-            <option value={teamLeadGroup}>Genel Koordinasyon ({counts.get(teamLeadGroup) ?? 0})</option>
             <optgroup label="Akademik">
-              <option value={teamAcademicGroup}>Akademik Ekip ({counts.get(teamAcademicGroup) ?? 0})</option>
+              <option value={teamAcademicGroup}>Akademik Başkanı ({counts.get(teamAcademicGroup) ?? 0})</option>
               {draft.commissions.map((commission) => (
                 <option key={commission.slug} value={commission.slug}>
                   {commission.name || "Adsız komisyon"} ({counts.get(commission.slug) ?? 0})
@@ -1043,12 +1044,14 @@ function TeamPanel({
               ))}
             </optgroup>
             <optgroup label="Organizasyon">
+              <option value={teamOrgLeadGroup}>Organizasyon Başkanı ({counts.get(teamOrgLeadGroup) ?? 0})</option>
               {teamUnits.map((unit) => (
                 <option key={unit.value} value={unit.value}>
                   {unit.label} ({counts.get(unit.value) ?? 0})
                 </option>
               ))}
             </optgroup>
+            <option value={teamLeadGroup}>Genel Koordinasyon ({counts.get(teamLeadGroup) ?? 0})</option>
             <option value="">Diğer ekip ({counts.get("") ?? 0})</option>
           </select>
         </label>
@@ -1507,6 +1510,8 @@ const copyGroups = [
       ["teamTitle", "Ekip başlığı"],
       ["teamText", "Ekip metni"],
       ["teamCta", "Ekip düğmesi"],
+      ["teamAcademicCta", "Akademik düğmesi"],
+      ["teamOrgCta", "Organizasyon düğmesi"],
       ["applyTitle", "Başvuru başlığı"],
       ["applyText", "Başvuru metni"],
       ["applyCta", "Başvuru düğmesi"],
@@ -1526,9 +1531,15 @@ const copyGroups = [
       ["commissionsEyebrow", "Komisyonlar üst yazı"],
       ["commissionsTitle", "Komisyonlar başlığı"],
       ["commissionsText", "Komisyonlar metni"],
-      ["teamEyebrow", "Ekibimiz üst yazı"],
-      ["teamTitle", "Ekibimiz başlığı"],
-      ["teamText", "Ekibimiz metni"],
+      ["teamEyebrow", "Ekipler üst yazı"],
+      ["teamTitle", "Ekipler başlığı"],
+      ["teamText", "Ekipler metni"],
+      ["academicEyebrow", "Akademik üst yazı"],
+      ["academicTitle", "Akademik başlığı"],
+      ["academicText", "Akademik metni"],
+      ["orgEyebrow", "Organizasyon üst yazı"],
+      ["orgTitle", "Organizasyon başlığı"],
+      ["orgText", "Organizasyon metni"],
       ["sponsorsEyebrow", "Sponsorlar üst yazı"],
       ["sponsorsTitle", "Sponsorlar başlığı"],
       ["sponsorsText", "Sponsorlar metni"],
