@@ -1112,6 +1112,44 @@ function TeamPanel({
   );
 }
 
+const imageMaxBytes = 4 * 1024 * 1024;
+const hostedMedia = "/storage/v1/object/public/genta-media/";
+
+function clipboardFile(data: DataTransfer) {
+  const fromFiles = Array.from(data.files).find((item) => item.type.startsWith("image/"));
+  if (fromFiles) return fromFiles;
+  for (const item of Array.from(data.items)) {
+    if (item.kind === "file" && item.type.startsWith("image/")) return item.getAsFile() ?? undefined;
+  }
+  return undefined;
+}
+
+function clipboardSource(data: DataTransfer) {
+  const plain = data.getData("text/plain").trim();
+  const fromPlain = /https?:\/\/[^\s<>"']+/i.exec(plain)?.[0];
+  if (fromPlain) return fromPlain;
+  if (plain.startsWith("data:image/")) return plain.split(/\s+/)[0];
+  const html = data.getData("text/html").replace(/&amp;/g, "&");
+  const htmlSource = /<img[^>]+src=["']([^"']+)["']/i.exec(html)?.[1]?.trim() ?? "";
+  if (/^https?:\/\//i.test(htmlSource) || htmlSource.startsWith("data:image/")) return htmlSource;
+  const uri = /https?:\/\/[^\s<>"']+/i.exec(data.getData("text/uri-list"))?.[0];
+  return uri ?? "";
+}
+
+function fileFromDataUrl(source: string) {
+  const match = /^data:(image\/[a-zA-Z0-9.+-]+)(;base64)?,([\s\S]+)$/.exec(source);
+  if (!match) return null;
+  const type = match[1];
+  const encoded = match[2] ? match[3] : btoa(match[3]);
+  try {
+    const binary = atob(encoded);
+    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+    return new File([bytes], "pasted", { type });
+  } catch {
+    return null;
+  }
+}
+
 function ImageField({
   label,
   folder,
@@ -1128,29 +1166,87 @@ function ImageField({
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
 
-  async function upload(file: File) {
+  async function postUpload(body: FormData) {
     setUploading(true);
     setError("");
     try {
-      const body = new FormData();
-      body.append("file", file);
-      body.append("folder", folder);
       const response = await fetch("/api/admin/upload", { method: "POST", body });
       const result = (await response.json().catch(() => null)) as { url?: string; error?: string } | null;
       if (!response.ok || !result?.url) {
         setError(result?.error ?? (response.status === 413 ? "Dosya en fazla 4 MB olsun." : "Görsel yüklenemedi."));
-        return;
+        return false;
       }
       onChange(result.url);
+      return true;
     } catch {
       setError("Görsel yüklenemedi. Bağlantıyı kontrol et.");
+      return false;
     } finally {
       setUploading(false);
     }
   }
 
+  async function upload(file: File) {
+    const body = new FormData();
+    body.append("file", file);
+    body.append("folder", folder);
+    await postUpload(body);
+  }
+
+  async function importUrl(url: string) {
+    if (url.includes(hostedMedia)) {
+      onChange(url);
+      return;
+    }
+    const body = new FormData();
+    body.append("url", url);
+    body.append("folder", folder);
+    const ok = await postUpload(body);
+    if (!ok) {
+      onChange(url);
+      setError((current) => (current ? `${current} Adres yine de kaydedildi.` : "Adres kaydedildi."));
+    }
+  }
+
+  function takeTransfer(data: DataTransfer, event?: { preventDefault(): void }) {
+    const file = clipboardFile(data);
+    const source = clipboardSource(data);
+    if (file && (file.size <= imageMaxBytes || !source)) {
+      event?.preventDefault();
+      if (file.size > imageMaxBytes) {
+        setError("Dosya en fazla 4 MB olsun.");
+        return;
+      }
+      void upload(file);
+      return;
+    }
+    if (source.startsWith("data:image/")) {
+      const pasted = fileFromDataUrl(source);
+      event?.preventDefault();
+      if (!pasted) {
+        setError("Yapıştırılan görsel okunamadı.");
+        return;
+      }
+      void upload(pasted);
+      return;
+    }
+    if (/^https?:\/\//i.test(source)) {
+      event?.preventDefault();
+      void importUrl(source);
+    }
+  }
+
   return (
-    <div>
+    <div
+      tabIndex={0}
+      className="rounded-3xl outline-none"
+      onPaste={(event) => takeTransfer(event.clipboardData, event)}
+      onDragOver={(event) => event.preventDefault()}
+      onDrop={(event) => {
+        event.preventDefault();
+        takeTransfer(event.dataTransfer);
+      }}
+    >
       <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">{label}</span>
       <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-start">
         <div
@@ -1190,10 +1286,13 @@ function ImageField({
           <input
             value={value}
             onChange={(event) => onChange(event.target.value.trim())}
-            placeholder="veya görsel adresini yapıştır (https://...)"
+            disabled={uploading}
+            placeholder="görseli veya https:// adresini yapıştır (Ctrl+V)"
             className="w-full rounded-2xl border border-brand/15 bg-ivory px-4 py-3 text-sm text-ink outline-none focus:border-brand"
           />
-          <p className="text-xs leading-5 text-ink/50">JPG, PNG, WEBP, GIF veya SVG. En fazla 4 MB.</p>
+          <p className="text-xs leading-5 text-ink/50">
+            JPG, PNG, WEBP, GIF veya SVG. En fazla 4 MB. Görseli kopyalayıp buraya yapıştırabilirsin; link de olur, indirmene gerek yok.
+          </p>
           {error ? <p className="text-sm text-brand">{error}</p> : null}
         </div>
       </div>
