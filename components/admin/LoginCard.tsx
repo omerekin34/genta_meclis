@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 export function LoginCard() {
   const router = useRouter();
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -17,7 +18,7 @@ export function LoginCard() {
     const response = await fetch("/api/admin/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ username, password }),
     });
     setPending(false);
     if (!response.ok) {
@@ -38,12 +39,26 @@ export function LoginCard() {
           Site metinlerini, kişileri ve kartları buradan düzenlersiniz.
         </p>
         <label className="mt-8 block">
+          <span className="font-display text-[11px] tracking-[0.16em] text-ink/50 uppercase">Kullanıcı adı</span>
+          <input
+            type="text"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            autoComplete="username"
+            autoCapitalize="none"
+            spellCheck={false}
+            required
+            className="mt-2 w-full rounded-full border border-brand/15 bg-ivory px-5 py-3 text-ink outline-none focus:border-brand"
+          />
+        </label>
+        <label className="mt-4 block">
           <span className="font-display text-[11px] tracking-[0.16em] text-ink/50 uppercase">Şifre</span>
           <input
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             autoComplete="current-password"
+            required
             className="mt-2 w-full rounded-full border border-brand/15 bg-ivory px-5 py-3 text-ink outline-none focus:border-brand"
           />
         </label>
