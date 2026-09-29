@@ -1,82 +1,69 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { PageHero } from "@/components/layout/PageHero";
-import { Reveal } from "@/components/motion/Reveal";
+import { TeamDirectory, type TeamCategory, type TeamGroup } from "@/components/team/TeamDirectory";
 import { getContent } from "@/lib/content";
-import type { TeamMember } from "@/lib/content-types";
+import { teamAcademicGroup, teamLeadGroup, teamUnits } from "@/lib/content-types";
 
 export const metadata: Metadata = {
   title: "Ekibimiz",
   description: "GENTA 2026 Genç Tartışmacılar Meclisi’ni hazırlayan ekip: görevleri ve okulları.",
 };
 
-function initials(name: string) {
-  const parts = name.split(/\s+/).filter(Boolean);
-  const picked = parts.length > 1 ? [parts[0], parts[parts.length - 1]] : parts;
-  return picked.map((part) => part[0]?.toLocaleUpperCase("tr-TR")).join("");
-}
+const otherGroup = "diger";
 
-function MemberCard({ member }: { member: TeamMember }) {
-  return (
-    <article className="group flex h-full flex-col overflow-hidden border border-brand/12 bg-paper transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:border-brand/30 hover:shadow-[0_22px_40px_-28px_rgba(108,17,16,0.7)] motion-reduce:transition-none motion-reduce:hover:translate-y-0">
-      <div className="relative aspect-[4/5] overflow-hidden bg-brand">
-        {member.photo ? (
-          // eslint-disable-next-line @next/next/no-img-element -- fotoğraf adresi her kaynaktan gelebilir
-          <img
-            src={member.photo}
-            alt={member.name}
-            loading="lazy"
-            className="size-full object-cover transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04] motion-reduce:transition-none"
-          />
-        ) : (
-          <div className="flex size-full items-center justify-center">
-            <span className="font-display text-6xl font-semibold tracking-wide text-white/85">{initials(member.name)}</span>
-          </div>
-        )}
-        <span className="absolute inset-x-0 bottom-0 h-1 bg-brand" aria-hidden="true" />
-      </div>
-      <div className="flex flex-1 flex-col p-6 text-center">
-        <p className="mx-auto inline-flex rounded-full bg-brand px-4 py-1.5 font-display text-[11px] font-semibold tracking-[0.16em] text-white uppercase">
-          {member.role || "Ekip üyesi"}
-        </p>
-        <h2 className="mt-4 font-display text-xl leading-snug font-semibold text-brand">{member.name}</h2>
-        {member.school ? (
-          <p className="mt-2 flex items-start justify-center gap-2 text-sm leading-6 text-ink/70">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-brand/70">
-              <path d="M3 9 L12 4 L21 9 L12 14 Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
-              <path d="M7 11.5 V16 C9.5 18 14.5 18 17 16 V11.5" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
-            </svg>
-            <span>{member.school}</span>
-          </p>
-        ) : null}
-      </div>
-    </article>
-  );
-}
+const categories: TeamCategory[] = [
+  { value: teamLeadGroup, label: "Genel Koordinasyon" },
+  { value: teamAcademicGroup, label: "Akademik Ekip" },
+  ...teamUnits.map((unit) => ({ value: unit.value, label: unit.short })),
+  { value: otherGroup, label: "Diğer" },
+];
 
 export default async function TeamPage() {
-  const { team, copy } = await getContent();
+  const { team, copy, commissions } = await getContent();
   const members = team.filter((member) => member.name);
+  const known = new Set<string>([
+    teamLeadGroup,
+    teamAcademicGroup,
+    ...teamUnits.map((unit) => unit.value),
+    ...commissions.map((commission) => commission.slug),
+  ]);
+  const of = (group: string) => members.filter((member) => member.group === group);
+
+  const groups: TeamGroup[] = [
+    { key: teamLeadGroup, title: "Genel Koordinasyon", lead: true, category: teamLeadGroup, members: of(teamLeadGroup) },
+    { key: teamAcademicGroup, title: "Akademik Ekip", lead: false, category: teamAcademicGroup, members: of(teamAcademicGroup) },
+    ...commissions.map((commission) => ({
+      key: commission.slug,
+      title: commission.name,
+      eyebrow: "Akademik Ekip",
+      icon: commission.icon,
+      lead: false,
+      category: teamAcademicGroup,
+      members: of(commission.slug),
+    })),
+    ...teamUnits.map((unit) => ({
+      key: unit.value,
+      title: unit.label,
+      lead: false,
+      category: unit.value,
+      members: of(unit.value),
+    })),
+    {
+      key: otherGroup,
+      title: "Ekip",
+      lead: false,
+      category: otherGroup,
+      members: members.filter((member) => !known.has(member.group)),
+    },
+  ].filter((group) => group.members.length > 0);
+
   return (
     <>
       <PageHero eyebrow={copy.pages.teamEyebrow} title={copy.pages.teamTitle} description={copy.pages.teamText} />
-      <section className="bg-ivory py-20 sm:py-28">
+      <section className="bg-ivory py-16 sm:py-24">
         <Container>
-          {members.length > 0 ? (
-            <div className="flex flex-wrap justify-center gap-5">
-              {members.map((member, index) => (
-                <Reveal
-                  key={member.id}
-                  delay={Math.min(index * 0.06, 0.36)}
-                  className="w-full sm:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)] xl:w-[calc((100%-3.75rem)/4)]"
-                >
-                  <MemberCard member={member} />
-                </Reveal>
-              ))}
-            </div>
-          ) : (
-            <p className="text-center text-base text-ink/70">Ekip bilgileri yakında burada.</p>
-          )}
+          <TeamDirectory groups={groups} categories={categories} />
         </Container>
       </section>
     </>

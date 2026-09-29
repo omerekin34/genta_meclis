@@ -13,6 +13,11 @@ export const defaultCopy = {
     commissionsEyebrow: "Dokuz komisyon",
     commissionsTitle: "Komisyonlar",
     commissionsCta: "Tümünü gör",
+    teamEyebrow: "Ekibimiz",
+    teamTitle: "Meclisi hazırlayan ekip.",
+    teamText:
+      "Genel koordinasyondan komisyon masalarına kadar GENTA 2026’yı yürüten ekip. Görevlerini ve okullarını ekip sayfasında görebilirsiniz.",
+    teamCta: "Ekibimizi gör",
     applyTitle: "Başvurular\naçıldı",
     applyText:
       "Bireysel delege veya okul delegasyonu olarak yerinizi ayırın. Tercih ettiğiniz komisyonu başvuru formunda belirtin.",

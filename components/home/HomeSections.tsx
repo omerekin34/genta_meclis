@@ -5,11 +5,23 @@ import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/motion/Reveal";
 import { SponsorMarquee } from "@/components/sponsors/SponsorMarquee";
 import { getContent } from "@/lib/content";
+import { teamLeadGroup } from "@/lib/content-types";
 import { Countdown } from "./Countdown";
 import { NovemberCalendar } from "./NovemberCalendar";
 
+function initials(name: string) {
+  const parts = name.split(/\s+/).filter(Boolean);
+  const picked = parts.length > 1 ? [parts[0], parts[parts.length - 1]] : parts;
+  return picked.map((part) => part[0]?.toLocaleUpperCase("tr-TR")).join("");
+}
+
 export async function HomeSections() {
-  const { site, about, copy, commissions } = await getContent();
+  const { site, about, copy, team } = await getContent();
+  const named = team.filter((member) => member.name);
+  const leads = (named.some((member) => member.group === teamLeadGroup)
+    ? named.filter((member) => member.group === teamLeadGroup)
+    : named
+  ).slice(0, 4);
   return (
     <>
       <section className="bg-ivory py-20 text-ink sm:py-28">
@@ -74,6 +86,63 @@ export async function HomeSections() {
 
       <section className="bg-ivory py-20 sm:py-28">
         <Container>
+          <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+            <Reveal className="text-center lg:text-left">
+              <p className="font-display text-xs tracking-[0.3em] text-brand/70 uppercase">{copy.home.teamEyebrow}</p>
+              <h2 className="mx-auto mt-3 max-w-xl font-display text-4xl leading-tight font-semibold text-brand sm:text-5xl lg:mx-0">
+                {copy.home.teamTitle}
+              </h2>
+              <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-ink/80 lg:mx-0">{copy.home.teamText}</p>
+              <Link
+                href="/ekibimiz"
+                className="group mx-auto mt-8 inline-flex w-full max-w-xs items-center justify-center gap-3 border border-brand bg-brand px-6 py-3.5 font-display text-[12px] font-semibold tracking-[0.16em] text-white uppercase transition-all duration-700 hover:-translate-y-1 hover:bg-brand-deep hover:shadow-[0_16px_32px_-18px_rgba(108,17,16,0.65)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 lg:mx-0 lg:w-auto"
+              >
+                {copy.home.teamCta}
+                <span className="transition-transform duration-700 group-hover:translate-x-1.5" aria-hidden="true">
+                  →
+                </span>
+              </Link>
+            </Reveal>
+            {leads.length > 0 ? (
+              <div className="flex flex-wrap justify-center gap-4 sm:gap-5">
+                {leads.map((member, index) => (
+                  <Reveal key={member.id} delay={0.08 + index * 0.06} className="w-[calc((100%-1rem)/2)] max-w-60 sm:w-56">
+                    <Link
+                      href="/ekibimiz"
+                      className="group flex h-full flex-col overflow-hidden border border-brand/12 bg-white text-center transition-all duration-700 hover:-translate-y-1.5 hover:border-brand/30 hover:shadow-[0_22px_40px_-28px_rgba(108,17,16,0.7)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                    >
+                      <div className="flex aspect-square items-center justify-center overflow-hidden bg-brand">
+                        {member.photo ? (
+                          // eslint-disable-next-line @next/next/no-img-element -- fotoğraf adresi her kaynaktan gelebilir
+                          <img
+                            src={member.photo}
+                            alt={member.name}
+                            loading="lazy"
+                            className="size-full object-cover transition-transform duration-1000 group-hover:scale-[1.04] motion-reduce:transition-none"
+                          />
+                        ) : (
+                          <span className="font-display text-5xl font-semibold tracking-wide text-white/85">
+                            {initials(member.name)}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-1 flex-col p-4">
+                        <p className="mx-auto rounded-full bg-brand px-3 py-1 font-display text-[10px] font-semibold tracking-[0.14em] text-white uppercase">
+                          {member.role || "Ekip üyesi"}
+                        </p>
+                        <p className="mt-3 font-display text-base leading-snug font-semibold text-brand">{member.name}</p>
+                      </div>
+                    </Link>
+                  </Reveal>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </Container>
+      </section>
+
+      <section className="bg-paper py-20 sm:py-28">
+        <Container>
           <Reveal>
             <div className="flex flex-col items-center gap-6 text-center lg:flex-row lg:items-end lg:justify-between lg:text-left">
               <div>
@@ -84,7 +153,7 @@ export async function HomeSections() {
               </div>
               <Link
                 href="/komisyonlar"
-                className="group inline-flex w-full max-w-xs items-center justify-center gap-3 border border-brand/30 bg-paper px-5 py-3 font-display text-[12px] font-semibold tracking-[0.16em] text-brand uppercase transition-all duration-700 hover:-translate-y-1 hover:border-brand hover:bg-brand hover:text-white hover:shadow-[0_16px_32px_-18px_rgba(108,17,16,0.65)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 lg:w-auto"
+                className="group inline-flex w-full max-w-xs items-center justify-center gap-3 border border-brand/30 bg-white px-5 py-3 font-display text-[12px] font-semibold tracking-[0.16em] text-brand uppercase transition-all duration-700 hover:-translate-y-1 hover:border-brand hover:bg-brand hover:text-white hover:shadow-[0_16px_32px_-18px_rgba(108,17,16,0.65)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 lg:w-auto"
               >
                 {copy.home.commissionsCta}
                 <span className="transition-transform duration-700 group-hover:translate-x-1.5" aria-hidden="true">
@@ -94,7 +163,7 @@ export async function HomeSections() {
             </div>
           </Reveal>
           <div className="mt-10">
-            <CommissionGrid />
+            <CommissionGrid limit={6} />
           </div>
         </Container>
       </section>

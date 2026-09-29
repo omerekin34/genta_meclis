@@ -26,13 +26,19 @@ function schoolLabel(school: School) {
 const lineClass =
   "box-border w-full min-w-0 border-b border-ink/20 bg-transparent py-2 text-[15px] text-ink outline-none transition-colors duration-300 placeholder:text-ink/35 focus:border-brand";
 
+const boxClass =
+  "mt-2 w-full rounded-2xl border border-brand/15 bg-ivory px-4 py-3 text-ink outline-none placeholder:text-ink/35 focus:border-brand";
+
 export function SchoolPicker({
   value,
   onChange,
+  variant = "line",
 }: {
   value: string;
   onChange: (value: string) => void;
+  variant?: "line" | "box";
 }) {
+  const box = variant === "box";
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState(value);
   const [active, setActive] = useState(0);
@@ -72,7 +78,7 @@ export function SchoolPicker({
   return (
     <div ref={root} className="relative min-w-0">
       <input
-        className={lineClass}
+        className={box ? boxClass : lineClass}
         value={query}
         role="combobox"
         aria-expanded={open}
@@ -119,7 +125,15 @@ export function SchoolPicker({
         }}
       />
       {open ? (
-        <ul id={listId} role="listbox" className="mt-2 max-h-56 overflow-y-auto rounded-lg border border-brand/15">
+        <ul
+          id={listId}
+          role="listbox"
+          className={
+            box
+              ? "absolute inset-x-0 top-full z-30 mt-2 max-h-64 overflow-y-auto rounded-2xl border border-brand/15 bg-white py-1 shadow-[0_18px_40px_-24px_rgba(108,17,16,0.55)]"
+              : "mt-2 max-h-56 overflow-y-auto rounded-lg border border-brand/15"
+          }
+        >
           {matches.map((item, index) => (
             <li key={item}>
               <button

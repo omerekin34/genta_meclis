@@ -2,12 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
+import { useEffect, useMemo, useRef, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { iconNames, type IconName } from "@/data/commissions";
 import { sponsorMarks, type SponsorMark } from "@/data/sponsors";
 import { InstagramIcon, MailIcon, WhatsAppIcon } from "@/components/layout/SocialIcons";
-import type { Content } from "@/lib/content-types";
+import { CommissionIcon } from "@/components/commissions/CommissionIcon";
+import { SchoolPicker } from "@/components/forms/SchoolPicker";
+import { teamAcademicGroup, teamLeadGroup, teamUnits, type Content } from "@/lib/content-types";
 import { ApplicationsPanel } from "./ApplicationsPanel";
 
 const sections = [
@@ -55,6 +57,14 @@ function uid(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+const toastEvent = "genta-admin-toast";
+const addEvent = "genta-admin-add";
+
+function announceAdd(text = "Eklendi. Doldurup Kaydet’e bas.") {
+  window.dispatchEvent(new CustomEvent<string>(addEvent, { detail: text }));
+}
+const flashClasses = ["ring-2", "ring-brand", "ring-offset-4", "ring-offset-ivory", "shadow-[0_18px_40px_-24px_rgba(108,17,16,0.6)]"];
+
 function move<T>(list: T[], index: number, direction: -1 | 1) {
   const next = [...list];
   const target = index + direction;
@@ -74,6 +84,45 @@ export function AdminDesk({ initial }: { initial: Content }) {
   const [pending, setPending] = useState(false);
   const [focusSlug, setFocusSlug] = useState("");
   const dirty = useMemo(() => JSON.stringify(draft) !== saved, [draft, saved]);
+  const [toast, setToast] = useState<{ id: number; text: string } | null>(null);
+  const [teamFilter, setTeamFilter] = useState<string | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const addSnapshot = useRef<Set<Element> | null>(null);
+
+  useEffect(() => {
+    function onToast(event: Event) {
+      setToast({ id: Date.now(), text: (event as CustomEvent<string>).detail });
+    }
+    function onAdd(event: Event) {
+      addSnapshot.current = new Set(panelRef.current?.querySelectorAll("article") ?? []);
+      onToast(event);
+    }
+    window.addEventListener(toastEvent, onToast);
+    window.addEventListener(addEvent, onAdd);
+    return () => {
+      window.removeEventListener(toastEvent, onToast);
+      window.removeEventListener(addEvent, onAdd);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = window.setTimeout(() => setToast(null), 2800);
+    return () => window.clearTimeout(timer);
+  }, [toast]);
+
+  useEffect(() => {
+    const before = addSnapshot.current;
+    if (!before) return;
+    addSnapshot.current = null;
+    const articles = [...(panelRef.current?.querySelectorAll("article") ?? [])];
+    const target = articles.find((item) => !before.has(item)) ?? articles[0];
+    if (!(target instanceof HTMLElement)) return;
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+    target.querySelector<HTMLElement>("input, textarea")?.focus({ preventScroll: true });
+    target.classList.add(...flashClasses);
+    window.setTimeout(() => target.classList.remove(...flashClasses), 1800);
+  }, [draft]);
 
   function patchSite(key: keyof Content["site"], value: string) {
     setDraft((current) => ({ ...current, site: { ...current.site, [key]: value } }));
@@ -100,20 +149,6 @@ export function AdminDesk({ initial }: { initial: Content }) {
     router.refresh();
   }
 
-  async function resetAll() {
-    if (!window.confirm("Tüm düzenlemeler silinip ilk metinlere dönülsün mü?")) return;
-    const response = await fetch("/api/admin/content", { method: "DELETE" });
-    if (!response.ok) {
-      setError("Sıfırlama tamamlanamadı.");
-      return;
-    }
-    const body = (await response.json()) as Content;
-    setDraft(body);
-    setSaved(JSON.stringify(body));
-    setMessage("İlk metinlere dönüldü.");
-    router.refresh();
-  }
-
   function addCoordinator() {
     setDraft((current) => ({
       ...current,
@@ -127,7 +162,7 @@ export function AdminDesk({ initial }: { initial: Content }) {
   function addMember() {
     setDraft((current) => ({
       ...current,
-      team: [...current.team, { id: uid("team"), name: "", role: "", school: "", photo: "" }],
+      team: [...current.team, { id: uid("team"), name: "", role: "", group: teamFilter ?? "", school: "", photo: "" }],
     }));
   }
 
@@ -277,17 +312,18 @@ export function AdminDesk({ initial }: { initial: Content }) {
               <button
                 key={action.label}
                 type="button"
-                onClick={action.run}
-                className="rounded-full border border-brand bg-white px-4 py-2.5 text-sm font-medium text-brand"
+                onClick={() => {
+                  announceAdd(action.label === "Ekle" ? undefined : `${action.label} eklendi. Doldurup Kaydet’e bas.`);
+                  action.run();
+                }}
+                className="inline-flex items-center gap-1.5 rounded-full border border-brand bg-white px-4 py-2.5 text-sm font-medium text-brand transition-colors duration-200 hover:bg-brand hover:text-white active:scale-[0.97]"
               >
+                <svg viewBox="0 0 16 16" fill="none" className="size-3.5" aria-hidden="true">
+                  <path d="M8 3 V13 M3 8 H13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
                 {action.label}
               </button>
             ))}
-            {section === "gelen" ? null : (
-              <button type="button" onClick={resetAll} className="text-sm text-ink/55 hover:text-brand">
-                İlk metinlere dön
-              </button>
-            )}
             {section === "gelen" ? null : (
               <button
                 type="button"
@@ -301,13 +337,30 @@ export function AdminDesk({ initial }: { initial: Content }) {
           </div>
         </header>
 
-        <div className="mx-auto max-w-3xl px-6 py-8">
+        {toast ? (
+          <div
+            key={toast.id}
+            role="status"
+            aria-live="polite"
+            className="fixed right-4 bottom-4 z-50 flex items-center gap-3 rounded-2xl border border-brand/15 bg-white py-3 pr-5 pl-4 text-sm font-medium text-brand shadow-[0_18px_40px_-20px_rgba(108,17,16,0.55)]"
+          >
+            <span className="flex size-6 items-center justify-center rounded-full bg-brand text-white" aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="none" className="size-3.5">
+                <path d="M3.5 8.5 L6.5 11.5 L12.5 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+            {toast.text}
+          </div>
+        ) : null}
+        <div ref={panelRef} className="mx-auto max-w-3xl px-6 py-8">
           {error ? <p className="mb-4 rounded-2xl bg-brand/10 px-4 py-3 text-sm text-brand">{error}</p> : null}
           {message ? <p className="mb-4 rounded-2xl bg-white px-4 py-3 text-sm text-ink/70">{message}</p> : null}
           {section === "gelen" ? <ApplicationsPanel /> : null}
           {section === "genel" ? <GeneralPanel draft={draft} patchSite={patchSite} setDraft={setDraft} /> : null}
           {section === "kisiler" ? <PeoplePanel draft={draft} setDraft={setDraft} /> : null}
-          {section === "ekip" ? <TeamPanel draft={draft} setDraft={setDraft} /> : null}
+          {section === "ekip" ? (
+            <TeamPanel draft={draft} setDraft={setDraft} filter={teamFilter} setFilter={setTeamFilter} />
+          ) : null}
           {section === "sosyal" ? <SocialPanel draft={draft} patchSite={patchSite} /> : null}
           {section === "menu" ? <MenuPanel draft={draft} setDraft={setDraft} /> : null}
           {section === "hakkimizda" ? <AboutPanel draft={draft} setDraft={setDraft} /> : null}
@@ -507,7 +560,7 @@ function MenuPanel({ draft, setDraft }: PanelProps) {
     <List>
       {draft.navItems.map((item, index) => (
         <Card
-          key={`${item.href}-${index}`}
+          key={index}
           onUp={() => setDraft((current) => ({ ...current, navItems: move(current.navItems, index, -1) }))}
           onDown={() => setDraft((current) => ({ ...current, navItems: move(current.navItems, index, 1) }))}
           onDelete={() => setDraft((current) => ({ ...current, navItems: current.navItems.filter((_, itemIndex) => itemIndex !== index) }))}
@@ -683,20 +736,7 @@ function CommissionsPanel({ draft, setDraft, focusSlug }: PanelProps & { focusSl
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
-        {draft.commissions.map((item) => (
-          <button
-            key={item.slug}
-            type="button"
-            onClick={() => setOpen(item.slug)}
-            className={`rounded-full border px-3 py-1.5 text-sm ${
-              current?.slug === item.slug ? "border-brand bg-brand text-white" : "border-brand/20 text-brand"
-            }`}
-          >
-            {item.name || "Adsız"}
-          </button>
-        ))}
-      </div>
+      <CommissionPicker commissions={draft.commissions} value={current?.slug ?? ""} onChange={setOpen} />
       {current ? (
         <Card
           onDelete={() => {
@@ -759,6 +799,115 @@ function CommissionsPanel({ draft, setDraft, focusSlug }: PanelProps & { focusSl
   );
 }
 
+function CommissionPicker({
+  commissions,
+  value,
+  onChange,
+}: {
+  commissions: Content["commissions"];
+  value: string;
+  onChange: (slug: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const root = useRef<HTMLDivElement>(null);
+  const current = commissions.find((item) => item.slug === value);
+  const needle = query.trim().toLocaleLowerCase("tr");
+  const matches = needle
+    ? commissions.filter((item) => item.name.toLocaleLowerCase("tr").includes(needle))
+    : commissions;
+
+  useEffect(() => {
+    if (!open) return;
+    function onPointer(event: MouseEvent) {
+      if (!root.current?.contains(event.target as Node)) setOpen(false);
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  function choose(slug: string) {
+    onChange(slug);
+    setOpen(false);
+    setQuery("");
+  }
+
+  return (
+    <div ref={root} className="relative">
+      <p className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Düzenlenen komisyon</p>
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((state) => !state)}
+        className="mt-2 flex w-full items-center gap-3 rounded-2xl border border-brand/20 bg-white px-4 py-3 text-left transition-colors duration-200 hover:border-brand/50"
+      >
+        {current ? <CommissionIcon name={current.icon} className="size-6 shrink-0 text-brand" /> : null}
+        <span className="flex-1 font-medium text-brand">{current?.name || "Komisyon seç"}</span>
+        <span className="text-xs text-ink/45">{commissions.length} komisyon</span>
+        <svg
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true"
+          className={`size-4 text-brand transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        >
+          <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+      {open ? (
+        <div className="absolute inset-x-0 top-full z-30 mt-2 overflow-hidden rounded-2xl border border-brand/15 bg-white shadow-[0_22px_44px_-24px_rgba(108,17,16,0.55)]">
+          <div className="border-b border-brand/10 p-3">
+            <input
+              autoFocus
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && matches[0]) {
+                  event.preventDefault();
+                  choose(matches[0].slug);
+                }
+              }}
+              placeholder="Komisyon ara…"
+              className="w-full rounded-xl border border-brand/15 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-brand"
+            />
+          </div>
+          <ul role="listbox" className="max-h-72 overflow-y-auto py-1">
+            {matches.map((item) => (
+              <li key={item.slug}>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={item.slug === value}
+                  onClick={() => choose(item.slug)}
+                  className={`flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors duration-150 ${
+                    item.slug === value ? "bg-brand/8 font-medium text-brand" : "text-ink hover:bg-ivory hover:text-brand"
+                  }`}
+                >
+                  <CommissionIcon name={item.icon} className="size-5 shrink-0 text-brand/80" />
+                  <span className="flex-1">{item.name || "Adsız"}</span>
+                  {item.slug === value ? (
+                    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" className="size-4 text-brand">
+                      <path d="M3.5 8.5 L6.5 11.5 L12.5 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  ) : null}
+                </button>
+              </li>
+            ))}
+            {matches.length === 0 ? <li className="px-4 py-3 text-sm text-ink/55">Eşleşen komisyon yok.</li> : null}
+          </ul>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function AgendaEditor({
   agenda,
   onChange,
@@ -776,8 +925,11 @@ function AgendaEditor({
         <p className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Gündem maddeleri</p>
         <button
           type="button"
-          onClick={() => onChange([...agenda, { id: uid("gundem"), title: "", text: "" }])}
-          className="rounded-full border border-brand/25 px-3 py-1.5 text-sm text-brand hover:bg-brand hover:text-white"
+          onClick={() => {
+            announceAdd("Gündem maddesi eklendi. Doldurup Kaydet’e bas.");
+            onChange([...agenda, { id: uid("gundem"), title: "", text: "" }]);
+          }}
+          className="rounded-full border border-brand/25 px-3 py-1.5 text-sm text-brand transition-colors duration-200 hover:bg-brand hover:text-white"
         >
           Madde ekle
         </button>
@@ -789,7 +941,7 @@ function AgendaEditor({
           onUp={() => onChange(move(agenda, index, -1))}
           onDown={() => onChange(move(agenda, index, 1))}
           onDelete={() => {
-            if (!window.confirm(`${index + 1}. gündem maddesi silinsin mi?`)) return;
+            if (!window.confirm(`${index + 1}. gündem maddesi silinsin mi?`)) return false;
             onChange(agenda.filter((entry) => entry.id !== item.id));
           }}
         >
@@ -804,7 +956,58 @@ function AgendaEditor({
   );
 }
 
-function TeamPanel({ draft, setDraft }: PanelProps) {
+function teamGroupLabel(group: string, commissions: Content["commissions"]) {
+  if (group === teamLeadGroup) return "Genel Koordinasyon";
+  if (group === teamAcademicGroup) return "Akademik Ekip";
+  const unit = teamUnits.find((item) => item.value === group);
+  if (unit) return unit.label;
+  const commission = commissions.find((item) => item.slug === group);
+  if (commission) return commission.name || "Adsız komisyon";
+  return "Diğer ekip";
+}
+
+function moveWithinGroup(list: Content["team"], id: string, direction: -1 | 1) {
+  const index = list.findIndex((item) => item.id === id);
+  if (index < 0) return list;
+  const group = list[index].group;
+  let target = index + direction;
+  while (target >= 0 && target < list.length && list[target].group !== group) target += direction;
+  if (target < 0 || target >= list.length) return list;
+  const next = [...list];
+  [next[index], next[target]] = [next[target], next[index]];
+  return next;
+}
+
+function TeamGroupOptions({ commissions }: { commissions: Content["commissions"] }) {
+  return (
+    <>
+      <option value={teamLeadGroup}>Genel Koordinasyon (en üstte)</option>
+      <optgroup label="Akademik">
+        <option value={teamAcademicGroup}>Akademik Ekip</option>
+        {commissions.map((commission) => (
+          <option key={commission.slug} value={commission.slug}>
+            {commission.name || "Adsız komisyon"}
+          </option>
+        ))}
+      </optgroup>
+      <optgroup label="Organizasyon">
+        {teamUnits.map((unit) => (
+          <option key={unit.value} value={unit.value}>
+            {unit.label}
+          </option>
+        ))}
+      </optgroup>
+      <option value="">Diğer ekip</option>
+    </>
+  );
+}
+
+function TeamPanel({
+  draft,
+  setDraft,
+  filter,
+  setFilter,
+}: PanelProps & { filter: string | null; setFilter: (value: string | null) => void }) {
   function patch(id: string, next: Partial<Content["team"][number]>) {
     setDraft((current) => ({
       ...current,
@@ -812,30 +1015,89 @@ function TeamPanel({ draft, setDraft }: PanelProps) {
     }));
   }
 
+  const counts = new Map<string, number>();
+  for (const member of draft.team) counts.set(member.group, (counts.get(member.group) ?? 0) + 1);
+  const shown = filter === null ? draft.team : draft.team.filter((member) => member.group === filter);
+
   return (
     <div className="space-y-4">
       <p className="text-sm leading-6 text-ink/60">
-        Ekibimiz sayfasında görünür. Görev, kartta en belirgin satırdır. Fotoğraf yoksa adın baş harfleri gösterilir. Değişiklikten sonra Kaydet’e bas.
+        Ekibimiz sayfasında Genel Koordinasyon en üstte durur. Altında Akademik Ekip ve komisyonlar, ardından Lojistik, Halkla İlişkiler, Sosyal Medya, Tasarım ve Basın ekipleri kendi satırlarında yan yana dizilir. Okul için birkaç harf yaz, listeden seç. Değişiklikten sonra Kaydet’e bas.
       </p>
-      {draft.team.length === 0 ? (
+      <div className="flex flex-wrap items-center gap-3 rounded-3xl border border-brand/10 bg-white p-4">
+        <label className="flex min-w-0 flex-1 items-center gap-3">
+          <span className="shrink-0 font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Göster</span>
+          <select
+            value={filter ?? "__all"}
+            onChange={(event) => setFilter(event.target.value === "__all" ? null : event.target.value)}
+            className="min-w-0 flex-1 rounded-2xl border border-brand/15 bg-ivory px-4 py-2.5 text-sm"
+          >
+            <option value="__all">Tüm ekip ({draft.team.length})</option>
+            <option value={teamLeadGroup}>Genel Koordinasyon ({counts.get(teamLeadGroup) ?? 0})</option>
+            <optgroup label="Akademik">
+              <option value={teamAcademicGroup}>Akademik Ekip ({counts.get(teamAcademicGroup) ?? 0})</option>
+              {draft.commissions.map((commission) => (
+                <option key={commission.slug} value={commission.slug}>
+                  {commission.name || "Adsız komisyon"} ({counts.get(commission.slug) ?? 0})
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Organizasyon">
+              {teamUnits.map((unit) => (
+                <option key={unit.value} value={unit.value}>
+                  {unit.label} ({counts.get(unit.value) ?? 0})
+                </option>
+              ))}
+            </optgroup>
+            <option value="">Diğer ekip ({counts.get("") ?? 0})</option>
+          </select>
+        </label>
+        {filter !== null ? (
+          <button type="button" onClick={() => setFilter(null)} className="text-sm text-brand hover:underline">
+            Filtreyi kaldır
+          </button>
+        ) : null}
+      </div>
+      {filter !== null ? (
+        <p className="text-sm text-ink/60">
+          Kişi ekle, yeni kişiyi doğrudan <strong className="font-medium text-brand">{teamGroupLabel(filter, draft.commissions)}</strong> bölümüne ekler.
+        </p>
+      ) : null}
+      {shown.length === 0 ? (
         <p className="rounded-3xl border border-dashed border-brand/20 bg-white p-5 text-sm text-ink/60">
-          Henüz kimse yok. Sağ üstteki Kişi ekle düğmesiyle başla.
+          {filter === null ? "Henüz kimse yok. Sağ üstteki Kişi ekle düğmesiyle başla." : "Bu bölümde henüz kimse yok. Kişi ekle ile başla."}
         </p>
       ) : null}
       <List>
-        {draft.team.map((member, index) => (
+        {shown.map((member) => (
           <Card
             key={member.id}
-            onUp={() => setDraft((current) => ({ ...current, team: move(current.team, index, -1) }))}
-            onDown={() => setDraft((current) => ({ ...current, team: move(current.team, index, 1) }))}
+            onUp={() => setDraft((current) => ({ ...current, team: moveWithinGroup(current.team, member.id, -1) }))}
+            onDown={() => setDraft((current) => ({ ...current, team: moveWithinGroup(current.team, member.id, 1) }))}
             onDelete={() => {
-              if (!window.confirm(`${member.name || "Bu kişi"} ekipten çıkarılsın mı?`)) return;
+              if (!window.confirm(`${member.name || "Bu kişi"} ekipten çıkarılsın mı?`)) return false;
               setDraft((current) => ({ ...current, team: current.team.filter((item) => item.id !== member.id) }));
             }}
           >
+            <p className="inline-flex rounded-full bg-brand/8 px-3 py-1 font-display text-[11px] font-semibold tracking-[0.12em] text-brand uppercase">
+              {teamGroupLabel(member.group, draft.commissions)}
+            </p>
             <TextField label="Ad soyad" value={member.name} onChange={(value) => patch(member.id, { name: value })} />
             <TextField label="Görevi" value={member.role} onChange={(value) => patch(member.id, { role: value })} />
-            <TextField label="Okulu" value={member.school} onChange={(value) => patch(member.id, { school: value })} />
+            <label className="block">
+              <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Bölümü</span>
+              <select
+                value={member.group}
+                onChange={(event) => patch(member.id, { group: event.target.value })}
+                className="mt-2 w-full rounded-2xl border border-brand/15 bg-ivory px-4 py-3"
+              >
+                <TeamGroupOptions commissions={draft.commissions} />
+              </select>
+            </label>
+            <div className="block">
+              <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Okulu</span>
+              <SchoolPicker variant="box" value={member.school} onChange={(value) => patch(member.id, { school: value })} />
+            </div>
             <ImageField
               label="Fotoğraf"
               folder="ekip"
@@ -1014,7 +1276,7 @@ function QuestionsPanel({ draft, setDraft }: PanelProps) {
     <List>
       {draft.whatsappQuestions.map((question, index) => (
         <Card
-          key={`${index}-${question.slice(0, 12)}`}
+          key={index}
           onUp={() => setDraft((current) => ({ ...current, whatsappQuestions: move(current.whatsappQuestions, index, -1) }))}
           onDown={() => setDraft((current) => ({ ...current, whatsappQuestions: move(current.whatsappQuestions, index, 1) }))}
           onDelete={() =>
@@ -1045,7 +1307,7 @@ function PreferencesPanel({ draft, setDraft }: PanelProps) {
     <List>
       {draft.preferences.map((option, index) => (
         <Card
-          key={`${option.value}-${index}`}
+          key={index}
           onUp={() => setDraft((current) => ({ ...current, preferences: move(current.preferences, index, -1) }))}
           onDown={() => setDraft((current) => ({ ...current, preferences: move(current.preferences, index, 1) }))}
           onDelete={() =>
@@ -1142,6 +1404,10 @@ const copyGroups = [
       ["commissionsEyebrow", "Komisyon üst yazı"],
       ["commissionsTitle", "Komisyon başlığı"],
       ["commissionsCta", "Komisyon düğmesi"],
+      ["teamEyebrow", "Ekip üst yazısı"],
+      ["teamTitle", "Ekip başlığı"],
+      ["teamText", "Ekip metni"],
+      ["teamCta", "Ekip düğmesi"],
       ["applyTitle", "Başvuru başlığı"],
       ["applyText", "Başvuru metni"],
       ["applyCta", "Başvuru düğmesi"],
@@ -1242,6 +1508,13 @@ function CopyPanel({ draft, setDraft }: PanelProps) {
   );
 }
 
+function notify(text: string) {
+  window.dispatchEvent(new CustomEvent<string>(toastEvent, { detail: text }));
+}
+
+const moveButton =
+  "inline-flex items-center gap-1.5 rounded-full border border-brand/15 px-3 py-1.5 text-ink/65 transition-colors duration-200 hover:border-brand/40 hover:bg-brand/5 hover:text-brand";
+
 function Card({
   children,
   onDelete,
@@ -1249,26 +1522,47 @@ function Card({
   onDown,
 }: {
   children: ReactNode;
-  onDelete?: () => void;
+  onDelete?: () => void | boolean;
   onUp?: () => void;
   onDown?: () => void;
 }) {
   return (
-    <article className="space-y-4 rounded-3xl border border-brand/10 bg-white p-5">
+    <article className="space-y-4 rounded-3xl border border-brand/10 bg-white p-5 transition-shadow duration-500">
       {children}
-      <div className="flex gap-3 text-sm">
+      <div className="flex flex-wrap items-center gap-2 border-t border-brand/10 pt-4 text-sm">
         {onUp ? (
-          <button type="button" onClick={onUp} className="text-ink/55 hover:text-brand">
+          <button type="button" onClick={onUp} className={moveButton}>
+            <svg viewBox="0 0 16 16" fill="none" className="size-3.5" aria-hidden="true">
+              <path d="M8 12.5 V3.5 M4 7.5 L8 3.5 L12 7.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
             Yukarı
           </button>
         ) : null}
         {onDown ? (
-          <button type="button" onClick={onDown} className="text-ink/55 hover:text-brand">
+          <button type="button" onClick={onDown} className={moveButton}>
+            <svg viewBox="0 0 16 16" fill="none" className="size-3.5" aria-hidden="true">
+              <path d="M8 3.5 V12.5 M4 8.5 L8 12.5 L12 8.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
             Aşağı
           </button>
         ) : null}
         {onDelete ? (
-          <button type="button" onClick={onDelete} className="ml-auto text-brand">
+          <button
+            type="button"
+            onClick={() => {
+              if (onDelete() !== false) notify("Silindi. Kalıcı olması için Kaydet’e bas.");
+            }}
+            className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-brand/25 px-4 py-1.5 font-medium text-brand transition-colors duration-200 hover:border-brand hover:bg-brand hover:text-white"
+          >
+            <svg viewBox="0 0 16 16" fill="none" className="size-3.5" aria-hidden="true">
+              <path
+                d="M3 4.5 H13 M6.5 4.5 V3 H9.5 V4.5 M4.5 4.5 L5.2 13 H10.8 L11.5 4.5 M7 7 V10.5 M9 7 V10.5"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
             Sil
           </button>
         ) : null}

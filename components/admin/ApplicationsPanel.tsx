@@ -21,11 +21,19 @@ const kindLabel: Record<ApplicationKind, string> = {
   delegasyon: "Delegasyon",
 };
 
+const toastText: Record<ApplicationStatus, string> = {
+  yeni: "Başvuru yeni olarak işaretlendi",
+  incelendi: "Başvuru incelemeye alındı",
+  kabul: "Başvuru onaylandı",
+  red: "Başvuru reddedildi",
+};
+
 export function ApplicationsPanel() {
   const [rows, setRows] = useState<ApplicationRecord[]>([]);
   const [openId, setOpenId] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState<{ id: number; text: string } | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -48,7 +56,14 @@ export function ApplicationsPanel() {
     return () => window.clearTimeout(start);
   }, [load]);
 
+  useEffect(() => {
+    if (!toast) return;
+    const timer = window.setTimeout(() => setToast(null), 5000);
+    return () => window.clearTimeout(timer);
+  }, [toast]);
+
   async function setStatus(row: ApplicationRecord, status: ApplicationStatus) {
+    if (!window.confirm("Bu işlemi gerçekleştirmek istediğinize emin misiniz?")) return;
     const response = await fetch(`/api/admin/applications/${row.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -59,7 +74,9 @@ export function ApplicationsPanel() {
       setError(body?.error ?? "Durum güncellenemedi.");
       return;
     }
+    setError("");
     setRows((current) => current.map((item) => (item.id === row.id && item.kind === row.kind ? { ...item, status } : item)));
+    setToast({ id: Date.now(), text: toastText[status] });
   }
 
   async function remove(row: ApplicationRecord) {
@@ -80,6 +97,21 @@ export function ApplicationsPanel() {
 
   return (
     <div className="space-y-4">
+      {toast ? (
+        <div
+          key={toast.id}
+          role="status"
+          aria-live="polite"
+          className="fixed right-4 bottom-4 z-50 flex items-center gap-3 rounded-2xl border border-brand/15 bg-white py-3 pr-5 pl-4 text-sm font-medium text-brand shadow-[0_18px_40px_-20px_rgba(108,17,16,0.55)]"
+        >
+          <span className="flex size-6 items-center justify-center rounded-full bg-brand text-white" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" className="size-3.5">
+              <path d="M3.5 8.5 L6.5 11.5 L12.5 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+          {toast.text}
+        </div>
+      ) : null}
       {error ? <p className="rounded-2xl bg-brand/10 px-4 py-3 text-sm text-brand">{error}</p> : null}
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm text-ink/60">{rows.length} başvuru</p>

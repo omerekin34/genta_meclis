@@ -5,7 +5,7 @@ import { commissions, iconNames, type IconName } from "@/data/commissions";
 import { sponsorMarks, sponsors, type SponsorMark } from "@/data/sponsors";
 import { communityJoinMessage, coordinators, navItems, practicalNotes, site, whatsappQuestions } from "@/data/site";
 import { defaultCopy } from "./site-copy";
-import type { Commission, Content, Coordinator, HomeStat, Sponsor, StatSource } from "./content-types";
+import { teamLeadGroup, type Commission, type Content, type Coordinator, type HomeStat, type Sponsor, type StatSource } from "./content-types";
 
 const settingsId = "live";
 
@@ -99,6 +99,7 @@ export function defaultContent(): Content {
       id: `team-${index + 1}`,
       name: person.name,
       role: person.role,
+      group: teamLeadGroup,
       school: "",
       photo: "",
     })),
@@ -240,6 +241,7 @@ export function normalizeContent(value: unknown): Content {
             id: text(member.id) || `team-${index + 1}`,
             name: text(member.name),
             role: text(member.role),
+            group: text(member.group) || (/genel koordinat/i.test(text(member.role)) ? teamLeadGroup : ""),
             school: text(member.school),
             photo: text(member.photo),
           };

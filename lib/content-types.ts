@@ -11,10 +11,22 @@ export type Coordinator = {
   whatsapp: string;
 };
 
+export const teamLeadGroup = "genel";
+export const teamAcademicGroup = "akademik";
+
+export const teamUnits = [
+  { value: "lojistik", label: "Lojistik Ekibi", short: "Lojistik" },
+  { value: "halkla-iliskiler", label: "Halkla İlişkiler Ekibi", short: "Halkla İlişkiler" },
+  { value: "sosyal-medya", label: "Sosyal Medya Ekibi", short: "Sosyal Medya" },
+  { value: "tasarim", label: "Tasarım Ekibi", short: "Tasarım" },
+  { value: "basin", label: "Basın Ekibi", short: "Basın" },
+] as const;
+
 export type TeamMember = {
   id: string;
   name: string;
   role: string;
+  group: string;
   school: string;
   photo: string;
 };
