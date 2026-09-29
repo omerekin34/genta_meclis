@@ -1,3 +1,5 @@
+import agendas from "./agendas.json";
+
 export const iconNames = [
   "parliament",
   "health",
@@ -8,6 +10,8 @@ export const iconNames = [
   "interior",
   "faith",
   "budget",
+  "constitution",
+  "turkic",
 ] as const;
 
 export type IconName = (typeof iconNames)[number];
@@ -19,16 +23,26 @@ export type CommissionMedia = {
   src?: string;
 };
 
+export type AgendaItem = {
+  id: string;
+  title: string;
+  text: string;
+};
+
 export type Commission = {
   slug: string;
   name: string;
   fullName: string;
   summary: string;
   description: string;
-  agenda: string[];
+  agenda: AgendaItem[];
   icon: IconName;
   media: CommissionMedia[];
 };
+
+function agenda(slug: keyof typeof agendas): AgendaItem[] {
+  return agendas[slug].map((item, index) => ({ id: `${slug}-gundem-${index + 1}`, ...item }));
+}
 
 function media(prefix: string): CommissionMedia[] {
   return [
@@ -43,19 +57,15 @@ function media(prefix: string): CommissionMedia[] {
 
 export const commissions: Commission[] = [
   {
-    slug: "tbmm",
-    name: "TBMM Genel Kurulu",
-    fullName: "Türkiye Büyük Millet Meclisi Genel Kurul Simülasyonu",
-    summary: "Komisyon metinlerinin görüşüldüğü, düzeltildiği ve oylandığı nihai kürsü.",
+    slug: "anayasa",
+    name: "Anayasa Komisyonu",
+    fullName: "Anayasa Komisyonu",
+    summary: "Temel hak ve özgürlükler ile devlet düzeninin anayasal çerçevesi.",
     description:
-      "Genel kurul, komisyonlardan gelen metinlerin bütün meclise açıldığı yerdir. Delegeler söz alır, önerge verir ve oturumun usulüne göre oy kullanır. Bu komisyon, meclis ritminin tamamını görmek isteyen katılımcılar içindir.",
-    agenda: [
-      "Genel kurul içtüzüğü ve söz alma düzeni",
-      "Komisyon raporlarının okunması ve düzeltilmesi",
-      "Gençlik politikalarında öncelik sırası üzerine kapanış oylaması",
-    ],
-    icon: "parliament",
-    media: media("tbmm"),
+      "Anayasa Komisyonu, bütün yasaların dayandığı metni masaya yatırır. Delegeler temel hakları, kuvvetler ayrılığını ve anayasa değişikliğinin usulünü tartışır, önerilerini gerekçesiyle birlikte yazıya döker.",
+    agenda: agenda("anayasa"),
+    icon: "constitution",
+    media: media("anayasa"),
   },
   {
     slug: "saglik",
@@ -64,11 +74,7 @@ export const commissions: Commission[] = [
     summary: "Koruyucu sağlık, gençlik ruh sağlığı ve sosyal politika başlıklarını çalışır.",
     description:
       "Sağlık komisyonu, gençlerin doğrudan etkilendiği sağlık ve sosyal politika başlıklarında çözüm metni hazırlar. Tartışma, hizmete erişim, okul sağlığı ve istihdama geçiş etrafında yürür.",
-    agenda: [
-      "Okullarda koruyucu sağlık hizmetleri",
-      "Gençlerin ruh sağlığı desteğine erişimi",
-      "Eğitimden istihdama geçişte sosyal politika",
-    ],
+    agenda: agenda("saglik"),
     icon: "health",
     media: media("saglik"),
   },
@@ -79,11 +85,7 @@ export const commissions: Commission[] = [
     summary: "Hukuka erişim, hak arama kültürü ve gençlerin adaletle ilişkisi.",
     description:
       "Adalet komisyonu, hukukun gündelik hayattaki karşılığını konuşur. Amaç, cezalandırma ayrıntısı üretmek değil; hak arama yollarını, adli yardıma erişimi ve uzlaşı usullerini anlamaktır.",
-    agenda: [
-      "Gençlerin adli yardıma erişimi",
-      "Okullarda hak okuryazarlığı",
-      "Uyuşmazlıklarda arabuluculuk ve uzlaşı",
-    ],
+    agenda: agenda("adalet"),
     icon: "justice",
     media: media("adalet"),
   },
@@ -94,11 +96,7 @@ export const commissions: Commission[] = [
     summary: "Eğitimde fırsat eşitliği, kültür politikaları ve gençlik programları.",
     description:
       "Millî Eğitim komisyonu, okulun yalnızca ders değil bir kamusal alan olduğu kabulüyle çalışır. Müfredatta tartışma kültürü, kültürel mirasa erişim ve okul sporları gündemin omurgasıdır.",
-    agenda: [
-      "Müfredatta müzakere ve tartışma kültürü",
-      "Kültürel mirasa eşit erişim",
-      "Okul sporları ve gençlik programları",
-    ],
+    agenda: agenda("milli-egitim"),
     icon: "education",
     media: media("egitim"),
   },
@@ -109,11 +107,7 @@ export const commissions: Commission[] = [
     summary: "Savunma politikalarının sivil denetimi ve güvenlik okuryazarlığı.",
     description:
       "Bu komisyon bir harekât masası değildir. Gençler, savunma ve güvenlik politikalarının demokratik denetimini, şeffaflığı ve afetlerde sivil savunma bilincini sivil bir dille tartışır.",
-    agenda: [
-      "Güvenlik politikalarında demokratik denetim ve şeffaflık",
-      "Afetlerde sivil savunma bilinci",
-      "Gençlerin kamu güvenliği tartışmasındaki yeri",
-    ],
+    agenda: agenda("milli-savunma"),
     icon: "defense",
     media: media("savunma"),
   },
@@ -124,11 +118,7 @@ export const commissions: Commission[] = [
     summary: "Diplomasi, kamu diplomasisi ve çok taraflı ilişkiler.",
     description:
       "Dışişleri komisyonu, uluslararası gündemi gençlerin sözüne açar. Müzakere burada bir protokol ezberi değil, karşı tarafı anlayarak konum almaktır.",
-    agenda: [
-      "Gençlik diplomasisi ve değişim programları",
-      "İklim müzakerelerinde ortak sorumluluk",
-      "Kültürel diplomasi ve uluslararası temsil",
-    ],
+    agenda: agenda("disisleri"),
     icon: "diplomacy",
     media: media("disisleri"),
   },
@@ -139,11 +129,7 @@ export const commissions: Commission[] = [
     summary: "Yerel yönetimler, afet koordinasyonu ve güvenli kentler.",
     description:
       "İçişleri komisyonu, kentin gündelik işleyişini ve vatandaş katılımını ele alır. Tartışma, gençlik alanları, afet yönetimi ve yerel karar süreçlerine katılım üzerinde durur.",
-    agenda: [
-      "Afet yönetiminde yerel koordinasyon",
-      "Güvenli kentler ve gençlik mekânları",
-      "Yerel kararlara vatandaş katılımı",
-    ],
+    agenda: agenda("icisleri"),
     icon: "interior",
     media: media("icisleri"),
   },
@@ -154,28 +140,20 @@ export const commissions: Commission[] = [
     summary: "Din hizmetleri, toplumsal dayanışma ve birlikte yaşama.",
     description:
       "Diyanet komisyonu, inanç hizmetleri ile toplumsal dayanışmayı aynı ciddiyetle konuşur. Çerçeve; gençlere yönelik manevi danışmanlık, yardımlaşma ve farklı inançlara saygıdır.",
-    agenda: [
-      "Gençlere yönelik manevi danışmanlık",
-      "Toplumsal dayanışma ve yardımlaşma",
-      "İnanç özgürlüğü ve birlikte yaşama",
-    ],
+    agenda: agenda("diyanet"),
     icon: "faith",
     media: media("diyanet"),
   },
   {
-    slug: "plan-butce",
-    name: "Plan ve Bütçe Komisyonu",
-    fullName: "Plan ve Bütçe Komisyonu",
-    summary: "Kamu kaynaklarının önceliği ve gençlik harcamalarının görünürlüğü.",
+    slug: "turk-devletleri",
+    name: "Türk Devletleri Komisyonu",
+    fullName: "Türk Devletleri Komisyonu",
+    summary: "Türk devletleri arasında eğitim, kültür ve ekonomi alanında iş birliği.",
     description:
-      "Plan ve Bütçe, bir temenniyi kaleme değil kaynağa bağlar. Komisyon, eğitim ve gençlik başlıklarının bütçede nasıl göründüğünü, önceliğin nasıl kurulduğunu ve harcamanın nasıl anlatıldığını tartışır.",
-    agenda: [
-      "Gençlik ve eğitim harcamalarında öncelik",
-      "Kaynakların şeffaf anlatımı",
-      "Yerel gençlik programlarının finansmanı",
-    ],
-    icon: "budget",
-    media: media("butce"),
+      "Türk Devletleri Komisyonu, ortak tarih ve dil bağından doğan iş birliğini ele alır. Delegeler gençlik hareketliliğini, eğitim ve kültür alanındaki ortak çalışmaları ve ekonomik bağları tartışır.",
+    agenda: agenda("turk-devletleri"),
+    icon: "turkic",
+    media: media("turk-devletleri"),
   },
 ];
 

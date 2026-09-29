@@ -95,6 +95,13 @@ export function defaultContent(): Content {
       tel: person.tel,
       whatsapp: person.whatsapp,
     })),
+    team: coordinators.map((person, index) => ({
+      id: `team-${index + 1}`,
+      name: person.name,
+      role: person.role,
+      school: "",
+      photo: "",
+    })),
     navItems: navItems.map((item) => ({ href: item.href, label: item.label })),
     practicalNotes: practicalNotes.map((note, index) => ({
       id: `note-${index + 1}`,
@@ -116,7 +123,7 @@ export function defaultContent(): Content {
     },
     commissions: commissions.map((commission) => ({
       ...commission,
-      agenda: [...commission.agenda],
+      agenda: commission.agenda.map((item) => ({ ...item })),
       media: commission.media.map((item) => ({ ...item })),
     })),
     sponsors: sponsors.map((sponsor) => ({ ...sponsor })),
@@ -146,7 +153,16 @@ function normalizeCoordinator(value: unknown, index: number): Coordinator {
 function normalizeCommission(value: unknown, index: number): Commission {
   const row = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
   const media = Array.isArray(row.media) ? row.media : [];
-  const agenda = Array.isArray(row.agenda) ? row.agenda.map((item) => text(item)).filter(Boolean) : [];
+  const agenda = (Array.isArray(row.agenda) ? row.agenda : [])
+    .map((item, agendaIndex) => {
+      const agendaRow: Record<string, unknown> = item && typeof item === "object" ? (item as Record<string, unknown>) : { title: item };
+      return {
+        id: text(agendaRow.id) || `gundem-${index + 1}-${agendaIndex + 1}`,
+        title: text(agendaRow.title),
+        text: text(agendaRow.text),
+      };
+    })
+    .filter((item) => item.title || item.text);
   return {
     slug: text(row.slug) || `komisyon-${index + 1}`,
     name: text(row.name),
@@ -217,6 +233,18 @@ export function normalizeContent(value: unknown): Content {
     coordinators: Array.isArray(row.coordinators)
       ? row.coordinators.map(normalizeCoordinator)
       : fallback.coordinators,
+    team: Array.isArray(row.team)
+      ? row.team.map((item, index) => {
+          const member = item && typeof item === "object" ? (item as Record<string, unknown>) : {};
+          return {
+            id: text(member.id) || `team-${index + 1}`,
+            name: text(member.name),
+            role: text(member.role),
+            school: text(member.school),
+            photo: text(member.photo),
+          };
+        })
+      : fallback.team,
     navItems: Array.isArray(row.navItems)
       ? row.navItems.map((item) => {
           const nav = item && typeof item === "object" ? (item as Record<string, unknown>) : {};

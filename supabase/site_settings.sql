@@ -65,6 +65,10 @@ values (
       "label": "Hakkımızda"
     },
     {
+      "href": "/ekibimiz",
+      "label": "Ekibimiz"
+    },
+    {
       "href": "/komisyonlar",
       "label": "Komisyonlar"
     },
@@ -161,45 +165,57 @@ values (
   },
   "commissions": [
     {
-      "slug": "tbmm",
-      "name": "TBMM Genel Kurulu",
-      "fullName": "Türkiye Büyük Millet Meclisi Genel Kurul Simülasyonu",
-      "summary": "Komisyon metinlerinin görüşüldüğü, düzeltildiği ve oylandığı nihai kürsü.",
-      "description": "Genel kurul, komisyonlardan gelen metinlerin bütün meclise açıldığı yerdir. Delegeler söz alır, önerge verir ve oturumun usulüne göre oy kullanır. Bu komisyon, meclis ritminin tamamını görmek isteyen katılımcılar içindir.",
+      "slug": "anayasa",
+      "name": "Anayasa Komisyonu",
+      "fullName": "Anayasa Komisyonu",
+      "summary": "Temel hak ve özgürlükler ile devlet düzeninin anayasal çerçevesi.",
+      "description": "Anayasa Komisyonu, bütün yasaların dayandığı metni masaya yatırır. Delegeler temel hakları, kuvvetler ayrılığını ve anayasa değişikliğinin usulünü tartışır, önerilerini gerekçesiyle birlikte yazıya döker.",
       "agenda": [
-        "Genel kurul içtüzüğü ve söz alma düzeni",
-        "Komisyon raporlarının okunması ve düzeltilmesi",
-        "Gençlik politikalarında öncelik sırası üzerine kapanış oylaması"
+        {
+          "id": "anayasa-gundem-1",
+          "title": "İdam Cezasının Anayasal Boyutu, Yaşama Hakkının Mutlaklığı ve Uluslararası Hukuki Taahhütlerle Uyum Krizlerinin Sınırlarının Belirlenmesi",
+          "text": "Ağır suçlar ve kamu vicdanını derinden yaralayan eylemler kapsamında idam cezasının ceza adalet sistemine yeniden dahil edilmesi taleplerinin; Anayasa’nın 17. maddesinde güvence altına alınan yaşama hakkının mutlaklığı, suç ve cezaların geriye yürümezliği ilkesi ile ceza hukukunun temel evrensel ilkeleri çerçevesinde değerlendirilmesi. Türkiye’nin taraf olduğu Avrupa İnsan Hakları Sözleşmesi (AİHS) ek 6 ve 13 numaralı protokoller başta olmak üzere uluslararası sözleşmelerden doğan bağlayıcı taahhütler ile ulusal egemenlik yetkilerinin çatışma noktalarının masaya yatırılması; infaz rejiminde yapılabilecek olası değişikliklerin devletin uluslararası hukuki statüsü, dış ilişkileri ve uluslararası yargı organları nezdindeki sorumlulukları üzerindeki etkilerinin tespit edilmesi; olası bir anayasal düzenleme sürecinde yasama organının yetki sınırları ile anayasa yargısının denetim parametrelerinin hukuki çerçevesinin çizilmesi."
+        },
+        {
+          "id": "anayasa-gundem-2",
+          "title": "Anayasa Değişiklikleri ve Yasama Süreçlerinde \"Halk Teşebbüsü\" Mekanizmasının Doğrudan Demokrasi Enstrümanı Olarak Anayasal Çerçeveye Dahil Edilmesinin Sınırlarının Belirlenmesi",
+          "text": "Temsili demokrasi ile doğrudan demokrasi unsurlarının entegrasyonu amacıyla, Anayasa’nın 67. maddesinde düzenlenen seçme, seçilme ve siyasi faaliyette bulunma hakları ile Madde 175’teki anayasa değişikliği usullerinin yeni bir katılım mekanizması üzerinden yeniden kurgulanmasının değerlendirilmesi. Belirli bir seçmen nisabının (toplanan imza sayısının) katılımıyla vatandaşların doğrudan kanun teklifi verme veya anayasa değişikliği sürecini başlatabilme yetkisinin (halk teşebbüsü) demokratik meşruiyet üzerindeki etkilerinin masaya yatırılması; bu mekanizmanın popülist siyaset dinamiklerince istismar edilmesi, temel hak ve özgürlükler ile azınlık haklarını riske atma tehlikeleri, iç siyasi istikrar ve parlamentonun teknik yasa yapma kalitesini bozma risklerinin analizi; Türkiye TBMM’nin devredilemez yasama yetkisi ile halk iradesinin doğrudan tecelli etmesi arasındaki dengenin sağlanmasına yönelik anayasal usul ve denetim sınırlarının ele alınması."
+        },
+        {
+          "id": "anayasa-gundem-3",
+          "title": "Cumhurbaşkanlığı Kararnamelerinin Yetki Sınırları, Yasama Yetkisinin Münhasır Alanı ve Anayasa Mahkemesi Norm Denetim Mekanizmalarının Sınırlarının Belirlenmesi",
+          "text": "Anayasa’nın 104. maddesi uyarınca çıkarılan Cumhurbaşkanlığı Kararnamelerinin (CBK) hukuki kapsamının; mülkiyet hakkı, temel hak ve özgürlükler, kurumsal özerklik ve kamu tüzel kişiliklerinin tesisi/tasfiyesi gibi Anayasa gereği münhasıran kanunla düzenlenmesi gereken alanlara müdahalesi ekseninde değerlendirilmesi. Anayasa’nın 7. maddesindeki yasama yetkisinin devredilemezliği ilkesi ile kanun koyucunun alanına giren düzenlemelerin hukuki geçerliliği, sakatlığı ve yok hükmünde sayılma (mutlak butlan) argümanlarının anayasal kuramlar çerçevesinde masaya yatırılması; Madde 148 kapsamında Anayasa Mahkemesi’nin CBK’lar üzerindeki norm denetimi süreçlerinin, iptal kararlarının geriye yürümezliği ilkesinin yarattığı muhtemel hukuki boşlukların ve yürütmenin esnek karar alma ihtiyacı ile meclisin yasama üstünlüğü arasındaki dengenin temini amacıyla meclis onayı, idari denetim ve yasama denetimi usullerinin hukuki çerçevesinin çizilmesi."
+        }
       ],
-      "icon": "parliament",
+      "icon": "constitution",
       "media": [
         {
-          "id": "tbmm-1",
+          "id": "anayasa-1",
           "kind": "image",
           "caption": "Açılış karesi"
         },
         {
-          "id": "tbmm-2",
+          "id": "anayasa-2",
           "kind": "image",
           "caption": "Komisyon masası"
         },
         {
-          "id": "tbmm-3",
+          "id": "anayasa-3",
           "kind": "image",
           "caption": "Söz alma anı"
         },
         {
-          "id": "tbmm-4",
+          "id": "anayasa-4",
           "kind": "image",
           "caption": "Kapanış karesi"
         },
         {
-          "id": "tbmm-5",
+          "id": "anayasa-5",
           "kind": "video",
           "caption": "Oturum kaydı"
         },
         {
-          "id": "tbmm-6",
+          "id": "anayasa-6",
           "kind": "video",
           "caption": "Kısa değerlendirme"
         }
@@ -212,9 +228,21 @@ values (
       "summary": "Koruyucu sağlık, gençlik ruh sağlığı ve sosyal politika başlıklarını çalışır.",
       "description": "Sağlık komisyonu, gençlerin doğrudan etkilendiği sağlık ve sosyal politika başlıklarında çözüm metni hazırlar. Tartışma, hizmete erişim, okul sağlığı ve istihdama geçiş etrafında yürür.",
       "agenda": [
-        "Okullarda koruyucu sağlık hizmetleri",
-        "Gençlerin ruh sağlığı desteğine erişimi",
-        "Eğitimden istihdama geçişte sosyal politika"
+        {
+          "id": "saglik-gundem-1",
+          "title": "Özel Hastaneler, Resmi Olmayan Sağlık Yapılanmaları ve Yetkisiz Merkezlerde Gerçekleştirilen Ölümcül Risk Barındıran Müdahaleler Ekseninde Hekim Denetimi ile İdari Yaptırım Mekanizmalarının Sınırlarının Belirlenmesi",
+          "text": "Özellikle son dönemde ruhsatlı özel hastaneler, merdiven altı işletmeler ile resmi statüsü ve yetkisi bulunmayan kaçak sağlık merkezlerinde; branş dışı, uzmanlık sınırını aşan veya ehliyetsiz doktorlar ve yetkisiz şahıslarca gerçekleştirilen estetik operasyonlar dahil tüm cerrahi, tıbbi ve invaziv müdahalelerin yol açtığı ölümcül vakaların ile kalıcı sağlık hasarlarının değerlendirilmesi. Kayıt dışı yürütülen ya da özel hastaneler bünyesinde denetimsiz bırakılan alanlarda hekimlerin mesleki icra yetki sınırlarının, lisans geçerliliklerinin ve Sağlık Bakanlığı Teftiş Kurulu’nun özel ve kaçak kurumlar üzerindeki yaptırım yetkilerinin hukuki çerçevesinin çizilmesi; resmi olmayan kurumlar ile mevzuata ve tıp etiğine aykırı faaliyet gösteren özel hastaneler, hekimler ve sağlık çalışanlarına yönelik ruhsat iptali, faaliyetten men ve meslekten men süreçleri ile uygulanacak idari, hukuki ve mali yaptırımların idare hukuku prensipleri doğrultusunda ele alınması."
+        },
+        {
+          "id": "saglik-gundem-2",
+          "title": "Ötenazi, Biyoetik ve Terminal Dönem Sağlık Hizmetleri Ekseninde Bireysel Özerklik ile Yaşam Hakkının İdari ve Hukuki Sınırlarının Belirlenmesi",
+          "text": "Bireysel özerklik, yaşam hakkı, tıp etiği ve anayasal ilkelere bağlı kalınarak, terminal dönemdeki (tedavisi mümkün olmayan son evre) hastalar açısından ötenazinin hukuki statüsünün değerlendirilmesi. Tıbbi süreçlerde pasif ötenazi, aktif ötenazi ve hekim destekli intihar kavramlarının biyoetik kurullar ve idare hukuku prensipleri doğrultusunda masaya yatırılması; Sağlık Bakanlığı bünyesinde kurulacak Üst Biyoetik Kurullarının yetki alanları, hekimlerin vicdani reddetme hakları, tıbbi müdahaleyi reddetme vasiyetnamelerinin (önceden beyan edilen tıbbi direktifler) geçerlilik şartları ile hastane etiği komitelerinin denetim sorumluluklarının hukuki çerçevesinin çizilmesi."
+        },
+        {
+          "id": "saglik-gundem-3",
+          "title": "Üreme Sağlığı Hizmetleri ve Gebeliğin Sona Erdirilmesi (Kürtaj) Süreçlerinde Biyoetik Sorumluluklar, Tıbbi Zorunluluklar ve İdari Denetim Sınırlarının Belirlenmesi",
+          "text": "Kadın sağlığı, üreme hakları ve toplumsal dinamikler çerçevesinde gebeliğin sona erdirilmesi (kürtaj) uygulamalarının yasal ve tıbbi sınırlarının değerlendirilmesi. İsteğe bağlı gebelik sonlandırma süreçlerindeki yasal hafta sınırları, hekimlerin vicdani ret hakkının kamusal sağlık hizmeti sunumuna etkisi ve tıbbi zorunluluk hallerinde (anne hayatı veya ağır fetal anomaliler) karar alacak hastane kurullarının çalışma usullerinin masaya yatırılması; kamu ve özel sağlık kuruluşlarında üreme sağlığı hizmetlerine erişimin şeffaflığı, merdiven altı gebelik sonlandırma işlemlerinin engellenmesi amacıyla Sağlık Bakanlığı Teftiş Kurulu'nun denetim yetkileri ile uygulanacak idari ve idari yaptırım sınırlarının hukuki çerçevesinin çizilmesi."
+        }
       ],
       "icon": "health",
       "media": [
@@ -257,9 +285,21 @@ values (
       "summary": "Hukuka erişim, hak arama kültürü ve gençlerin adaletle ilişkisi.",
       "description": "Adalet komisyonu, hukukun gündelik hayattaki karşılığını konuşur. Amaç, cezalandırma ayrıntısı üretmek değil; hak arama yollarını, adli yardıma erişimi ve uzlaşı usullerini anlamaktır.",
       "agenda": [
-        "Gençlerin adli yardıma erişimi",
-        "Okullarda hak okuryazarlığı",
-        "Uyuşmazlıklarda arabuluculuk ve uzlaşı"
+        {
+          "id": "adalet-gundem-1",
+          "title": "İfade Özgürlüğü, Dini Değerlerin Korunması ve 5816 Sayılı Atatürk Aleyhine İşlenen Suçlar Hakkında Kanun Ekseninde Hukuki Dengenin Belirlenmesi",
+          "text": "Anayasa ile güvence altına alınan ifade ve düşünceyi açıklama özgürlüğü ile semboller ve koruma kanunları arasındaki sınırların değerlendirilmesi. 5816 sayılı Kanun kapsamında Atatürk’ün hatırasına hakaret suçları ile TCK m. 216 uyarınca inanç, din ve kutsal değerlere yönelik tahrik, propaganda ve hakaret eylemlerinin ceza hukuku nezdindeki tanım ve yaptırım sınırlarının; nefret söylemi ve eleştiri hakkı ayrımı gözetilerek idari ve hukuki çerçevesinin çizilmesi."
+        },
+        {
+          "id": "adalet-gundem-2",
+          "title": "Yargı Süreçlerinde Yapay Zekâ ve Dijital Destek Sistemlerinin Kullanımı, Hukuki Geçerliliği ve Etik Denetim Sınırlarının Belirlenmesi",
+          "text": "Adalet hizmetlerinin hızlandırılması amacıyla adli ve idari yargı süreçlerinde yapay zekâ tabanlı karar destek sistemleri, otomatik hukuki analiz araçları ve dijital delil inceleme altyapılarının kullanılabilirliğinin değerlendirilmesi. Yapay zekâ algoritmalarının yargı bağımsızlığı, adil yargılanma hakkı, kişisel verilerin korunması ve \"insan gözetimi\" (human-in-the-loop) prensibi çerçevesinde hukuki statüsünün ve Adalet Bakanlığı denetim mekanizmalarının sınırlarının ele alınması."
+        },
+        {
+          "id": "adalet-gundem-3",
+          "title": "Çocuk İşçiliği ile Mücadele, Çalışma Yaşı Sınırları ve İdari Yaptırım Mekanizmalarının Sınırlarının Belirlenmesi",
+          "text": "Sosyoekonomik gerekçelerle veya kayıt dışı sektörlerde çocukların iş gücü olarak kullanılması krizinin çocuk hakları ve iş hukuku çerçevesinde değerlendirilmesi. Çalışma yaşı sınırları, muafiyet durumları, çıraklık/staj eğitim süreçlerinin istismar edilmesinin engellenmesi; Çalışma ve Sosyal Güvenlik Bakanlığı teftiş mekanizmaları marifetiyle çocuk işçi çalıştıran işletmelere uygulanacak idari, mali ve adli yaptırım sınırlarının çizilmesi."
+        }
       ],
       "icon": "justice",
       "media": [
@@ -302,9 +342,21 @@ values (
       "summary": "Eğitimde fırsat eşitliği, kültür politikaları ve gençlik programları.",
       "description": "Millî Eğitim komisyonu, okulun yalnızca ders değil bir kamusal alan olduğu kabulüyle çalışır. Müfredatta tartışma kültürü, kültürel mirasa erişim ve okul sporları gündemin omurgasıdır.",
       "agenda": [
-        "Müfredatta müzakere ve tartışma kültürü",
-        "Kültürel mirasa eşit erişim",
-        "Okul sporları ve gençlik programları"
+        {
+          "id": "milli-egitim-gundem-1",
+          "title": "Çağdaş Eğitim Sistemi İçerisinde Zorunlu Din Eğitiminin Pedagojik Boyutları ile İmam Hatip Okullarının Kontenjan, Nitelik ve Kurumsal Dönüşüm Opsiyonlarının Değerlendirilmesi",
+          "text": "Türkiye’deki temel ve ortaöğretim kurumlarında uygulanan zorunlu din kültürü ve ahlak bilgisi dersleri ile seçmeli dini içerikli ders havuzlarının pedagojik ilkelere, anayasal din ve vicdan hürriyetine uyumunun masaya yatırılması. Din eğitimi müfredatının çoğulculaştırılması veya mevcut yapının korunması kurallarının belirlenmesi; sayıları, kontenjanları ve bütçe payları son yıllarda artış gösteren İmam Hatip okullarının akademik başarı oranları ve doluluk kapasiteleri ekseninde masaya yatırılması; bölgesel ihtiyaç analizleri neticesinde atıl veya gereğinden fazla olduğu tespit edilen İmam Hatip okullarının kademeli olarak kapatılarak Fen, Sosyal Bilimler veya Mesleki ve Teknik Anadolu Liselerine dönüştürülmesi opsiyonlarının ve bu okulların fiziki/mali kaynaklarının verimliliğinin eğitim mevzuatı kapsamında ele alınması."
+        },
+        {
+          "id": "milli-egitim-gundem-2",
+          "title": "FETÖ Sonrası Kapatılan Harp Okulları/Askeri Okullar Ekseninde TSK Alt Kademe Teknik Personel ve Subay İhtiyacının \"Tam Bağımsız Askeri Liseler\" ile Karşılanması Opsiyonunun İncelenmesi",
+          "text": "2016 yılındaki yasal düzenlemelerle kapatılan askeri liselerin (Kuleli, Maltepe, Işıklar, Deniz Lisesi) TSK'nın subay, astsubay ve siber/teknik personel havuzundaki uzun vadeli etkilerinin masaya yatırılması. Askeri disiplin ve kurumsal kültürün lise çağında başlaması gerektiğini savunan \"Tam Bağımsız Askeri Liselerin Yeniden Açılması\" tezi ile geçmişteki vesayet ve sızma girişimlerini engellemek adına mevcut sivil üniversite/Harp Okulu modelinin (MSÜ) korunması tezi arasındaki kurumsal stratejilerin değerlendirilmesi; askeri liselerin yeniden açılması halinde müfredatın MEB denetiminde yapay zekâ, havacılık ve siber güvenlik odaklı modernizasyonu ile bu kurumlara öğrenci alımındaki şeffaflık ve liyakat mekanizmalarının yasal çerçevede ele alınması."
+        },
+        {
+          "id": "milli-egitim-gundem-3",
+          "title": "Eğitim Sisteminde Farklı Ana Dillerin Yeri, Bölgesel Seçmeli Dil Dersleri ve Anadili Uygulamalarının İdari ve Hukuki Sınırlarının Belirlenmesi",
+          "text": "Örgün eğitim müfredatı içerisinde Türkçe dışındaki farklı anadillerin öğretimi, pedagojik statüsü ve bölgesel ihtiyaçlar doğrultusunda sunulan seçmeli dil derslerinin işleyiş altyapısının değerlendirilmesi. Anayasal ilkeler, eğitim birliği (Tevhid-i Tedrisat) ve kamusal hizmet sunumu ilkeleri saklı kalmak kaydıyla; yaşayan diller ve lehçeler kapsamında yürütülen müfredat çalışmalarının, öğretmen istihdamının ve ders materyallerinin kapsayıcılığının masaya yatırılması; yerel ve bölgesel talepler doğrultusunda seçmeli anadili derslerinin açılma şartları, sınıf oluşturma kriterleri ile Milli Eğitim Bakanlığı’nın bu alandaki idari denetim, program geliştirme ve standart belirleme yetkilerinin hukuki çerçevesinin çizilmesi."
+        }
       ],
       "icon": "education",
       "media": [
@@ -347,9 +399,21 @@ values (
       "summary": "Savunma politikalarının sivil denetimi ve güvenlik okuryazarlığı.",
       "description": "Bu komisyon bir harekât masası değildir. Gençler, savunma ve güvenlik politikalarının demokratik denetimini, şeffaflığı ve afetlerde sivil savunma bilincini sivil bir dille tartışır.",
       "agenda": [
-        "Güvenlik politikalarında demokratik denetim ve şeffaflık",
-        "Afetlerde sivil savunma bilinci",
-        "Gençlerin kamu güvenliği tartışmasındaki yeri"
+        {
+          "id": "milli-savunma-gundem-1",
+          "title": "Türk Silahlı Kuvvetleri Envanterindeki Eskiyen Askerî Teçhizatın Modernizasyonu, Yerlileştirme Stratejileri ve Operasyonel Yeterliliğin Sürdürülebilirliğinin Belirlenmesi",
+          "text": "Türk Silahlı Kuvvetleri (TSK) envanterinde bulunan, kullanım ömrünü tamamlamış veya teknolojik açıdan eskimiş kara, hava ve deniz unsurlarının envanter durumunun ve operasyonel harfiyete etkilerinin değerlendirilmesi. Kritik askerî teçhizatın idame-işletme maliyetleri ile yeni nesil savunma teknolojilerine geçiş süreçlerinin masaya yatırılması; Millî Savunma Bakanlığı ve Savunma Sanayii Başkanlığı koordinasyonunda yürütülen yerli ve millî modernizasyon projelerinin tedarik takvimleri, kriz dönemlerindeki lojistik sürdürülebilirlik ilkeleri ve Silahlı Kuvvetler'in harbe hazırlık seviyesini korumaya yönelik idari, teknik ve mali tedbirlerin hukuki ve kurumsal çerçevesinin çizilmesi."
+        },
+        {
+          "id": "milli-savunma-gundem-2",
+          "title": "Türkiye’deki Yabancı Askerî Üs ve Tesislerin Hukuki Statüsü, Denetim Mekanizmaları ve Ulusal Egemenlik İlkeleri Çerçevesinde Faaliyet Sınırlarının Belirlenmesi",
+          "text": "Türkiye Cumhuriyeti sınırları içerisinde ikili veya çok taraflı uluslararası antlaşmalar (NATO vb.) kapsamında faaliyet gösteren yabancı askerî üs, tesis ve unsurların hukuki statülerinin ve kullanım usullerinin değerlendirilmesi. Tesislerin kullanım amaçları, icra edilen askerî/istihbari faaliyetlerin sınırları, kuvvet kaydırma izinleri ve üslerdeki komuta denetim yetkilerinin ulusal güvenlik, toprak bütünlüğü ve anayasal egemenlik ilkeleri doğrultusunda masaya yatırılması; Millî Savunma Bakanlığı ile Dışişleri Bakanlığı’nın ilgili tesisler üzerindeki idari denetim, fiziki teftiş ve operasyonel onay yetkilerinin mevzuat çerçevesinde yeniden yapılandırılmasının idare ve uluslararası hukuk prensipleri doğrultusunda ele alınması."
+        },
+        {
+          "id": "milli-savunma-gundem-3",
+          "title": "Doğu Akdeniz’deki İsrail-Yunanistan Deniz İttifakı Karşısında Türkiye’nin Yeni Deniz Güvenliği Doktrini, Sınır Ötesi Üslenme ve Kıyı Savunma Stratejilerinin Belirlenmesi",
+          "text": "Doğu Akdeniz ve Ege havzasında İsrail ve Yunanistan deniz kuvvetleri arasında derinleşen askeri işbirlikleri, ortak üs kullanım anlaşmaları, Ege adalarının silahlandırılması ve savunma paktlarının, Türkiye’nin \"Mavi Vatan\" doktrini ve deniz yetki alanları üzerindeki jeostratejik tehditlerinin masaya yatırılması. Bu çoklu kuşatma riskine karşı; başta KKTC ve Libya olmak üzere jeopolitik açıdan gerekli görülen kritik bölgelerde kalıcı deniz ve hava üslerinin kurulmasına yönelik altyapı çalışmalarının yasal çerçeveye kavuşturulması; düşman unsurların olası saldırı, sızma ve çıkarma operasyonu düzenleyebileceği kritik kıyı bölgelerinin ve adalar cephesinin kıyı savunma füze sistemleri, otonom erken uyarı radarları ve asimetrik tahkimatlarla askeri olarak güçlendirilmesi; Türk Deniz Kuvvetleri’nin caydırıcılık kapasitesini artıracak insansız deniz araçları (İDA) ve denizaltı savunma harbi (DSH) teknolojilerine yönelik yatırımlar ile TSK’nın Doğu Akdeniz angajman kurallarının revize edilmesini öngören yeni askeri doktrinlerin yasal teknikler açısından ele alınması."
+        }
       ],
       "icon": "defense",
       "media": [
@@ -392,9 +456,21 @@ values (
       "summary": "Diplomasi, kamu diplomasisi ve çok taraflı ilişkiler.",
       "description": "Dışişleri komisyonu, uluslararası gündemi gençlerin sözüne açar. Müzakere burada bir protokol ezberi değil, karşı tarafı anlayarak konum almaktır.",
       "agenda": [
-        "Gençlik diplomasisi ve değişim programları",
-        "İklim müzakerelerinde ortak sorumluluk",
-        "Kültürel diplomasi ve uluslararası temsil"
+        {
+          "id": "disisleri-gundem-1",
+          "title": "Türkiye'nin TDT ve Ortadoğu Arasında Stratejik Tercihi",
+          "text": "Türkiye'nin Türk Devletleri Teşkilatı ile Ortadoğu merkezli ittifaklar arasında nasıl bir öncelik belirlemesi gerektiğinin değerlendirilmesi. Çin'in TDT ve Ortadoğu'daki etkisi, İran-İsrail rekabeti ve Türkiye'nin Pakistan, Suudi Arabistan gibi ülkelerle ilişkileri üzerinden hangi ittifak zincirinin Türkiye'nin uzun vadeli güvenlik ve jeopolitik çıkarlarına daha uygun olduğunun tartışılması."
+        },
+        {
+          "id": "disisleri-gundem-2",
+          "title": "Yeni İpek Yolu ve Türkiye'nin Küresel Jeopolitik Konumu",
+          "text": "Çin'in Yeni İpek Yolu ve Kuşak-Yol politikasıyla oluşturduğu ekonomik, siyasi ve stratejik bağlantı ağının Türkiye açısından doğuracağı fırsat ve risklerin değerlendirilmesi. Türkiye'nin bu projeye katılımcı, rakip veya seçici ortak olarak nasıl yaklaşması gerektiğinin; ekonomik kazanç ile stratejik bağımsızlık arasındaki dengenin tartışılması."
+        },
+        {
+          "id": "disisleri-gundem-3",
+          "title": "Avrupa Birliği'nin Geleceği ve Türkiye'nin AB Politikası",
+          "text": "AB'nin gelecekteki ekonomik, siyasi ve stratejik dönüşümünün Türkiye açısından değerlendirilmesi. Türkiye'nin AB'yi birincil ortak, seçici ortak, karşılıklı çıkar temelinde ortak veya ikincil bir aktör olarak görüp görmemesi; \"Made in Europe\" gibi yeni Avrupa politikalarına nasıl cevap verileceği ve Türkiye'nin AB ile ilişkilerinden ne ölçüde, hangi alanlarda ve hangi şartlarla yararlanması gerektiğinin tartışılması."
+        }
       ],
       "icon": "diplomacy",
       "media": [
@@ -437,9 +513,21 @@ values (
       "summary": "Yerel yönetimler, afet koordinasyonu ve güvenli kentler.",
       "description": "İçişleri komisyonu, kentin gündelik işleyişini ve vatandaş katılımını ele alır. Tartışma, gençlik alanları, afet yönetimi ve yerel karar süreçlerine katılım üzerinde durur.",
       "agenda": [
-        "Afet yönetiminde yerel koordinasyon",
-        "Güvenli kentler ve gençlik mekânları",
-        "Yerel kararlara vatandaş katılımı"
+        {
+          "id": "icisleri-gundem-1",
+          "title": "Siyasi Partiler, Yerel Yönetimler ve Kamu Kurumlarında Mali Harcamaların Şeffaflığı, Yolsuzluk ve Kara Para Aklama Riskleriyle Mücadelede İdari Denetim Mekanizmalarının Sınırlarının Belirlenmesi",
+          "text": "Siyasi partilerin, belediyelerin ve kamu tüzel kişiliğini haiz devlet kurumlarının bütçe kullanımları, ihale süreçleri, bağış kabul mekanizmaları ile mali harcamalarının kamu idaresi hukuku çerçevesinde değerlendirilmesi. Kamu kaynaklarının usulsüz kullanımı, hırsızlık, nitelikli nüfuz ticareti, örtülü ödenek suiistimalleri ve kayıt dışı finansal akışlar üzerinden yürütülen olası kara para aklama faaliyetlerinin engellenmesine yönelik Sayıştay, Mülkiye Müfettişliği ve MASAK arasındaki idari koordinasyon ile denetim yetki alanlarının hukuki çerçevesinin çizilmesi. Siyasi partilerin seçim kampanyası fonlamalarının, yerel yönetimlerin doğrudan temin ile ihale harcamalarının, kamu kuruluşlarına bağlı şirket ve vakıfların finansal hareketlerinin dijital şeffaflık platformları üzerinden vatandaş ve adli/idari mercilerin denetimine açılması; kamusal mal varlığı artışlarının düzenli takibi ve şeffaf idare ilkeleri doğrultusunda önleyici idari tedbirlerin ve mevzuat değişikliklerinin kapsamının ele alınması."
+        },
+        {
+          "id": "icisleri-gundem-2",
+          "title": "\"Terörsüz Türkiye\" Vizyonu Doğrultusunda Sınır İçi Kontrol Noktalarının Dijitalizasyonu, Koruculuk Sistemi ile FETÖ Baştan Sona Tüm Terör Yapılanmalarıyla Mücadelede İdari Çerçevenin Çizilmesi",
+          "text": "\"Terörsüz Türkiye\" hedefleri doğrultusunda terör örgütlerinin yurt içindeki eylem kabiliyetlerinin ve hücresel yapılanmalarının tamamen engellenmesi amacıyla İçişleri Bakanlığı'na bağlı kolluk kuvvetlerinin asayiş ve denetim yetki alanlarının hukuki çerçevesinin çizilmesi. Kamu düzenini ve şehirlerarası ticareti rahatlatmak amacıyla kaldırılan fiziki denetim noktalarının yerine Emniyet ve Jandarma envanterindeki dijital altyapıların (TEDES/KGYS ve siber takip) entegrasyon sınırlarının belirlenmesi; FETÖ/PDY başta olmak üzere tüm terör örgütlerinin tepe yönetiminden alt hücre yapılanmalarına kadar uzanan mahrem kadrolarının tespiti, idari takibi ve yakalanması süreçlerinde Mülkiye Müfettişliği ve Kolluk İstihbarat birimlerinin idari koordinasyon ve yetki sınırlarının ele alınması. Suça karışmamış ya da sivil hayata dönüş yapacak unsurlar ile ailelerinin mülki idare amirlikleri (valiler/kaymakamlar) vasıtasıyla yürütülebilecek toplumsal entegrasyon süreçlerinin hukuki boyutlarının değerlendirilmesi; geçici ve gönüllü güvenlik koruculuğu sisteminin değişen kırsal asayiş ihtiyaçlarına göre idari ve mali yönden yeniden yapılandırılmasının iç güvenlik mevzuatı açısından ele alınması."
+        },
+        {
+          "id": "icisleri-gundem-3",
+          "title": "Çevrim İçi ve Fiziki Kumar/Şans Oyunları Alanında Yasal Çerçevenin Yeniden Yapılandırılması, Kumarhanelerin İdari Denetim Altında Lisanslandırılması ve Dijital Finansal Akışların Düzenlenmesinin Değerlendirilmesi",
+          "text": "Yasa dışı bahis, kayıtdışı kumar ve illegal finansal hareketlerle mücadelede mevcut yasaklayıcı tedbirlerin operasyonel yetersizliklerinin ve kamusal mali kayıpların değerlendirilmesi. Yasa dışı mecralara yönelimin önüne geçilmesi amacıyla; fiziki kumarhane/gazino işletmelerinin ve çevrim içi platformların devlet kontrolü, ruhsatlandırma ve sıkı idari denetim mekanizmaları altında resmileştirilerek aktif ve denetlenebilir hale getirilmesinin hukuki çerçevesinin çizilmesi. Lisanslı işletmelerin kuruluş, lokasyon, yaş ve erişim sınırlamaları ile kamu idaresine aktarılacak vergi/fon oranlarının belirlenmesi; elde edilecek kamu gelirlerinin denetimi, siber denetim altyapısının mülki amirlikler ve kolluk kuvvetleri nezdinde güçlendirilmesi ile şeffaf finansal akış ilkesi doğrultusunda mevzuat düzenlemelerinin sınırlarının ele alınması."
+        }
       ],
       "icon": "interior",
       "media": [
@@ -482,9 +570,21 @@ values (
       "summary": "Din hizmetleri, toplumsal dayanışma ve birlikte yaşama.",
       "description": "Diyanet komisyonu, inanç hizmetleri ile toplumsal dayanışmayı aynı ciddiyetle konuşur. Çerçeve; gençlere yönelik manevi danışmanlık, yardımlaşma ve farklı inançlara saygıdır.",
       "agenda": [
-        "Gençlere yönelik manevi danışmanlık",
-        "Toplumsal dayanışma ve yardımlaşma",
-        "İnanç özgürlüğü ve birlikte yaşama"
+        {
+          "id": "diyanet-gundem-1",
+          "title": "Diyanet İşleri Başkanlığı’nın Yurt Dışı Teşkilatlanması, Yumuşak Güç Diplomasisi ve Uluslararası Kurumsal Statüsünün Yeniden Yapılandırılmasının Belirlenmesi",
+          "text": "Diyanet İşleri Başkanlığı’nın yurt dışındaki temsilcilikleri, vakıf iştirakleri ve uluslararası külliyeleri (Diyanet Center of America, Tokyo Camii ve Kültür Merkezi vb.) aracılığıyla yürüttüğü faaliyetlerin sevk, idare ve diplomatik sınırlarının değerlendirilmesi. Kurumun yalnızca ulusal sınırlar içerisinde hizmet veren geleneksel bir iç bürokrasi yapısı olarak kalması ile küresel ölçekte dini-kültürel diplomasi icra eden uluslararası bir yapılanmaya dönüştürülmesi arasındaki stratejik tercihlerin masaya yatırılması; dış temsilciliklerin hukuki statüsü, Dışişleri Bakanlığı ile koordinasyon esasları, yurt dışı personel istihdam kriterleri ve uluslararası fondan yararlanma imkanlarının idari ve hukuki çerçevesinin çizilmesi."
+        },
+        {
+          "id": "diyanet-gundem-2",
+          "title": "Dini Toplulukların, Cemaat ve Tarikat Tarzı Yapılanmaların Diyanet İşleri Başkanlığı Bünyesinde Resmileştirilmesi, Mali ve İdari Denetim Kriterlerinin Belirlenmesi",
+          "text": "Türkiye'de tarihsel ve sosyolojik birer realite olarak varlığını sürdüren dini topluluk, cemaat ve tarikat tarzı yapılanmaların, anayasal laiklik ilkesi ve kamu düzeni çerçevesinde hukuki/idari bir statüye kavuşturulması taleplerinin masaya yatırılması. Bu yapıların merdiven altı ve denetimsiz kalmasının yarattığı güvenlik ve inançsal riskleri önlemek adına; Diyanet İşleri Başkanlığı bünyesinde kurulacak bir \"İnanç Grupları Denetim ve Akreditasyon Kurulu\" vasıtasıyla cemaatlerin dini söylemlerinin, bastıkları kitapların, yurt ve kurslarındaki irşat (aydınlatma) faaliyetlerinin idari denetim altına alınması veya bu yapıların tamamen gayriyasal kabul edilerek kurumsal hiçbir dini muhataplık verilmemesi opsiyonlarının idari yollar açısından ele alınması."
+        },
+        {
+          "id": "diyanet-gundem-3",
+          "title": "Diyanet İşleri Başkanlığı’nın Kamu Maliyesi İle Uyumlu Bütçe Tahsisleri, Harcama Denetimleri ve Mali Şeffaflık Standartlarının Belirlenmesi",
+          "text": "Diyanet İşleri Başkanlığı’na (DİB) genel bütçeden ayrılan payın büyüklüğü, kamu mali yönetimi ilkeleri ve kaynakların etkin kullanımı doğrultusunda idari ve mali denetim esasları çerçevesinde değerlendirilmesi. Kurum bütçesinin diğer kamu hizmeti alanlarıyla kıyaslamalı analizi; personel giderleri, yatırım kalemleri ve sosyal projeler arasındaki mali dengelerin masaya yatırılması; Sayıştay denetim raporları ışığında harcama şeffaflığının artırılması, kamu kaynaklarının mevzuata uygunluğunun denetlenmesi ve DİB mali yönetiminin idare hukuku ile kamu maliyesi prensipleri doğrultusunda yeniden yapılandırılmasının sınırlarının ele alınması."
+        }
       ],
       "icon": "faith",
       "media": [
@@ -521,45 +621,57 @@ values (
       ]
     },
     {
-      "slug": "plan-butce",
-      "name": "Plan ve Bütçe Komisyonu",
-      "fullName": "Plan ve Bütçe Komisyonu",
-      "summary": "Kamu kaynaklarının önceliği ve gençlik harcamalarının görünürlüğü.",
-      "description": "Plan ve Bütçe, bir temenniyi kaleme değil kaynağa bağlar. Komisyon, eğitim ve gençlik başlıklarının bütçede nasıl göründüğünü, önceliğin nasıl kurulduğunu ve harcamanın nasıl anlatıldığını tartışır.",
+      "slug": "turk-devletleri",
+      "name": "Türk Devletleri Komisyonu",
+      "fullName": "Türk Devletleri Komisyonu",
+      "summary": "Türk devletleri arasında eğitim, kültür ve ekonomi alanında iş birliği.",
+      "description": "Türk Devletleri Komisyonu, ortak tarih ve dil bağından doğan iş birliğini ele alır. Delegeler gençlik hareketliliğini, eğitim ve kültür alanındaki ortak çalışmaları ve ekonomik bağları tartışır.",
       "agenda": [
-        "Gençlik ve eğitim harcamalarında öncelik",
-        "Kaynakların şeffaf anlatımı",
-        "Yerel gençlik programlarının finansmanı"
+        {
+          "id": "turk-devletleri-gundem-1",
+          "title": "Doğu Türkistan Meselesi ve Bölgesel Kriz Alanları Kapsamında Türkiye’nin Diplomatik Politikalarının Teşkilat Dengeleri Ekseninde İncelenmesi ile Türk Dünyası'nın Ortak Tutumunun Belirlenmesine Yönelik Çalışmaların Ele Alınması",
+          "text": "Doğu Türkistan başta olmak üzere, Kırım ve Ahıska gibi Türk soylu azınlıkların yaşadığı jeopolitik kriz alanlarına yönelik olarak Türkiye Cumhuriyeti'nin yürüttüğü geleneksel diplomatik politikaların ve ikili ilişkilerin, Türk Devletleri Teşkilatı'nın (TDT) bölgesel istikrar ve çok kutuplu dünya dengeleri ekseninde masaya yatırılması. Ankara'nın bu meselelerdeki insan hakları ve soydaşlık odaklı reflekslerinin, Orta Asya üye devletlerinin Çin ve Rusya ile yürüttüğü milyarlarca dolarlık ticari, ekonomik ve sınır güvenliği stratejileriyle (Kuşak-Yol Projesi, Şanghay İşbirliği Örgütü taahhütleri) uyumlaştırılması; kriz bölgelerinden gelebilecek olası iltica ve göç hareketleri karşısında üye devletler arasında adil bir yük paylaşımı ve ortak insani iskân mekanizmasının kurulması; Pekin ve Moskova yönetimleriyle olan diplomatik köprüleri atmadan, teşkilat bünyesinde kabul edilebilir, uluslararası hukuka uygun ve ortak bir kurumsal tutum belgesinin ihdas edilmesine yönelik yasal ve idari çalışmaların değerlendirilmesi."
+        },
+        {
+          "id": "turk-devletleri-gundem-2",
+          "title": "İş Gücü Krizi: Rusya Federasyonu’ndaki Olası Jeopolitik/Askeri Krizler Karşısında Türk Dünyası Göçmen İş Gücü Akışının Yönetimi ve TDT Bünyesinde \"Ortak İstihdam ve İş Piyasası\" Ağının Kurulması",
+          "text": "Rusya Federasyonu’nun NATO ve Batı blokuyla yaşadığı asimetrik ve askeri krizlerin derinleşmesi senaryosunda; Rus ekonomisine iş gücü sağlayan milyonlarca Türkî cumhuriyet vatandaşı göçmen işçinin (Özbek, Kırgız, Kazak vb.) iş imkanlarını kaybetmesi ve ülkelerine ani, kitlesel geri dönüşlerinin yaratacağı makroekonomik ve asayiş krizlerinin masaya yatırılması. Rusya'dan gelecek milyarlarca dolarlık işçi dövizi (remittance) akışının kesilmesiyle Orta Asya ekonomilerinde oluşacak çöküşü engellemek adına; TDT üye devletleri arasında vizesiz, serbest ve hukuki güvenceli bir \"Ortak Türk İş Gücü Piyasası\" modelinin kurulması; Türkiye ve Azerbaycan başta olmak üzere ekonomisi daha stabil olan üye ülkelerin bu iş gücünü emebilecek sanayi ve altyapı kotaları belirlemesi ile geri dönen işçilerin istihdamı için Türk Yatırım Fonu bünyesinde bir \"Acil Durum İstihdam ve Kalkınma Fonu\" oluşturulmasının yasal çerçevede ele alınması."
+        },
+        {
+          "id": "turk-devletleri-gundem-3",
+          "title": "Küresel Güvenlik Dengelerinin Değişmesi Ekseninde TDT \"Ortak Enerji Güvenliği ve Alışveriş Programı\" (TETP) Vasatıyla Rusya Enerji Bağımlılığının Tasfiyesi",
+          "text": "Rusya Federasyonu’nun jeopolitik olarak sıkışması veya enerji altyapılarını bir baskı aracı olarak kullanması riskine karşı; TDT üye ülkelerinin elektrik şebekelerinin ve doğalgaz boru hatlarının Rusya merkezli sistemlerden koparılarak \"TDT Ortak Enerji Güvenliği ve Alışveriş Programı\" (TETP) çatısı altında birleştirilmesinin masaya yatırılması. Kazakistan, Özbekistan ve Türkmenistan’ın (gözlemci üye) devasa doğalgaz ve petrol kaynaklarının, Rusya topraklarına uğramadan, Hazar Denizi ve Azerbaycan üzerinden doğrudan Türkiye’ye ve oradan dünyaya ulaştırılmasını sağlayacak \"Trans-Hazar Enerji Koridoru\"nun hukuki statüsünün netleştirilmesi; üye ülkeler arasında ortak bir enerji borsası kurularak kış aylarında enerji krizi yaşayan Kırgızistan ve Özbekistan gibi devletlerin enerji ihtiyaçlarının TDT içi ortak havuzdan (Türkiye'nin nükleer/yenilenebilir ve Azerbaycan'ın gaz desteğiyle) karşılanmasını öngören uluslararası enerji protokollerinin ele alınması."
+        }
       ],
-      "icon": "budget",
+      "icon": "turkic",
       "media": [
         {
-          "id": "butce-1",
+          "id": "turk-devletleri-1",
           "kind": "image",
           "caption": "Açılış karesi"
         },
         {
-          "id": "butce-2",
+          "id": "turk-devletleri-2",
           "kind": "image",
           "caption": "Komisyon masası"
         },
         {
-          "id": "butce-3",
+          "id": "turk-devletleri-3",
           "kind": "image",
           "caption": "Söz alma anı"
         },
         {
-          "id": "butce-4",
+          "id": "turk-devletleri-4",
           "kind": "image",
           "caption": "Kapanış karesi"
         },
         {
-          "id": "butce-5",
+          "id": "turk-devletleri-5",
           "kind": "video",
           "caption": "Oturum kaydı"
         },
         {
-          "id": "butce-6",
+          "id": "turk-devletleri-6",
           "kind": "video",
           "caption": "Kısa değerlendirme"
         }
@@ -713,7 +825,23 @@ values (
       "whatsappWho": "Kime yazılsın",
       "whatsappOwn": "Kendi sorumu yazayım"
     }
-  }
+  },
+  "team": [
+    {
+      "id": "team-1",
+      "name": "Metin Oktay Tüylü",
+      "role": "Genel Koordinatör",
+      "school": "",
+      "photo": ""
+    },
+    {
+      "id": "team-2",
+      "name": "Ömer Asaf Ertaş",
+      "role": "Genel Koordinatör",
+      "school": "",
+      "photo": ""
+    }
+  ]
 }$genta_doc$::jsonb
 )
 on conflict (id) do update

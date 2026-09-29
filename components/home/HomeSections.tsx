@@ -4,23 +4,12 @@ import { CommissionGrid } from "@/components/commissions/CommissionGrid";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/motion/Reveal";
 import { SponsorMarquee } from "@/components/sponsors/SponsorMarquee";
-import { countApplications } from "@/lib/applications";
-import { activityYears, getContent } from "@/lib/content";
-import type { HomeStat } from "@/lib/content-types";
+import { getContent } from "@/lib/content";
 import { Countdown } from "./Countdown";
 import { NovemberCalendar } from "./NovemberCalendar";
-import { StatBand } from "./StatBand";
-
-function shownValue(stat: HomeStat, applications: number, commissions: number) {
-  if (stat.source === "applications") return applications;
-  if (stat.source === "commissions") return commissions;
-  if (stat.source === "activity") return activityYears();
-  return stat.value;
-}
 
 export async function HomeSections() {
-  const { site, about, copy, stats, commissions } = await getContent();
-  const applications = await countApplications();
+  const { site, about, copy, commissions } = await getContent();
   return (
     <>
       <section className="bg-ivory py-20 text-ink sm:py-28">
@@ -54,17 +43,6 @@ export async function HomeSections() {
         <Container className="mt-14">
           <PracticalNotes />
         </Container>
-
-        <div className="mt-16 sm:mt-20">
-          <StatBand
-            stats={stats.map((stat) => ({
-              id: stat.id,
-              label: stat.label,
-              caption: stat.caption,
-              value: shownValue(stat, applications, commissions.length),
-            }))}
-          />
-        </div>
       </section>
 
       <section className="bg-paper py-20 sm:py-28">

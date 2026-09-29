@@ -11,6 +11,14 @@ export type Coordinator = {
   whatsapp: string;
 };
 
+export type TeamMember = {
+  id: string;
+  name: string;
+  role: string;
+  school: string;
+  photo: string;
+};
+
 export type NavItem = {
   href: string;
   label: string;
@@ -74,6 +82,7 @@ export type SiteFacts = {
 export type Content = {
   site: SiteFacts;
   coordinators: Coordinator[];
+  team: TeamMember[];
   navItems: NavItem[];
   practicalNotes: PracticalNote[];
   stats: HomeStat[];

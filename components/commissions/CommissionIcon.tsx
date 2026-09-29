@@ -107,6 +107,26 @@ function Budget({ className }: { className?: string }) {
   );
 }
 
+function Constitution({ className }: { className?: string }) {
+  return (
+    <IconFrame className={className}>
+      <path d="M14 9 H30 L36 15 V39 H14 Z" {...stroke} />
+      <path d="M30 9 V15 H36" {...stroke} />
+      <path d="M19 21 H31 M19 27 H31 M19 33 H26" {...stroke} />
+    </IconFrame>
+  );
+}
+
+function Turkic({ className }: { className?: string }) {
+  return (
+    <IconFrame className={className}>
+      <circle cx="18" cy="20" r="7" {...stroke} />
+      <circle cx="30" cy="20" r="7" {...stroke} />
+      <circle cx="24" cy="30" r="7" {...stroke} />
+    </IconFrame>
+  );
+}
+
 const icons = {
   parliament: Parliament,
   health: Health,
@@ -117,6 +137,8 @@ const icons = {
   interior: Interior,
   faith: Faith,
   budget: Budget,
+  constitution: Constitution,
+  turkic: Turkic,
 };
 
 export function CommissionIcon({

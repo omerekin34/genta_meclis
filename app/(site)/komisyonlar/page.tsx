@@ -7,7 +7,7 @@ import { getContent } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Komisyonlar",
   description:
-    "GENTA 2026’nın dokuz komisyonu: TBMM, Sağlık, Adalet, Millî Eğitim, Millî Savunma, Dışişleri, İçişleri, Diyanet ve Plan ve Bütçe.",
+    "GENTA 2026’nın dokuz komisyonu: Anayasa, Sağlık, Adalet, Millî Eğitim, Millî Savunma, Dışişleri, İçişleri, Diyanet ve Türk Devletleri.",
 };
 
 export default async function CommissionsPage() {

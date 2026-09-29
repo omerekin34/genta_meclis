@@ -30,6 +30,9 @@ export const defaultCopy = {
     commissionsTitle: "Dokuz masa, tek meclis.",
     commissionsText:
       "Her komisyon kendi gündemini çalışır, metnini olgunlaştırır ve genel kurula taşır. Karttan komisyonun konusuna ve medya alanına geçebilirsiniz.",
+    teamEyebrow: "Ekibimiz",
+    teamTitle: "Meclisi hazırlayanlar.",
+    teamText: "GENTA 2026’yı kuran, yürüten ve oturumları yöneten ekip.",
     sponsorsEyebrow: "Sponsorlar",
     sponsorsTitle: "Destekleyen kurumlara teşekkürler.",
     sponsorsText:

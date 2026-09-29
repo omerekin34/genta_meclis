@@ -7,14 +7,14 @@ import { useRouter } from "next/navigation";
 import { iconNames, type IconName } from "@/data/commissions";
 import { sponsorMarks, type SponsorMark } from "@/data/sponsors";
 import { InstagramIcon, MailIcon, WhatsAppIcon } from "@/components/layout/SocialIcons";
-import type { Content, StatSource } from "@/lib/content-types";
+import type { Content } from "@/lib/content-types";
 import { ApplicationsPanel } from "./ApplicationsPanel";
 
 const sections = [
   ["gelen", "Gelen başvurular"],
   ["genel", "Genel"],
-  ["istatistik", "İstatistikler"],
   ["kisiler", "Koordinatörler"],
+  ["ekip", "Ekibimiz"],
   ["sosyal", "Sosyal"],
   ["menu", "Menü"],
   ["hakkimizda", "Hakkımızda"],
@@ -38,6 +38,8 @@ const iconLabels: Record<IconName, string> = {
   interior: "İçişleri",
   faith: "Diyanet",
   budget: "Bütçe",
+  constitution: "Anayasa",
+  turkic: "Türk Devletleri",
 };
 
 const markLabels: Record<SponsorMark, string> = {
@@ -122,6 +124,13 @@ export function AdminDesk({ initial }: { initial: Content }) {
     }));
   }
 
+  function addMember() {
+    setDraft((current) => ({
+      ...current,
+      team: [...current.team, { id: uid("team"), name: "", role: "", school: "", photo: "" }],
+    }));
+  }
+
   function addNav() {
     setDraft((current) => ({ ...current, navItems: [...current.navItems, { href: "/", label: "Yeni sayfa" }] }));
   }
@@ -170,13 +179,6 @@ export function AdminDesk({ initial }: { initial: Content }) {
     setDraft((current) => ({ ...current, whatsappQuestions: [...current.whatsappQuestions, ""] }));
   }
 
-  function addStat() {
-    setDraft((current) => ({
-      ...current,
-      stats: [...current.stats, { id: uid("stat"), label: "Yeni sayı", caption: "", value: 0, source: "manual" }],
-    }));
-  }
-
   function addPreference() {
     setDraft((current) => ({
       ...current,
@@ -204,8 +206,8 @@ export function AdminDesk({ initial }: { initial: Content }) {
                   ? [{ label: "Ekle", run: addQuestion }]
                   : section === "basvuru"
                     ? [{ label: "Ekle", run: addPreference }]
-                    : section === "istatistik"
-                      ? [{ label: "Ekle", run: addStat }]
+                    : section === "ekip"
+                      ? [{ label: "Kişi ekle", run: addMember }]
                       : [];
 
   async function logout() {
@@ -304,8 +306,8 @@ export function AdminDesk({ initial }: { initial: Content }) {
           {message ? <p className="mb-4 rounded-2xl bg-white px-4 py-3 text-sm text-ink/70">{message}</p> : null}
           {section === "gelen" ? <ApplicationsPanel /> : null}
           {section === "genel" ? <GeneralPanel draft={draft} patchSite={patchSite} setDraft={setDraft} /> : null}
-          {section === "istatistik" ? <StatsPanel draft={draft} setDraft={setDraft} /> : null}
           {section === "kisiler" ? <PeoplePanel draft={draft} setDraft={setDraft} /> : null}
+          {section === "ekip" ? <TeamPanel draft={draft} setDraft={setDraft} /> : null}
           {section === "sosyal" ? <SocialPanel draft={draft} patchSite={patchSite} /> : null}
           {section === "menu" ? <MenuPanel draft={draft} setDraft={setDraft} /> : null}
           {section === "hakkimizda" ? <AboutPanel draft={draft} setDraft={setDraft} /> : null}
@@ -627,72 +629,6 @@ function AboutPanel({ draft, setDraft }: PanelProps) {
   );
 }
 
-const sourceLabel: Record<StatSource, string> = {
-  manual: "Elle yazılan sayı",
-  applications: "Başvuru kayıtları",
-  commissions: "Komisyon listesi",
-  activity: "Faaliyet yılı",
-};
-
-function StatsPanel({ draft, setDraft }: PanelProps) {
-  function patch(id: string, next: Partial<Content["stats"][number]>) {
-    setDraft((current) => ({
-      ...current,
-      stats: current.stats.map((item) => (item.id === id ? { ...item, ...next } : item)),
-    }));
-  }
-
-  return (
-    <div className="space-y-4">
-      <p className="text-sm leading-6 text-ink/60">
-        Ana sayfada süre, yer ve kıyafet kartlarının altında görünür. Sayılar ekrana gelince artarak dolar. Başvuru kayıtları ve komisyon listesi seçilirse sayı kendiliğinden güncellenir.
-      </p>
-      <List>
-        {draft.stats.map((stat, index) => (
-          <Card
-            key={stat.id}
-            onUp={() => setDraft((current) => ({ ...current, stats: move(current.stats, index, -1) }))}
-            onDown={() => setDraft((current) => ({ ...current, stats: move(current.stats, index, 1) }))}
-            onDelete={() => setDraft((current) => ({ ...current, stats: current.stats.filter((item) => item.id !== stat.id) }))}
-          >
-            <TextField label="Başlık" value={stat.label} onChange={(value) => patch(stat.id, { label: value })} />
-            <TextField label="Alt yazı" value={stat.caption} onChange={(value) => patch(stat.id, { caption: value })} />
-            <label className="block">
-              <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Sayı nereden gelsin</span>
-              <select
-                value={stat.source}
-                onChange={(event) => patch(stat.id, { source: event.target.value as StatSource })}
-                className="mt-2 w-full rounded-2xl border border-brand/15 bg-ivory px-4 py-3 text-ink outline-none focus:border-brand"
-              >
-                {(Object.keys(sourceLabel) as StatSource[]).map((source) => (
-                  <option key={source} value={source}>
-                    {sourceLabel[source]}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {stat.source === "manual" ? (
-              <TextField
-                label="Sayı"
-                value={String(stat.value)}
-                onChange={(value) => patch(stat.id, { value: Math.max(0, Math.round(Number(value.replace(/\D/g, "")) || 0)) })}
-              />
-            ) : (
-              <p className="text-sm leading-6 text-ink/55">
-                {stat.source === "applications"
-                  ? "Sitedeki sayı, gelen bireysel ve delegasyon başvurularının toplamıdır. Yeni kayıt geldikçe artar."
-                  : stat.source === "activity"
-                    ? "28 Eylül 2026’dan itibaren sayılır. İlk yıl 1’dir, her yıl dönümünde 1 artar."
-                    : "Sitedeki sayı, komisyon listesindeki kurul adedidir. Komisyon ekleyince artar."}
-              </p>
-            )}
-          </Card>
-        ))}
-      </List>
-    </div>
-  );
-}
-
 function NotesPanel({ draft, setDraft }: PanelProps) {
   return (
     <List>
@@ -794,11 +730,7 @@ function CommissionsPanel({ draft, setDraft, focusSlug }: PanelProps & { focusSl
           </label>
           <AreaField label="Özet" value={current.summary} onChange={(value) => update(current.slug, { summary: value })} />
           <AreaField label="Açıklama" value={current.description} onChange={(value) => update(current.slug, { description: value })} />
-          <AreaField
-            label="Gündem, her satır bir madde"
-            value={current.agenda.join("\n")}
-            onChange={(value) => update(current.slug, { agenda: value.split("\n").map((line) => line.trim()).filter(Boolean) })}
-          />
+          <AgendaEditor agenda={current.agenda} onChange={(agenda) => update(current.slug, { agenda })} />
           <AreaField
             label="Medya, her satır: gorsel veya video | başlık"
             value={current.media.map((item) => `${item.kind === "video" ? "video" : "gorsel"} | ${item.caption}`).join("\n")}
@@ -823,6 +755,186 @@ function CommissionsPanel({ draft, setDraft, focusSlug }: PanelProps & { focusSl
       ) : (
         <p className="text-sm text-ink/60">Komisyon kalmadı. Ekle ile yeni bir masa açabilirsiniz.</p>
       )}
+    </div>
+  );
+}
+
+function AgendaEditor({
+  agenda,
+  onChange,
+}: {
+  agenda: Content["commissions"][number]["agenda"];
+  onChange: (agenda: Content["commissions"][number]["agenda"]) => void;
+}) {
+  function patch(id: string, next: Partial<(typeof agenda)[number]>) {
+    onChange(agenda.map((item) => (item.id === id ? { ...item, ...next } : item)));
+  }
+
+  return (
+    <div className="space-y-3 rounded-3xl border border-brand/10 bg-ivory/60 p-4">
+      <div className="flex items-center justify-between gap-3">
+        <p className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Gündem maddeleri</p>
+        <button
+          type="button"
+          onClick={() => onChange([...agenda, { id: uid("gundem"), title: "", text: "" }])}
+          className="rounded-full border border-brand/25 px-3 py-1.5 text-sm text-brand hover:bg-brand hover:text-white"
+        >
+          Madde ekle
+        </button>
+      </div>
+      {agenda.length === 0 ? <p className="text-sm text-ink/55">Bu komisyonda henüz gündem maddesi yok.</p> : null}
+      {agenda.map((item, index) => (
+        <Card
+          key={item.id}
+          onUp={() => onChange(move(agenda, index, -1))}
+          onDown={() => onChange(move(agenda, index, 1))}
+          onDelete={() => {
+            if (!window.confirm(`${index + 1}. gündem maddesi silinsin mi?`)) return;
+            onChange(agenda.filter((entry) => entry.id !== item.id));
+          }}
+        >
+          <p className="font-display text-xs font-semibold tracking-[0.14em] text-brand uppercase">
+            {index + 1}. Gündem maddesi
+          </p>
+          <AreaField label="Başlık" value={item.title} onChange={(value) => patch(item.id, { title: value })} />
+          <AreaField label="Açıklama" value={item.text} onChange={(value) => patch(item.id, { text: value })} />
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+function TeamPanel({ draft, setDraft }: PanelProps) {
+  function patch(id: string, next: Partial<Content["team"][number]>) {
+    setDraft((current) => ({
+      ...current,
+      team: current.team.map((item) => (item.id === id ? { ...item, ...next } : item)),
+    }));
+  }
+
+  return (
+    <div className="space-y-4">
+      <p className="text-sm leading-6 text-ink/60">
+        Ekibimiz sayfasında görünür. Görev, kartta en belirgin satırdır. Fotoğraf yoksa adın baş harfleri gösterilir. Değişiklikten sonra Kaydet’e bas.
+      </p>
+      {draft.team.length === 0 ? (
+        <p className="rounded-3xl border border-dashed border-brand/20 bg-white p-5 text-sm text-ink/60">
+          Henüz kimse yok. Sağ üstteki Kişi ekle düğmesiyle başla.
+        </p>
+      ) : null}
+      <List>
+        {draft.team.map((member, index) => (
+          <Card
+            key={member.id}
+            onUp={() => setDraft((current) => ({ ...current, team: move(current.team, index, -1) }))}
+            onDown={() => setDraft((current) => ({ ...current, team: move(current.team, index, 1) }))}
+            onDelete={() => {
+              if (!window.confirm(`${member.name || "Bu kişi"} ekipten çıkarılsın mı?`)) return;
+              setDraft((current) => ({ ...current, team: current.team.filter((item) => item.id !== member.id) }));
+            }}
+          >
+            <TextField label="Ad soyad" value={member.name} onChange={(value) => patch(member.id, { name: value })} />
+            <TextField label="Görevi" value={member.role} onChange={(value) => patch(member.id, { role: value })} />
+            <TextField label="Okulu" value={member.school} onChange={(value) => patch(member.id, { school: value })} />
+            <ImageField
+              label="Fotoğraf"
+              folder="ekip"
+              value={member.photo}
+              round
+              onChange={(value) => patch(member.id, { photo: value })}
+            />
+          </Card>
+        ))}
+      </List>
+    </div>
+  );
+}
+
+function ImageField({
+  label,
+  folder,
+  value,
+  round = false,
+  onChange,
+}: {
+  label: string;
+  folder: string;
+  value: string;
+  round?: boolean;
+  onChange: (value: string) => void;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function upload(file: File) {
+    setUploading(true);
+    setError("");
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("folder", folder);
+      const response = await fetch("/api/admin/upload", { method: "POST", body });
+      const result = (await response.json().catch(() => null)) as { url?: string; error?: string } | null;
+      if (!response.ok || !result?.url) {
+        setError(result?.error ?? (response.status === 413 ? "Dosya en fazla 4 MB olsun." : "Görsel yüklenemedi."));
+        return;
+      }
+      onChange(result.url);
+    } catch {
+      setError("Görsel yüklenemedi. Bağlantıyı kontrol et.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div>
+      <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">{label}</span>
+      <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-start">
+        <div
+          className={`flex size-24 shrink-0 items-center justify-center overflow-hidden border border-brand/15 bg-ivory ${round ? "rounded-full" : "rounded-2xl"}`}
+        >
+          {value ? (
+            // eslint-disable-next-line @next/next/no-img-element -- adres her kaynaktan gelebilir
+            <img src={value} alt="" className="size-full object-cover" />
+          ) : (
+            <span className="text-xs text-ink/40">Görsel yok</span>
+          )}
+        </div>
+        <div className="min-w-0 flex-1 space-y-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <label
+              className={`inline-flex cursor-pointer items-center rounded-full bg-brand px-4 py-2.5 text-sm font-medium text-white ${uploading ? "pointer-events-none opacity-50" : ""}`}
+            >
+              {uploading ? "Yükleniyor" : "Bilgisayardan seç"}
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+                className="sr-only"
+                disabled={uploading}
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  event.target.value = "";
+                  if (file) void upload(file);
+                }}
+              />
+            </label>
+            {value ? (
+              <button type="button" onClick={() => onChange("")} className="text-sm text-ink/55 hover:text-brand">
+                Görseli kaldır
+              </button>
+            ) : null}
+          </div>
+          <input
+            value={value}
+            onChange={(event) => onChange(event.target.value.trim())}
+            placeholder="veya görsel adresini yapıştır (https://...)"
+            className="w-full rounded-2xl border border-brand/15 bg-ivory px-4 py-3 text-sm text-ink outline-none focus:border-brand"
+          />
+          <p className="text-xs leading-5 text-ink/50">JPG, PNG, WEBP, GIF veya SVG. En fazla 4 MB.</p>
+          {error ? <p className="text-sm text-brand">{error}</p> : null}
+        </div>
+      </div>
     </div>
   );
 }
@@ -857,8 +969,21 @@ function SponsorsPanel({ draft, setDraft }: PanelProps) {
               }))
             }
           />
+          <ImageField
+            label="Logo"
+            folder="sponsor"
+            value={sponsor.logoSrc ?? ""}
+            onChange={(value) =>
+              setDraft((current) => ({
+                ...current,
+                sponsors: current.sponsors.map((item) =>
+                  item.id === sponsor.id ? { ...item, logoSrc: value || undefined } : item,
+                ),
+              }))
+            }
+          />
           <label className="block">
-            <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">İşaret</span>
+            <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Logo yoksa işaret</span>
             <select
               value={sponsor.mark}
               onChange={(event) =>
@@ -1036,6 +1161,9 @@ const copyGroups = [
       ["commissionsEyebrow", "Komisyonlar üst yazı"],
       ["commissionsTitle", "Komisyonlar başlığı"],
       ["commissionsText", "Komisyonlar metni"],
+      ["teamEyebrow", "Ekibimiz üst yazı"],
+      ["teamTitle", "Ekibimiz başlığı"],
+      ["teamText", "Ekibimiz metni"],
       ["sponsorsEyebrow", "Sponsorlar üst yazı"],
       ["sponsorsTitle", "Sponsorlar başlığı"],
       ["sponsorsText", "Sponsorlar metni"],

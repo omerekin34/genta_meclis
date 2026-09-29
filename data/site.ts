@@ -87,6 +87,7 @@ export const communityJoinHref = whatsAppHref(coordinators[0].whatsapp, communit
 export const navItems = [
   { href: "/", label: "Ana Sayfa" },
   { href: "/hakkimizda", label: "Hakkımızda" },
+  { href: "/ekibimiz", label: "Ekibimiz" },
   { href: "/komisyonlar", label: "Komisyonlar" },
   { href: "/basvuru", label: "Başvuru" },
   { href: "/sponsorlar", label: "Sponsorlar" },

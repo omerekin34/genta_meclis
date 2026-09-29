@@ -61,34 +61,56 @@ export default async function CommissionPage({ params }: PageProps) {
 
       <section className="bg-ivory py-20 sm:py-24">
         <Container>
-          <div className="grid gap-14 lg:grid-cols-[1.15fr_0.85fr]">
-            <Reveal>
-              <p className="font-display text-xs tracking-[0.28em] text-brand/70 uppercase">Konu</p>
-              <p className="mt-5 text-lg leading-8 text-ink/85">{commission.description}</p>
-              <Link
-                href={`/basvuru?komisyon=${commission.slug}`}
-                className="mt-8 inline-flex bg-brand px-6 py-3.5 font-display text-[12px] font-semibold tracking-[0.18em] text-white uppercase transition-colors duration-700 hover:bg-brand-deep"
-              >
-                Bu komisyona başvur
-              </Link>
-            </Reveal>
-            <Reveal delay={0.08}>
-              <p className="font-display text-xs tracking-[0.28em] text-brand/70 uppercase">Gündem</p>
-              <ol className="mt-4">
+          <Reveal className="max-w-3xl">
+            <p className="font-display text-xs tracking-[0.28em] text-brand/70 uppercase">Konu</p>
+            <p className="mt-5 text-lg leading-8 text-ink/85">{commission.description}</p>
+            <Link
+              href={`/basvuru?komisyon=${commission.slug}`}
+              className="mt-8 inline-flex bg-brand px-6 py-3.5 font-display text-[12px] font-semibold tracking-[0.18em] text-white uppercase transition-colors duration-700 hover:bg-brand-deep"
+            >
+              Bu komisyona başvur
+            </Link>
+          </Reveal>
+
+          {commission.agenda.length > 0 ? (
+            <div className="mt-20">
+              <Reveal>
+                <p className="font-display text-xs tracking-[0.28em] text-brand/70 uppercase">Genta Meclis’26</p>
+                <h2 className="mt-3 font-display text-3xl font-semibold text-brand sm:text-4xl">Gündem maddeleri</h2>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/70">
+                  {commission.name}, oturumlarını bu {commission.agenda.length} madde üzerinden yürütür.
+                  Delegeler hazırlıklarını her maddenin çerçevesine göre yapar.
+                </p>
+              </Reveal>
+              <ol className="mt-10 space-y-5">
                 {commission.agenda.map((item, index) => (
-                  <li
-                    key={item}
-                    className="grid grid-cols-[auto_1fr] gap-4 border-t border-brand/15 py-4"
-                  >
-                    <span className="font-display text-sm text-brand/45">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="leading-7 text-ink/85">{item}</span>
+                  <li key={item.id}>
+                    <Reveal delay={Math.min(index * 0.06, 0.24)}>
+                      <article className="relative grid gap-5 overflow-hidden border border-brand/12 bg-paper p-6 sm:grid-cols-[5.5rem_1fr] sm:gap-8 sm:p-10">
+                        <span className="absolute inset-y-0 left-0 w-1 bg-brand" aria-hidden="true" />
+                        <p className="font-display text-5xl leading-none font-semibold text-brand/25 sm:text-6xl">
+                          {String(index + 1).padStart(2, "0")}
+                        </p>
+                        <div>
+                          <p className="font-display text-[11px] font-semibold tracking-[0.22em] text-brand/70 uppercase">
+                            {index + 1}. Gündem maddesi
+                          </p>
+                          {item.title ? (
+                            <h3 className="mt-3 font-display text-xl leading-snug font-semibold text-brand sm:text-2xl">
+                              {item.title}
+                            </h3>
+                          ) : null}
+                          {item.text ? (
+                            <p className="mt-5 max-w-4xl text-[15px] leading-8 text-ink/80">{item.text}</p>
+                          ) : null}
+                        </div>
+                      </article>
+                    </Reveal>
                   </li>
                 ))}
               </ol>
-            </Reveal>
-          </div>
+            </div>
+          ) : null}
 
           <div className="mt-20">
             <Reveal>

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { getContent } from "@/lib/content";
 import type { Sponsor } from "@/lib/content-types";
 import { SponsorMarkIcon } from "./SponsorMark";
@@ -29,13 +28,8 @@ export function SponsorPlaque({ sponsor }: { sponsor: Sponsor }) {
     <article className="flex w-56 shrink-0 flex-col items-center text-center">
       <div className="flex size-36 items-center justify-center rounded-full border border-brand/15 bg-ivory">
         {sponsor.logoSrc ? (
-          <Image
-            src={sponsor.logoSrc}
-            alt=""
-            width={88}
-            height={88}
-            className="size-20 object-contain"
-          />
+          // eslint-disable-next-line @next/next/no-img-element -- logo adresi her kaynaktan gelebilir
+          <img src={sponsor.logoSrc} alt="" className="size-20 object-contain" />
         ) : (
           <SponsorMarkIcon mark={sponsor.mark} />
         )}
