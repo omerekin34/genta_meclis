@@ -10,6 +10,7 @@ import { InstagramIcon, MailIcon, WhatsAppIcon } from "@/components/layout/Socia
 import { CommissionIcon } from "@/components/commissions/CommissionIcon";
 import { SchoolPicker } from "@/components/forms/SchoolPicker";
 import { teamAcademicGroup, teamLeadGroup, teamOrgLeadGroup, teamUnits, type Content } from "@/lib/content-types";
+import { optimizeImageForUpload, uploadReadyMaxBytes } from "@/lib/optimize-image";
 import { teamGroupRank } from "@/lib/team";
 import { ApplicationsPanel } from "./ApplicationsPanel";
 
@@ -1132,7 +1133,6 @@ function TeamPanel({
   );
 }
 
-const imageMaxBytes = 4 * 1024 * 1024;
 const hostedMedia = "/storage/v1/object/public/genta-media/";
 
 function clipboardFile(data: DataTransfer) {
@@ -1185,17 +1185,18 @@ function ImageField({
   hint?: string;
   onChange: (value: string) => void;
 }) {
-  const [uploading, setUploading] = useState(false);
+  const [phase, setPhase] = useState<"idle" | "optimize" | "upload">("idle");
   const [error, setError] = useState("");
+  const busy = phase !== "idle";
 
   async function postUpload(body: FormData) {
-    setUploading(true);
+    setPhase("upload");
     setError("");
     try {
       const response = await fetch("/api/admin/upload", { method: "POST", body });
       const result = (await response.json().catch(() => null)) as { url?: string; error?: string } | null;
       if (!response.ok || !result?.url) {
-        setError(result?.error ?? (response.status === 413 ? "Dosya en fazla 4 MB olsun." : "Görsel yüklenemedi."));
+        setError(result?.error ?? (response.status === 413 ? "Görsel optimize edildikten sonra hâlâ çok büyük." : "Görsel yüklenemedi."));
         return false;
       }
       onChange(result.url);
@@ -1204,15 +1205,28 @@ function ImageField({
       setError("Görsel yüklenemedi. Bağlantıyı kontrol et.");
       return false;
     } finally {
-      setUploading(false);
+      setPhase("idle");
     }
   }
 
   async function upload(file: File) {
-    const body = new FormData();
-    body.append("file", file);
-    body.append("folder", folder);
-    await postUpload(body);
+    setPhase("optimize");
+    setError("");
+    try {
+      const optimized = await optimizeImageForUpload(file);
+      if (optimized.size > uploadReadyMaxBytes) {
+        setError("Görsel optimize edildikten sonra hâlâ çok büyük. Daha küçük bir dosya deneyin.");
+        setPhase("idle");
+        return;
+      }
+      const body = new FormData();
+      body.append("file", optimized);
+      body.append("folder", folder);
+      await postUpload(body);
+    } catch {
+      setError("Görsel optimize edilemedi. Başka bir dosya deneyin.");
+      setPhase("idle");
+    }
   }
 
   async function importUrl(url: string) {
@@ -1233,12 +1247,8 @@ function ImageField({
   function takeTransfer(data: DataTransfer, event?: { preventDefault(): void }) {
     const file = clipboardFile(data);
     const source = clipboardSource(data);
-    if (file && (file.size <= imageMaxBytes || !source)) {
+    if (file) {
       event?.preventDefault();
-      if (file.size > imageMaxBytes) {
-        setError("Dosya en fazla 4 MB olsun.");
-        return;
-      }
       void upload(file);
       return;
     }
@@ -1284,14 +1294,14 @@ function ImageField({
         <div className="min-w-0 flex-1 space-y-3">
           <div className="flex flex-wrap items-center gap-3">
             <label
-              className={`inline-flex cursor-pointer items-center rounded-full bg-brand px-4 py-2.5 text-sm font-medium text-white ${uploading ? "pointer-events-none opacity-50" : ""}`}
+              className={`inline-flex cursor-pointer items-center rounded-full bg-brand px-4 py-2.5 text-sm font-medium text-white ${busy ? "pointer-events-none opacity-50" : ""}`}
             >
-              {uploading ? "Yükleniyor" : "Bilgisayardan seç"}
+              {phase === "optimize" ? "Optimize ediliyor" : phase === "upload" ? "Yükleniyor" : "Bilgisayardan seç"}
               <input
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
                 className="sr-only"
-                disabled={uploading}
+                disabled={busy}
                 onChange={(event) => {
                   const file = event.target.files?.[0];
                   event.target.value = "";
@@ -1300,7 +1310,7 @@ function ImageField({
               />
             </label>
             {value ? (
-              <button type="button" onClick={() => onChange("")} className="text-sm text-ink/55 hover:text-brand">
+              <button type="button" onClick={() => onChange("")} className="text-sm text-ink/55 hover:text-brand" disabled={busy}>
                 Görseli kaldır
               </button>
             ) : null}
@@ -1308,14 +1318,17 @@ function ImageField({
           <input
             value={value}
             onChange={(event) => onChange(event.target.value.trim())}
-            disabled={uploading}
+            disabled={busy}
             placeholder="görseli veya https:// adresini yapıştır (Ctrl+V)"
             className="w-full rounded-2xl border border-brand/15 bg-ivory px-4 py-3 text-sm text-ink outline-none focus:border-brand"
           />
           <p className="text-xs leading-5 text-ink/50">
             {hint ? `${hint} ` : null}
-            JPG, PNG, WEBP, GIF veya SVG. En fazla 4 MB. Görseli kopyalayıp buraya yapıştırabilirsin; link de olur, indirmene gerek yok.
+            JPG, PNG, WEBP, GIF veya SVG. Yüksek boyutlu görselleriniz sistem tarafından otomatik optimize edilecektir. Görseli kopyalayıp buraya yapıştırabilirsin; link de olur, indirmene gerek yok.
           </p>
+          {phase === "optimize" ? (
+            <p className="text-xs leading-5 text-brand/70">Görsel arka planda sıkıştırılıyor; ardından yüklenecek.</p>
+          ) : null}
           {error ? <p className="text-sm text-brand">{error}</p> : null}
         </div>
       </div>
