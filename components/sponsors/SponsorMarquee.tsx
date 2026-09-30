@@ -26,12 +26,14 @@ export async function SponsorMarquee() {
 export function SponsorPlaque({ sponsor }: { sponsor: Sponsor }) {
   return (
     <article className="flex w-56 shrink-0 flex-col items-center text-center">
-      <div className="flex size-36 items-center justify-center rounded-full border border-brand/15 bg-ivory">
+      <div className="relative size-36 overflow-hidden rounded-full border border-brand/15 bg-ivory">
         {sponsor.logoSrc ? (
           // eslint-disable-next-line @next/next/no-img-element -- logo adresi her kaynaktan gelebilir
-          <img src={sponsor.logoSrc} alt="" className="size-20 object-contain" />
+          <img src={sponsor.logoSrc} alt="" className="size-full object-cover" />
         ) : (
-          <SponsorMarkIcon mark={sponsor.mark} />
+          <span className="flex size-full items-center justify-center">
+            <SponsorMarkIcon mark={sponsor.mark} />
+          </span>
         )}
       </div>
       <h3 className="mt-4 flex h-10 items-center justify-center font-display text-[13px] leading-5 font-semibold tracking-[0.1em] text-brand uppercase">
