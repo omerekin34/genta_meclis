@@ -22,7 +22,8 @@ export async function generateMetadata(): Promise<Metadata> {
       default: `${site.name} | ${site.title} ${site.edition}`,
       template: `%s | ${site.name}`,
     },
-    description: `${site.title} ${site.edition}. ${site.datesShort}, ${site.city}. ${site.venue}.`,
+    description: `${site.title} ${site.edition}. ${site.datesShort}, ${site.city}. ${site.venue}. GENTA Meclis Simülasyonu resmi web sitesi.`,
+    keywords: ["Genta Meclis", "Genta", "Genta Meclis Simülasyonu", "Genç Tartışmacılar", "Genta Başvuru", "İstanbul Meclis Simülasyonu"],
     icons: {
       icon: "/brand/icon.png",
       apple: "/apple-icon.png",
