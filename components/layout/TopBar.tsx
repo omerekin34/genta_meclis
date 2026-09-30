@@ -39,7 +39,7 @@ export function TopBar() {
             target="_blank"
             rel="noreferrer"
             className="inline-flex size-8 items-center justify-center gap-2 text-white/85 transition-colors duration-500 hover:text-white sm:size-9 sm:w-auto sm:justify-start sm:px-1"
-            aria-label="WhatsApp grubuna ve topluluğuna katılma isteği gönder"
+            aria-label={copy.frame.whatsappCommunity}
           >
             <WhatsAppIcon className="size-4 sm:size-3.5" />
             <span className="hidden font-display text-[11px] tracking-[0.12em] lg:inline">

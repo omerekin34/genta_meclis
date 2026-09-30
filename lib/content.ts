@@ -87,6 +87,7 @@ export function defaultContent(): Content {
       eventStartIso: site.eventStartIso,
       headerOffset: site.headerOffset,
       communityJoinMessage,
+      communityJoinUrl: "",
     },
     coordinators: coordinators.map((person, index) => ({
       id: `coord-${index + 1}`,
@@ -165,6 +166,7 @@ function normalizeCommission(value: unknown, index: number): Commission {
       };
     })
     .filter((item) => item.title || item.text);
+  const logo = text(row.logoSrc);
   return {
     slug: text(row.slug) || `komisyon-${index + 1}`,
     name: text(row.name),
@@ -173,6 +175,7 @@ function normalizeCommission(value: unknown, index: number): Commission {
     description: text(row.description),
     agenda,
     icon: asIcon(row.icon),
+    logoSrc: logo || undefined,
     media: media.map((item, mediaIndex) => {
       const mediaRow = item && typeof item === "object" ? (item as Record<string, unknown>) : {};
       const kind = mediaRow.kind === "video" ? "video" : "image";
@@ -231,6 +234,7 @@ export function normalizeContent(value: unknown): Content {
       eventStartIso: text(siteRow.eventStartIso, fallback.site.eventStartIso),
       headerOffset: text(siteRow.headerOffset, fallback.site.headerOffset),
       communityJoinMessage: text(siteRow.communityJoinMessage, fallback.site.communityJoinMessage),
+      communityJoinUrl: text(siteRow.communityJoinUrl, fallback.site.communityJoinUrl),
     },
     coordinators: Array.isArray(row.coordinators)
       ? row.coordinators.map(normalizeCoordinator)

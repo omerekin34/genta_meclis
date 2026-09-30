@@ -23,7 +23,8 @@
     "applicationDeadlineIso": "2026-11-01T23:59:59+03:00",
     "eventStartIso": "2026-11-14T09:00:00+03:00",
     "headerOffset": "7.25rem",
-    "communityJoinMessage": "Merhaba, GENTA Meclisi WhatsApp grubuna ve topluluğuna katılmak istiyorum."
+    "communityJoinMessage": "Merhaba, GENTA Meclisi WhatsApp grubuna ve topluluğuna katılmak istiyorum.",
+    "communityJoinUrl": ""
   },
   "coordinators": [
     {

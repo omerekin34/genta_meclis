@@ -38,7 +38,12 @@ export type Commission = {
   agenda: AgendaItem[];
   icon: IconName;
   media: CommissionMedia[];
+  logoSrc?: string;
 };
+
+export function commissionLogoSrc(commission: Pick<Commission, "slug" | "logoSrc">) {
+  return commission.logoSrc?.trim() || `/logos/${commission.slug}.jpg`;
+}
 
 function agenda(slug: keyof typeof agendas): AgendaItem[] {
   return agendas[slug].map((item, index) => ({ id: `${slug}-gundem-${index + 1}`, ...item }));

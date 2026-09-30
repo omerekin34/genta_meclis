@@ -493,14 +493,16 @@ function SocialPanel({
           </span>
           <p className="font-display text-sm font-semibold text-brand">WhatsApp topluluğu</p>
         </div>
-        <div className="mt-4">
-          <AreaField
-            label="Katılım mesajı"
-            value={draft.site.communityJoinMessage}
-            onChange={(value) => patchSite("communityJoinMessage", value)}
+        <div className="mt-4 space-y-4">
+          <TextField
+            label="Topluluk bağlantısı"
+            value={draft.site.communityJoinUrl}
+            placeholder="https://chat.whatsapp.com/..."
+            onChange={(value) => patchSite("communityJoinUrl", value)}
           />
-          <p className="mt-2 text-sm leading-6 text-ink/55">
-            Bağlantı listedeki ilk koordinatörün numarasına gider.
+          <p className="text-sm leading-6 text-ink/55">
+            Üst çubuk ve alt menüdeki WhatsApp topluluğu bu adrese gider. Grup veya topluluk davet linkini yapıştır
+            (<span className="text-ink/80">https://chat.whatsapp.com/...</span>).
           </p>
         </div>
       </article>
@@ -747,6 +749,14 @@ function CommissionsPanel({ draft, setDraft, focusSlug }: PanelProps & { focusSl
         >
           <TextField label="Kısa ad" value={current.name} onChange={(value) => update(current.slug, { name: value })} />
           <TextField label="Tam ad" value={current.fullName} onChange={(value) => update(current.slug, { fullName: value })} />
+          <ImageField
+            label="Sayfa logosu"
+            folder="komisyon"
+            value={current.logoSrc ?? ""}
+            round
+            hint="Komisyon sayfasının ortasındaki mühürde görünür. Kare veya yuvarlak logo en temiz durur."
+            onChange={(value) => update(current.slug, { logoSrc: value || undefined })}
+          />
           <TextField
             label="Adres"
             value={current.slug}
@@ -1165,12 +1175,14 @@ function ImageField({
   folder,
   value,
   round = false,
+  hint,
   onChange,
 }: {
   label: string;
   folder: string;
   value: string;
   round?: boolean;
+  hint?: string;
   onChange: (value: string) => void;
 }) {
   const [uploading, setUploading] = useState(false);
@@ -1301,6 +1313,7 @@ function ImageField({
             className="w-full rounded-2xl border border-brand/15 bg-ivory px-4 py-3 text-sm text-ink outline-none focus:border-brand"
           />
           <p className="text-xs leading-5 text-ink/50">
+            {hint ? `${hint} ` : null}
             JPG, PNG, WEBP, GIF veya SVG. En fazla 4 MB. Görseli kopyalayıp buraya yapıştırabilirsin; link de olur, indirmene gerek yok.
           </p>
           {error ? <p className="text-sm text-brand">{error}</p> : null}
@@ -1688,12 +1701,23 @@ function Card({
   );
 }
 
-function TextField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+function TextField({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}) {
   return (
     <label className="block">
       <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">{label}</span>
       <input
         value={value}
+        placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
         className="mt-2 w-full rounded-2xl border border-brand/15 bg-ivory px-4 py-3 text-ink outline-none focus:border-brand"
       />

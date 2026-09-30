@@ -104,6 +104,7 @@ export type SiteFacts = {
   eventStartIso: string;
   headerOffset: string;
   communityJoinMessage: string;
+  communityJoinUrl: string;
 };
 
 export type Content = {

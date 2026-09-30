@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CommissionEmblem } from "@/components/commissions/CommissionEmblem";
 import { MediaGallery } from "@/components/commissions/MediaGallery";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/motion/Reveal";
@@ -46,17 +46,7 @@ export default async function CommissionPage({ params }: PageProps) {
             ← Komisyonlar
           </Link>
           <div className="mt-10 flex justify-center sm:mt-12">
-            <div className="flex h-32 w-32 items-center justify-center md:h-48 md:w-48">
-              <Image
-                src={`/logos/${commission.slug}.jpg`}
-                alt={`${commission.name} logosu`}
-                width={384}
-                height={384}
-                priority
-                sizes="(min-width: 640px) 192px, 128px"
-                className="h-full w-full scale-[1.03] object-cover [clip-path:circle(49%_at_50%_50%)]"
-              />
-            </div>
+            <CommissionEmblem commission={commission} />
           </div>
           <h1 className="mt-10 font-display text-4xl leading-tight font-semibold sm:mt-12 sm:text-6xl">
             {commission.name}
