@@ -16,6 +16,43 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+const MISIR_TURU_NOTE =
+  "Mısır Turu ile ilgili detaylı bilgilendirme çok yakında buradan yapılacaktır.";
+
+function MisirTuruNavLink({
+  variant,
+}: {
+  variant: "desktop" | "mobile";
+}) {
+  const isMobile = variant === "mobile";
+
+  return (
+    <a
+      href="#"
+      onClick={(event) => event.preventDefault()}
+      className={
+        isMobile
+          ? "group relative block border-b border-white/10 py-4 font-display text-3xl font-semibold text-amber-400 transition-all duration-500 hover:text-amber-300 hover:drop-shadow-[0_0_12px_rgba(251,191,36,0.9)]"
+          : "group relative inline-flex font-display text-[11px] xl:text-[12px] font-semibold tracking-[0.04em] whitespace-nowrap text-amber-400 transition-all duration-500 hover:text-amber-300 hover:drop-shadow-[0_0_10px_rgba(251,191,36,0.85)]"
+      }
+    >
+      Mısır Turu
+      <span
+        role="tooltip"
+        className={`pointer-events-none absolute left-1/2 z-[70] w-[min(16.5rem,calc(100vw-2.5rem))] -translate-x-1/2 whitespace-normal rounded-md bg-paper px-3.5 py-2.5 text-center font-sans text-[11px] font-medium leading-5 text-brand opacity-0 shadow-xl transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 ${
+          isMobile ? "top-full mt-1" : "top-full mt-3"
+        }`}
+      >
+        <span
+          aria-hidden="true"
+          className="absolute -top-[6px] left-1/2 -translate-x-1/2 border-x-[6px] border-b-[6px] border-x-transparent border-b-paper"
+        />
+        {MISIR_TURU_NOTE}
+      </span>
+    </a>
+  );
+}
+
 export function Navbar() {
   const { site, navItems, copy } = useContent();
   const pathname = usePathname();
@@ -133,6 +170,7 @@ export function Navbar() {
               </Link>
             );
           })}
+          <MisirTuruNavLink variant="desktop" />
         </nav>
 
         <div className="flex items-center gap-3">
@@ -282,6 +320,17 @@ export function Navbar() {
                     </motion.div>
                     );
                   })}
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: reduce ? 0 : 0.7,
+                      delay: reduce ? 0 : 0.08 * mobileNav.length,
+                      ease: pageFade.ease,
+                    }}
+                  >
+                    <MisirTuruNavLink variant="mobile" />
+                  </motion.div>
                   <Link
                     href="/basvuru"
                     className="mt-8 inline-flex w-full items-center justify-center gap-2 bg-white px-5 py-4 font-display text-sm font-semibold tracking-[0.04em] text-brand"
