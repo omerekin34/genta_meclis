@@ -16,7 +16,7 @@ export function TeamBranchNav() {
             key={item.href}
             href={item.href}
             aria-current={active ? "page" : undefined}
-            className={`inline-flex rounded-full border px-5 py-2 font-display text-[12px] font-semibold tracking-[0.16em] uppercase transition-colors duration-300 ${
+            className={`inline-flex rounded-full border px-5 py-2 font-display text-[12px] font-semibold tracking-[0.04em] transition-colors duration-300 ${
               active
                 ? "border-brand bg-brand text-white"
                 : "border-brand/20 bg-white text-brand hover:border-brand/50 hover:bg-brand/5"

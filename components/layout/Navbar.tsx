@@ -93,7 +93,7 @@ export function Navbar() {
                   aria-controls="ekip-alt-menu"
                   aria-current={active ? "page" : undefined}
                   onClick={() => setTeamOpen((current) => !current)}
-                  className={`group relative inline-flex items-center gap-1.5 font-display text-[11px] xl:text-[12px] font-medium tracking-[0.12em] xl:tracking-[0.14em] whitespace-nowrap uppercase transition-colors duration-700 ${
+                  className={`group relative inline-flex items-center gap-1.5 font-display text-[11px] xl:text-[12px] font-medium tracking-[0.04em] whitespace-nowrap transition-colors duration-700 ${
                     active || teamOpen ? "text-white" : "text-white/70 hover:text-white"
                   }`}
                 >
@@ -118,7 +118,7 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`group relative font-display text-[11px] xl:text-[12px] font-medium tracking-[0.12em] xl:tracking-[0.14em] whitespace-nowrap uppercase transition-colors duration-700 ${
+                className={`group relative font-display text-[11px] xl:text-[12px] font-medium tracking-[0.04em] whitespace-nowrap transition-colors duration-700 ${
                   active ? "text-white" : "text-white/70 hover:text-white"
                 }`}
               >
@@ -136,7 +136,7 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           <Link
             href="/basvuru"
-            className="group hidden items-center gap-2 border border-white bg-white px-5 py-3 font-display text-[12px] font-semibold tracking-[0.16em] text-brand uppercase transition-all duration-700 hover:-translate-y-0.5 hover:bg-transparent hover:text-white hover:shadow-[0_10px_28px_rgba(0,0,0,0.22)] sm:inline-flex"
+            className="group hidden items-center gap-2 border border-white bg-white px-5 py-3 font-display text-[12px] font-semibold tracking-[0.04em] text-brand transition-all duration-700 hover:-translate-y-0.5 hover:bg-transparent hover:text-white hover:shadow-[0_10px_28px_rgba(0,0,0,0.22)] sm:inline-flex"
           >
             {copy.frame.applyCta}
             <span
@@ -187,7 +187,7 @@ export function Navbar() {
                     key={branch.href}
                     href={branch.href}
                     aria-current={active ? "page" : undefined}
-                    className={`font-display text-[12px] font-medium tracking-[0.28em] uppercase transition-colors duration-500 ${
+                    className={`font-display text-[12px] font-medium tracking-[0.04em] transition-colors duration-500 ${
                       active ? "text-white" : "text-white/55 hover:text-white"
                     }`}
                     onClick={() => setTeamOpen(false)}
@@ -258,7 +258,7 @@ export function Navbar() {
                                   <Link
                                     key={branch.href}
                                     href={branch.href}
-                                    className="block py-3 font-display text-xl font-medium tracking-[0.12em] text-white/70 uppercase"
+                                    className="block py-3 font-display text-xl font-medium tracking-[0.02em] text-white/70"
                                     onClick={() => setMenuPath(null)}
                                   >
                                     {branch.label}
@@ -282,7 +282,7 @@ export function Navbar() {
                   })}
                   <Link
                     href="/basvuru"
-                    className="mt-8 inline-flex w-full items-center justify-center gap-2 bg-white px-5 py-4 font-display text-sm font-semibold tracking-[0.16em] text-brand uppercase"
+                    className="mt-8 inline-flex w-full items-center justify-center gap-2 bg-white px-5 py-4 font-display text-sm font-semibold tracking-[0.04em] text-brand"
                     onClick={() => setMenuPath(null)}
                   >
                     {copy.frame.applyCta}
