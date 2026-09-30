@@ -10,6 +10,7 @@ import { InstagramIcon, MailIcon, WhatsAppIcon } from "@/components/layout/Socia
 import { CommissionIcon } from "@/components/commissions/CommissionIcon";
 import { SchoolPicker } from "@/components/forms/SchoolPicker";
 import { teamAcademicGroup, teamLeadGroup, teamOrgLeadGroup, teamUnits, type Content } from "@/lib/content-types";
+import { teamGroupRank } from "@/lib/team";
 import { ApplicationsPanel } from "./ApplicationsPanel";
 
 const sections = [
@@ -982,6 +983,9 @@ function moveWithinGroup(list: Content["team"], id: string, direction: -1 | 1) {
 function TeamGroupOptions({ commissions }: { commissions: Content["commissions"] }) {
   return (
     <>
+      <optgroup label="Koordinasyon">
+        <option value={teamLeadGroup}>Genel Koordinasyon</option>
+      </optgroup>
       <optgroup label="Akademik">
         <option value={teamAcademicGroup}>Akademik Başkanı</option>
         {commissions.map((commission) => (
@@ -998,7 +1002,6 @@ function TeamGroupOptions({ commissions }: { commissions: Content["commissions"]
           </option>
         ))}
       </optgroup>
-      <option value={teamLeadGroup}>Genel Koordinasyon</option>
       <option value="">Diğer ekip</option>
     </>
   );
@@ -1019,12 +1022,14 @@ function TeamPanel({
 
   const counts = new Map<string, number>();
   for (const member of draft.team) counts.set(member.group, (counts.get(member.group) ?? 0) + 1);
-  const shown = filter === null ? draft.team : draft.team.filter((member) => member.group === filter);
+  const shown = [...(filter === null ? draft.team : draft.team.filter((member) => member.group === filter))].sort(
+    (a, b) => teamGroupRank(a.group, draft.commissions) - teamGroupRank(b.group, draft.commissions),
+  );
 
   return (
     <div className="space-y-4">
       <p className="text-sm leading-6 text-ink/60">
-        Ekip iki sayfaya ayrılır. Akademik sayfada Akademik Başkanı ve komisyon başkanları durur. Organizasyon sayfada Organizasyon Başkanı ile Tasarım, Halkla İlişkiler, Lojistik, Sosyal Medya ve Basın ekipleri durur. Okul için birkaç harf yaz, listeden seç. Değişiklikten sonra Kaydet’e bas.
+        Akademik sayfada sıra Genel Koordinasyon, Akademik Başkanı ve komisyon başkanlarıdır. Organizasyon sayfada sıra Genel Koordinasyon, Organizasyon Başkanı ve Tasarım, Halkla İlişkiler, Lojistik, Sosyal Medya, Basın ekipleridir. Okul için birkaç harf yaz, listeden seç. Değişiklikten sonra Kaydet’e bas.
       </p>
       <div className="flex flex-wrap items-center gap-3 rounded-3xl border border-brand/10 bg-white p-4">
         <label className="flex min-w-0 flex-1 items-center gap-3">
@@ -1035,6 +1040,9 @@ function TeamPanel({
             className="min-w-0 flex-1 rounded-2xl border border-brand/15 bg-ivory px-4 py-2.5 text-sm"
           >
             <option value="__all">Tüm ekip ({draft.team.length})</option>
+            <optgroup label="Koordinasyon">
+              <option value={teamLeadGroup}>Genel Koordinasyon ({counts.get(teamLeadGroup) ?? 0})</option>
+            </optgroup>
             <optgroup label="Akademik">
               <option value={teamAcademicGroup}>Akademik Başkanı ({counts.get(teamAcademicGroup) ?? 0})</option>
               {draft.commissions.map((commission) => (
@@ -1051,7 +1059,6 @@ function TeamPanel({
                 </option>
               ))}
             </optgroup>
-            <option value={teamLeadGroup}>Genel Koordinasyon ({counts.get(teamLeadGroup) ?? 0})</option>
             <option value="">Diğer ekip ({counts.get("") ?? 0})</option>
           </select>
         </label>

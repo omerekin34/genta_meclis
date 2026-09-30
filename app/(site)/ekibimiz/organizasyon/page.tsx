@@ -6,7 +6,7 @@ import { organizationTeam } from "@/lib/team";
 export const metadata: Metadata = {
   title: "Organizasyon Ekibi",
   description:
-    "GENTA 2026 organizasyon başkanı ile tasarım, halkla ilişkiler, lojistik, sosyal medya ve basın ekipleri.",
+    "GENTA 2026 genel koordinasyon, organizasyon başkanı ile tasarım, halkla ilişkiler, lojistik, sosyal medya ve basın ekipleri.",
 };
 
 export default async function OrganizationTeamPage() {
@@ -21,7 +21,7 @@ export default async function OrganizationTeamPage() {
       description={copy.pages.orgText}
       groups={groups}
       categories={categories}
-      empty="Organizasyon başkanı ile tasarım, halkla ilişkiler, lojistik, sosyal medya ve basın ekipleri eklendikçe burada görünecek."
+      empty="Genel koordinasyon, organizasyon başkanı ile tasarım, halkla ilişkiler, lojistik, sosyal medya ve basın ekipleri eklendikçe burada görünecek."
     />
   );
 }

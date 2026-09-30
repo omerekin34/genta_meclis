@@ -5,7 +5,7 @@ import { academicTeam } from "@/lib/team";
 
 export const metadata: Metadata = {
   title: "Akademik Ekip",
-  description: "GENTA 2026 akademik başkanı ve komisyon başkanları.",
+  description: "GENTA 2026 genel koordinasyon, akademik başkanı ve komisyon başkanları.",
 };
 
 export default async function AcademicTeamPage() {
@@ -20,7 +20,7 @@ export default async function AcademicTeamPage() {
       description={copy.pages.academicText}
       groups={groups}
       categories={categories}
-      empty="Akademik başkanı ve komisyon başkanları eklendikçe burada görünecek."
+      empty="Genel koordinasyon, akademik başkanı ve komisyon başkanları eklendikçe burada görünecek."
     />
   );
 }
