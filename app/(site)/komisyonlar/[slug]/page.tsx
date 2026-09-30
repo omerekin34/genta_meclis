@@ -66,7 +66,7 @@ export default async function CommissionPage({ params }: PageProps) {
             <p className="font-display text-xs tracking-[0.28em] text-brand/70 uppercase">Konu</p>
             <p className="mt-5 text-lg leading-8 text-ink/85">{commission.description}</p>
             <Link
-              href={`/basvuru?komisyon=${commission.slug}`}
+              href="/basvuru"
               className="mt-8 inline-flex bg-brand px-6 py-3.5 font-display text-[12px] font-semibold tracking-[0.18em] text-white uppercase transition-colors duration-700 hover:bg-brand-deep"
             >
               Bu komisyona başvur

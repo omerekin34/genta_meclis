@@ -22,7 +22,7 @@ export const defaultCopy = {
     teamOrgCta: "Organizasyon",
     applyTitle: "Başvurular\naçıldı",
     applyText:
-      "Bireysel delege veya okul delegasyonu olarak yerinizi ayırın. Tercih ettiğiniz komisyonu başvuru formunda belirtin.",
+      "Bireysel delege veya okul delegasyonu olarak yerinizi ayırın. Başvuru türünü seçin; form yeni sekmede açılır.",
     applyCta: "Başvuru formuna git",
     sponsorsEyebrow: "Destekleyenler",
     sponsorsTitle: "Sponsorlar",
@@ -66,7 +66,8 @@ export const defaultCopy = {
     contactSubmit: "Gönder",
     applyEyebrow: "Başvuru",
     applyTitle: "Başvurular açıldı.",
-    applyText: "Bireysel delege veya okul delegasyonu olarak başvurun. Son tarih 1 Kasım 2026. Katılım ücreti 800₺.",
+    applyText:
+      "Bireysel delege veya okul delegasyonu olarak başvurun. Formlar Google Forms üzerinde yeni sekmede açılır. Son tarih 1 Kasım 2026. Katılım ücreti 800₺.",
   },
   frame: {
     applyCta: "Başvuru Yap",

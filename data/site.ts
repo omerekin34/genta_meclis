@@ -84,6 +84,21 @@ export const communityJoinMessage =
 
 export const communityJoinHref = whatsAppHref(coordinators[0].whatsapp, communityJoinMessage);
 
+export const applicationForms = [
+  {
+    id: "bireysel",
+    title: "Bireysel Başvuru",
+    text: "Tek delege olarak meclise katılın. Form Google Forms üzerinde açılır.",
+    href: "https://docs.google.com/forms/d/1CR_b5z20Dd_RzBWXx14vIkPkT0_FPoh2_dMEXx5O1wU/viewform",
+  },
+  {
+    id: "delegasyon",
+    title: "Delegasyon Başvurusu",
+    text: "Okul veya grup olarak meclise katılın. Form Google Forms üzerinde açılır.",
+    href: "https://docs.google.com/forms/d/15wz6gaVZk7f3e1dXe0uxd2JRIGo1Y1NKimPa9Ya0Fdo/viewform",
+  },
+] as const;
+
 export const navItems = [
   { href: "/", label: "Ana Sayfa" },
   { href: "/hakkimizda", label: "Hakkımızda" },
@@ -92,5 +107,4 @@ export const navItems = [
   { href: "/basvuru", label: "Başvuru" },
   { href: "/sponsorlar", label: "Sponsorlar" },
   { href: "/iletisim", label: "İletişim" },
-  { href: "/basvuru/durum", label: "Sorgulama" },
 ] as const;

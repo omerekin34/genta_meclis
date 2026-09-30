@@ -62,8 +62,10 @@ export function Navbar() {
     return () => document.removeEventListener("mousedown", onPointer);
   }, [teamOpen]);
 
-  const mainNav = navItems.filter((item) => item.href !== "/" && item.href !== "/basvuru");
-  const mobileNav = navItems.filter((item) => item.href !== "/basvuru");
+  const mainNav = navItems.filter(
+    (item) => item.href !== "/" && item.href !== "/basvuru" && item.href !== "/basvuru/durum",
+  );
+  const mobileNav = navItems.filter((item) => item.href !== "/basvuru" && item.href !== "/basvuru/durum");
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 text-white">

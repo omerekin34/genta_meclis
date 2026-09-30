@@ -53,7 +53,9 @@ export async function Footer() {
           <nav className="md:col-span-3" aria-label="Alt menü">
             <SectionLabel>{copy.frame.columnPages}</SectionLabel>
             <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 md:block md:space-y-3">
-              {navItems.map((item) => (
+              {navItems
+                .filter((item) => item.href !== "/basvuru/durum")
+                .map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}

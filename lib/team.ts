@@ -125,6 +125,7 @@ export function collapseTeamNav(items: NavItem[]): NavItem[] {
   const hub = items.find((item) => item.href === teamHubHref);
 
   for (const item of items) {
+    if (item.href === "/basvuru/durum") continue;
     if (!isTeamNavHref(item.href)) {
       result.push(item);
       continue;
