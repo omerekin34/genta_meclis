@@ -836,14 +836,14 @@
       "name": "Metin Oktay Tüylü",
       "role": "Genel Koordinatör",
       "school": "",
-      "photo": ""
+      "photo": "/koordinator1.jpg"
     },
     {
       "id": "team-2",
       "name": "Ömer Asaf Ertaş",
       "role": "Genel Koordinatör",
       "school": "",
-      "photo": ""
+      "photo": "/koordinator2.jpg"
     }
   ]
 }

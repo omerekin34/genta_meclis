@@ -24,17 +24,14 @@ function initials(name: string) {
 export async function HomeSections() {
   const { site, about, copy, team } = await getContent();
   const named = team.filter((member) => member.name);
-  const presidents = [
-    ...named.filter((member) => member.group === teamAcademicGroup),
-    ...named.filter((member) => member.group === teamOrgLeadGroup),
-  ];
-  const leads = (
-    presidents.length > 0
-      ? presidents
-      : named.some((member) => member.group === teamLeadGroup)
-        ? named.filter((member) => member.group === teamLeadGroup)
-        : named
-  ).slice(0, 4);
+  const coordination = named.filter(
+    (member) => member.group === teamLeadGroup || /genel koordinat/i.test(member.role),
+  );
+  const leads = (coordination.length > 0 ? coordination : named).slice(0, 4).map((member, index) => ({
+    ...member,
+    role: member.role.trim() || "Genel Koordinatör",
+    photo: member.photo || `/koordinator${index + 1}.jpg`,
+  }));
   return (
     <>
       <section className="bg-ivory py-20 text-ink sm:py-28">

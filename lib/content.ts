@@ -103,7 +103,7 @@ export function defaultContent(): Content {
       role: person.role,
       group: teamLeadGroup,
       school: "",
-      photo: "",
+      photo: `/koordinator${index + 1}.jpg`,
     })),
     navItems: collapseTeamNav(navItems.map((item) => ({ href: item.href, label: item.label }))),
     practicalNotes: practicalNotes.map((note, index) => ({
@@ -167,6 +167,18 @@ function normalizeCommission(value: unknown, index: number): Commission {
     })
     .filter((item) => item.title || item.text);
   const logo = text(row.logoSrc);
+  const bureau = (Array.isArray(row.bureau) ? row.bureau : [])
+    .map((item, bureauIndex) => {
+      const person = item && typeof item === "object" ? (item as Record<string, unknown>) : {};
+      const photo = text(person.photo);
+      return {
+        id: text(person.id) || `divan-${index + 1}-${bureauIndex + 1}`,
+        name: text(person.name),
+        role: text(person.role),
+        photo: photo || undefined,
+      };
+    })
+    .filter((member) => member.name || member.role || member.photo);
   return {
     slug: text(row.slug) || `komisyon-${index + 1}`,
     name: text(row.name),
@@ -176,6 +188,7 @@ function normalizeCommission(value: unknown, index: number): Commission {
     agenda,
     icon: asIcon(row.icon),
     logoSrc: logo || undefined,
+    bureau: bureau.length > 0 ? bureau : undefined,
     media: media.map((item, mediaIndex) => {
       const mediaRow = item && typeof item === "object" ? (item as Record<string, unknown>) : {};
       const kind = mediaRow.kind === "video" ? "video" : "image";

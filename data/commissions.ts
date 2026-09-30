@@ -29,6 +29,13 @@ export type AgendaItem = {
   text: string;
 };
 
+export type BureauMember = {
+  id: string;
+  name: string;
+  role: string;
+  photo?: string;
+};
+
 export type Commission = {
   slug: string;
   name: string;
@@ -39,7 +46,21 @@ export type Commission = {
   icon: IconName;
   media: CommissionMedia[];
   logoSrc?: string;
+  bureau?: BureauMember[];
 };
+
+export function placeholderBureau(slug: string): BureauMember[] {
+  return [
+    { id: `${slug}-divan-baskan`, name: "Ad Soyad", role: "Komisyon Başkanı" },
+    { id: `${slug}-divan-vekil`, name: "Ad Soyad", role: "Başkan Vekili" },
+    { id: `${slug}-divan-sozcu`, name: "Ad Soyad", role: "Sözcü" },
+  ];
+}
+
+export function commissionBureau(commission: Pick<Commission, "slug" | "bureau">): BureauMember[] {
+  const stored = (commission.bureau ?? []).filter((member) => member.name.trim() || member.role.trim());
+  return stored.length > 0 ? stored : placeholderBureau(commission.slug);
+}
 
 export function commissionLogoSrc(commission: Pick<Commission, "slug" | "logoSrc">) {
   return commission.logoSrc?.trim() || `/logos/${commission.slug}.jpg`;
@@ -71,6 +92,7 @@ export const commissions: Commission[] = [
     agenda: agenda("anayasa"),
     icon: "constitution",
     media: media("anayasa"),
+    bureau: placeholderBureau("anayasa"),
   },
   {
     slug: "saglik",
@@ -82,6 +104,7 @@ export const commissions: Commission[] = [
     agenda: agenda("saglik"),
     icon: "health",
     media: media("saglik"),
+    bureau: placeholderBureau("saglik"),
   },
   {
     slug: "adalet",
@@ -93,6 +116,7 @@ export const commissions: Commission[] = [
     agenda: agenda("adalet"),
     icon: "justice",
     media: media("adalet"),
+    bureau: placeholderBureau("adalet"),
   },
   {
     slug: "milli-egitim",
@@ -104,6 +128,7 @@ export const commissions: Commission[] = [
     agenda: agenda("milli-egitim"),
     icon: "education",
     media: media("egitim"),
+    bureau: placeholderBureau("milli-egitim"),
   },
   {
     slug: "milli-savunma",
@@ -115,6 +140,7 @@ export const commissions: Commission[] = [
     agenda: agenda("milli-savunma"),
     icon: "defense",
     media: media("savunma"),
+    bureau: placeholderBureau("milli-savunma"),
   },
   {
     slug: "disisleri",
@@ -126,6 +152,7 @@ export const commissions: Commission[] = [
     agenda: agenda("disisleri"),
     icon: "diplomacy",
     media: media("disisleri"),
+    bureau: placeholderBureau("disisleri"),
   },
   {
     slug: "icisleri",
@@ -137,6 +164,7 @@ export const commissions: Commission[] = [
     agenda: agenda("icisleri"),
     icon: "interior",
     media: media("icisleri"),
+    bureau: placeholderBureau("icisleri"),
   },
   {
     slug: "diyanet",
@@ -148,6 +176,7 @@ export const commissions: Commission[] = [
     agenda: agenda("diyanet"),
     icon: "faith",
     media: media("diyanet"),
+    bureau: placeholderBureau("diyanet"),
   },
   {
     slug: "turk-devletleri",
@@ -159,6 +188,7 @@ export const commissions: Commission[] = [
     agenda: agenda("turk-devletleri"),
     icon: "turkic",
     media: media("turk-devletleri"),
+    bureau: placeholderBureau("turk-devletleri"),
   },
 ];
 

@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CommissionBureau } from "@/components/commissions/CommissionBureau";
 import { CommissionEmblem } from "@/components/commissions/CommissionEmblem";
 import { MediaGallery } from "@/components/commissions/MediaGallery";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/motion/Reveal";
 import { getContent } from "@/lib/content";
+import { resolveCommissionBureau } from "@/lib/team";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +36,7 @@ export default async function CommissionPage({ params }: PageProps) {
   const content = await getContent();
   const commission = content.commissions.find((item) => item.slug === slug);
   if (!commission) notFound();
+  const bureau = resolveCommissionBureau(commission, content.team);
 
   return (
     <>
@@ -125,6 +128,8 @@ export default async function CommissionPage({ params }: PageProps) {
               <MediaGallery items={commission.media} />
             </div>
           </div>
+
+          <CommissionBureau commissionName={commission.name} members={bureau} />
         </Container>
       </section>
     </>

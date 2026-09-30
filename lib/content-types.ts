@@ -1,4 +1,4 @@
-import type { Commission, IconName } from "@/data/commissions";
+import type { BureauMember, Commission, IconName } from "@/data/commissions";
 import type { Sponsor, SponsorMark } from "@/data/sponsors";
 import type { SiteCopy } from "@/lib/site-copy";
 
@@ -128,4 +128,4 @@ export type Content = {
   copy: SiteCopy;
 };
 
-export type { Commission, IconName, Sponsor, SponsorMark };
+export type { BureauMember, Commission, IconName, Sponsor, SponsorMark };

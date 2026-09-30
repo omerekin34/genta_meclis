@@ -1,4 +1,5 @@
-import type { IconName } from "@/data/commissions";
+import type { BureauMember, IconName } from "@/data/commissions";
+import { commissionBureau } from "@/data/commissions";
 import type { Commission, NavItem, TeamMember } from "@/lib/content-types";
 import {
   isTeamNavHref,
@@ -24,6 +25,19 @@ export type TeamCategory = { value: string; label: string };
 
 function of(members: TeamMember[], group: string) {
   return members.filter((member) => member.group === group);
+}
+
+export function resolveCommissionBureau(commission: Commission, team: TeamMember[]): BureauMember[] {
+  const fromTeam = of(team, commission.slug)
+    .filter((member) => member.name.trim())
+    .map((member) => ({
+      id: member.id,
+      name: member.name,
+      role: member.role.trim() || "Komisyon Başkanı",
+      photo: member.photo.trim() || undefined,
+    }));
+  if (fromTeam.length > 0) return fromTeam;
+  return commissionBureau(commission);
 }
 
 function coordinationGroup(members: TeamMember[]): TeamGroup {
