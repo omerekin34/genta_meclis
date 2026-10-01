@@ -6,30 +6,58 @@ import { lines, type MisirTuruContent } from "@/lib/misir-turu";
 
 function CityPhoto({ src, alt }: { src: string; alt: string }) {
   const image = src.trim();
+  if (!image) return null;
   return (
     <div className="relative aspect-[16/9] overflow-hidden rounded-t-lg bg-gradient-to-br from-zinc-800 via-brand-deep to-zinc-950">
-      {image ? (
-        <Image src={image} alt={alt} fill sizes="(min-width: 1024px) 64rem, 100vw" className="object-cover" />
-      ) : (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="font-display text-sm tracking-[0.22em] text-white/35 uppercase">{alt}</span>
-        </div>
-      )}
+      <Image src={image} alt={alt} fill sizes="(min-width: 1024px) 64rem, 100vw" className="object-cover" />
     </div>
+  );
+}
+
+function CityList({ items }: { items: string[] }) {
+  if (items.length === 0) return null;
+  return (
+    <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+      {items.map((item, index) => (
+        <li
+          key={`${index}-${item}`}
+          className="border border-brand/10 bg-zinc-50 px-4 py-3 text-[15px] leading-relaxed text-slate-800"
+        >
+          {item}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function withFlags(text: string) {
+  const parts = text.split(/(\p{Regional_Indicator}{2})/u);
+  return parts.map((part, index) =>
+    /^\p{Regional_Indicator}{2}$/u.test(part) ? (
+      <span
+        key={index}
+        className="inline-block align-[-0.12em]"
+        style={{ fontFamily: '"Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif' }}
+      >
+        {part}
+      </span>
+    ) : (
+      <span key={index}>{part}</span>
+    ),
   );
 }
 
 export function MisirTuruView({ content }: { content: MisirTuruContent }) {
   const hurghadaExperiences = [
-    { title: content.hurghada_exp1_title, text: content.hurghada_exp1_text },
-    { title: content.hurghada_exp2_title, text: content.hurghada_exp2_text },
+    { id: "exp1", title: content.hurghada_exp1_title, text: content.hurghada_exp1_text },
+    { id: "exp2", title: content.hurghada_exp2_title, text: content.hurghada_exp2_text },
   ].filter((item) => item.title || item.text);
   const luksorItems = lines(content.luksor_items);
   const kahireItems = lines(content.kahire_items);
   const finaleCities = [
-    { title: content.finale_hurghada_title, text: content.finale_hurghada_text },
-    { title: content.finale_luksor_title, text: content.finale_luksor_text },
-    { title: content.finale_kahire_title, text: content.finale_kahire_text },
+    { id: "hurghada", title: content.finale_hurghada_title, text: content.finale_hurghada_text },
+    { id: "luksor", title: content.finale_luksor_title, text: content.finale_luksor_text },
+    { id: "kahire", title: content.finale_kahire_title, text: content.finale_kahire_text },
   ].filter((item) => item.title || item.text);
 
   return (
@@ -73,11 +101,15 @@ export function MisirTuruView({ content }: { content: MisirTuruContent }) {
                       </p>
                       <p className="mt-5 text-base leading-relaxed text-slate-800">{content.hurghada_body}</p>
                     </div>
-                    <ul className="space-y-6 border-t border-brand/10 pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
+                    <ul className="space-y-8 border-t border-brand/10 pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
                       {hurghadaExperiences.map((item) => (
-                        <li key={item.title}>
-                          <p className="font-display text-[15px] font-semibold tracking-wide text-brand">{item.title}</p>
-                          <p className="mt-2 text-[15px] leading-relaxed text-slate-800">{item.text}</p>
+                        <li key={item.id}>
+                          {item.title ? (
+                            <p className="font-display text-[15px] font-semibold tracking-wide text-brand sm:text-base">
+                              {item.title}
+                            </p>
+                          ) : null}
+                          {item.text ? <p className="mt-2 text-[15px] leading-relaxed text-slate-800 sm:text-base">{item.text}</p> : null}
                         </li>
                       ))}
                     </ul>
@@ -98,19 +130,10 @@ export function MisirTuruView({ content }: { content: MisirTuruContent }) {
                     {content.luksor_subtitle}
                   </p>
                   <p className="mt-5 text-base leading-relaxed text-slate-800">{content.luksor_body}</p>
-                  {luksorItems.length > 0 ? (
-                    <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-                      {luksorItems.map((item) => (
-                        <li
-                          key={item}
-                          className="border border-brand/10 bg-zinc-50 px-4 py-3 text-[15px] leading-relaxed text-slate-800"
-                        >
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
+                  <CityList items={luksorItems} />
+                  {content.luksor_closing ? (
+                    <p className="mt-6 text-base leading-relaxed text-slate-800">{content.luksor_closing}</p>
                   ) : null}
-                  <p className="mt-6 text-base leading-relaxed text-slate-800">{content.luksor_closing}</p>
                 </div>
               </article>
             </Reveal>
@@ -127,19 +150,10 @@ export function MisirTuruView({ content }: { content: MisirTuruContent }) {
                     {content.kahire_subtitle}
                   </p>
                   <p className="mt-5 text-base leading-relaxed text-slate-800">{content.kahire_body}</p>
-                  {kahireItems.length > 0 ? (
-                    <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-                      {kahireItems.map((item) => (
-                        <li
-                          key={item}
-                          className="border border-brand/10 bg-zinc-50 px-4 py-3 text-[15px] leading-relaxed text-slate-800"
-                        >
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
+                  <CityList items={kahireItems} />
+                  {content.kahire_closing ? (
+                    <p className="mt-6 text-base leading-relaxed text-slate-800">{content.kahire_closing}</p>
                   ) : null}
-                  <p className="mt-6 text-base leading-relaxed text-slate-800">{content.kahire_closing}</p>
                 </div>
               </article>
             </Reveal>
@@ -157,11 +171,11 @@ export function MisirTuruView({ content }: { content: MisirTuruContent }) {
 
           <div className="mt-12 grid gap-8 md:grid-cols-3 md:gap-10">
             {finaleCities.map((city, index) => (
-              <Reveal key={city.title} delay={index * 0.06}>
+              <Reveal key={city.id} delay={index * 0.06}>
                 <p className="font-display text-sm font-semibold tracking-[0.12em] text-amber-400 uppercase sm:text-base">
                   {city.title}
                 </p>
-                <p className="mt-3 text-sm leading-7 text-white">{city.text}</p>
+                <p className="mt-3 text-sm leading-7 text-white sm:text-[15px]">{city.text}</p>
               </Reveal>
             ))}
           </div>
@@ -169,11 +183,11 @@ export function MisirTuruView({ content }: { content: MisirTuruContent }) {
           <Reveal delay={0.12}>
             <p className="mx-auto mt-12 max-w-4xl text-base leading-relaxed text-white/90 sm:text-lg">{content.finale_body}</p>
             <div className="mx-auto mt-14 h-px w-24 bg-amber-400/40" aria-hidden="true" />
-            <p className="mt-10 font-display text-[1.7rem] leading-[1.15] font-semibold tracking-tight text-amber-400 sm:text-4xl lg:text-6xl">
-              {content.finale_headline}
+            <p className="mt-10 font-display text-3xl leading-[1.15] font-semibold tracking-tight text-amber-400 sm:text-5xl lg:text-7xl">
+              {withFlags(content.finale_headline)}
             </p>
             <p className="mx-auto mt-6 max-w-3xl font-display text-base leading-relaxed text-white sm:text-lg">
-              {content.finale_footer}
+              {withFlags(content.finale_footer)}
             </p>
           </Reveal>
         </div>

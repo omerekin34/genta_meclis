@@ -7,8 +7,8 @@
   --color-ivory: #f3eeeb;
   --color-paper: #fbf9f8;
   --color-ink: #2c1412;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-montserrat), "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", ui-sans-serif, system-ui, sans-serif;
 }
 
 html {

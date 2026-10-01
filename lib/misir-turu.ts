@@ -112,7 +112,8 @@ export function defaultMisirTuru(): MisirTuruContent {
 }
 
 function asText(value: unknown, fallback = "") {
-  return typeof value === "string" ? value : fallback;
+  if (typeof value !== "string") return fallback;
+  return value.trim() ? value : fallback;
 }
 
 function asId(value: unknown) {
@@ -122,8 +123,13 @@ function asId(value: unknown) {
 }
 
 export function lines(value: string) {
-  return value
+  const byLine = value
     .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+  if (byLine.length !== 1 || !byLine[0].includes(",")) return byLine;
+  return byLine[0]
+    .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
 }
@@ -147,10 +153,12 @@ function payload(content: MisirTuruContent) {
 function storageMessage(error: { message?: string; code?: string }) {
   const message = error.message ?? "";
   if (error.code === "PGRST205" || /schema cache|does not exist|Could not find the table/i.test(message)) {
-    return "misir_turu tablosu yok. Supabase'te tabloyu ve görsel kolonlarını oluşturun.";
+    return `misir_turu tablosu yok. Supabase'te tabloyu ve görsel kolonlarını oluşturun. ${message}`.trim();
   }
-  if (/column/i.test(message)) return "misir_turu tablosunda beklenen bir kolon yok. Metin ve görsel kolonlarını kontrol edin.";
-  return "Kayıt tamamlanamadı.";
+  if (/column/i.test(message)) {
+    return `misir_turu tablosunda beklenen bir kolon yok. Metin ve görsel kolonlarını kontrol edin. ${message}`.trim();
+  }
+  return message || "Kayıt tamamlanamadı.";
 }
 
 export const getMisirTuruContent = cache(async (): Promise<MisirTuruContent> => {
@@ -167,21 +175,30 @@ export async function saveMisirTuruContent(value: unknown) {
   if (!supabase) throw new Error("Supabase bağlantısı henüz yok.");
 
   const existing = await supabase.from(misirTuruTable).select("*").limit(1).maybeSingle();
-  if (existing.error) throw new Error(storageMessage(existing.error));
+  if (existing.error) {
+    console.error(existing.error);
+    throw new Error(storageMessage(existing.error));
+  }
 
   const current = existing.data && typeof existing.data === "object" ? existing.data : null;
-  const full = payload(content);
-  const row = current ? Object.fromEntries(Object.entries(full).filter(([key]) => key in current)) : full;
+  const row = payload(content);
   if (current?.id != null) {
     const { error } = await supabase.from(misirTuruTable).update(row).eq("id", current.id);
-    if (error) throw new Error(storageMessage(error));
+    if (error) {
+      console.error(error);
+      throw new Error(storageMessage(error));
+    }
     return { ...content, id: asId(current.id) };
   }
 
   const inserted = await supabase.from(misirTuruTable).insert({ id: content.id, ...row }).select("id").maybeSingle();
   if (inserted.error) {
+    console.error(inserted.error);
     const retry = await supabase.from(misirTuruTable).insert(row).select("id").maybeSingle();
-    if (retry.error) throw new Error(storageMessage(retry.error));
+    if (retry.error) {
+      console.error(retry.error);
+      throw new Error(storageMessage(retry.error));
+    }
     return { ...content, id: asId(retry.data?.id) };
   }
   return { ...content, id: asId(inserted.data?.id) };
@@ -220,7 +237,10 @@ export async function uploadMisirTuruFile(file: Blob) {
     contentType,
     cacheControl: "31536000",
   });
-  if (uploaded.error) throw new Error("Görsel yüklenemedi.");
+  if (uploaded.error) {
+    console.error(uploaded.error);
+    throw new Error(uploaded.error.message || "Görsel yüklenemedi.");
+  }
 
   const { data } = supabase.storage.from(misirTuruBucket).getPublicUrl(objectPath);
   return data.publicUrl;

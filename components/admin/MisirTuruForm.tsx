@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { optimizeImageForUpload, uploadReadyMaxBytes } from "@/lib/optimize-image";
 import { type MisirTuruContent, type MisirTuruImageKey } from "@/lib/misir-turu";
-import { updateMisirTuru, uploadMisirTuruImage } from "@/app/admin/misir-turu/actions";
 
 const imageFields: { key: MisirTuruImageKey; label: string; hint: string }[] = [
   { key: "hero_image", label: "Hero Arka Planı", hint: "Hero bölümünün arkasında, video ve metnin altında durur." },
@@ -20,14 +19,24 @@ export function MisirTuruForm({ initial }: { initial: MisirTuruContent }) {
   const [pending, setPending] = useState(false);
   const [uploading, setUploading] = useState<Partial<Record<MisirTuruImageKey, "optimize" | "upload">>>({});
   const [error, setError] = useState("");
-  const [toast, setToast] = useState<{ id: number; text: string } | null>(null);
+  const [notice, setNotice] = useState<{ id: number; kind: "success" | "error"; text: string } | null>(null);
   const busy = pending || Object.keys(uploading).length > 0;
 
+  const toast = {
+    success(message: string) {
+      setNotice({ id: Date.now(), kind: "success", text: message });
+    },
+    error(message: string) {
+      setError(message);
+      setNotice({ id: Date.now(), kind: "error", text: message });
+    },
+  };
+
   useEffect(() => {
-    if (!toast) return;
-    const timer = window.setTimeout(() => setToast(null), 2800);
+    if (!notice) return;
+    const timer = window.setTimeout(() => setNotice(null), 2800);
     return () => window.clearTimeout(timer);
-  }, [toast]);
+  }, [notice]);
 
   function patch(key: keyof MisirTuruContent, value: string) {
     setDraft((current) => ({ ...current, [key]: value }));
@@ -37,29 +46,27 @@ export function MisirTuruForm({ initial }: { initial: MisirTuruContent }) {
     setUploading((current) => ({ ...current, [key]: "optimize" }));
     setError("");
     try {
+      console.log("1. Resimler yükleniyor...", key, file.name);
       const optimized = await optimizeImageForUpload(file);
       if (optimized.size > uploadReadyMaxBytes) {
-        setError("Görsel optimize edildikten sonra hâlâ çok büyük. Daha küçük bir dosya deneyin.");
-        setUploading((current) => {
-          const next = { ...current };
-          delete next[key];
-          return next;
-        });
-        return;
+        throw new Error("Görsel optimize edildikten sonra hâlâ çok büyük. Daha küçük bir dosya deneyin.");
       }
       setUploading((current) => ({ ...current, [key]: "upload" }));
       const body = new FormData();
       body.append("file", optimized);
-      body.append("slot", key);
-      const result = await uploadMisirTuruImage(body);
-      if (!result.url) {
-        setError(result.error ?? "Görsel yüklenemedi.");
-        return;
+      body.append("folder", "misir-turu");
+      const response = await fetch("/api/admin/upload", { method: "POST", body });
+      const result = (await response.json().catch(() => null)) as { url?: string; error?: string } | null;
+      if (!response.ok || !result?.url) {
+        throw new Error(result?.error ?? (response.status === 413 ? "Görsel optimize edildikten sonra hâlâ çok büyük." : "Görsel yüklenemedi."));
       }
+      console.log("1. Resim yüklendi", key, result.url);
       patch(key, result.url);
-      setToast({ id: Date.now(), text: "Görsel yüklendi." });
-    } catch {
-      setError("Görsel optimize edilemedi. Başka bir dosya deneyin.");
+      toast.success("Görsel yüklendi.");
+    } catch (caught) {
+      console.error(caught);
+      const message = caught instanceof Error ? caught.message : "";
+      toast.error(message || "Bilinmeyen bir hata oluştu");
     } finally {
       setUploading((current) => {
         const next = { ...current };
@@ -69,18 +76,46 @@ export function MisirTuruForm({ initial }: { initial: MisirTuruContent }) {
     }
   }
 
-  async function save() {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (busy) return;
     setPending(true);
     setError("");
-    const result = await updateMisirTuru(draft);
-    setPending(false);
-    if (!result.ok) {
-      setError(result.error);
-      return;
+    try {
+      console.log("1. Resimler yükleniyor...");
+      const imageUrls = {
+        hero_image: draft.hero_image,
+        hurghada_image: draft.hurghada_image,
+        luksor_image: draft.luksor_image,
+        kahire_image: draft.kahire_image,
+      };
+      console.log("1. Resimler hazır (Storage URL string)", imageUrls);
+
+      console.log("2. Veritabanı güncelleniyor...", draft);
+      const response = await fetch("/api/admin/misir-turu", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(draft),
+      });
+      const body = (await response.json().catch(() => null)) as (MisirTuruContent & { error?: string }) | null;
+      if (!response.ok) {
+        throw new Error(body?.error ?? "Kayıt tamamlanamadı.");
+      }
+      if (!body) {
+        throw new Error("Sunucudan boş yanıt geldi.");
+      }
+
+      console.log("3. İşlem başarılı", body);
+      setDraft(body);
+      toast.success("Mısır Turu kaydedildi.");
+      router.refresh();
+    } catch (caught) {
+      console.error(caught);
+      const message = caught instanceof Error ? caught.message : "";
+      toast.error(message || "Bilinmeyen bir hata oluştu");
+    } finally {
+      setPending(false);
     }
-    setDraft(result.content);
-    setToast({ id: Date.now(), text: "Mısır Turu kaydedildi." });
-    router.refresh();
   }
 
   async function logout() {
@@ -90,7 +125,7 @@ export function MisirTuruForm({ initial }: { initial: MisirTuruContent }) {
   }
 
   return (
-    <div className="min-h-svh">
+    <form onSubmit={onSubmit} className="min-h-svh">
       <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-brand/10 bg-ivory/95 px-5 py-4 backdrop-blur sm:px-6">
         <div>
           <Link href="/admin" className="text-sm text-ink/55 hover:text-brand">
@@ -107,8 +142,7 @@ export function MisirTuruForm({ initial }: { initial: MisirTuruContent }) {
             Çıkış
           </button>
           <button
-            type="button"
-            onClick={() => void save()}
+            type="submit"
             disabled={busy}
             className="rounded-full bg-brand px-5 py-2.5 font-display text-[12px] font-semibold tracking-[0.12em] text-white uppercase transition-colors duration-500 hover:bg-brand-deep disabled:opacity-40"
           >
@@ -117,19 +151,27 @@ export function MisirTuruForm({ initial }: { initial: MisirTuruContent }) {
         </div>
       </header>
 
-      {toast ? (
+      {notice ? (
         <div
-          key={toast.id}
+          key={notice.id}
           role="status"
           aria-live="polite"
-          className="fixed right-4 bottom-4 z-50 flex items-center gap-3 rounded-2xl border border-brand/15 bg-white py-3 pr-5 pl-4 text-sm font-medium text-brand shadow-[0_18px_40px_-20px_rgba(108,17,16,0.55)]"
+          className={`fixed right-4 bottom-4 z-50 flex items-center gap-3 rounded-2xl border bg-white py-3 pr-5 pl-4 text-sm font-medium shadow-[0_18px_40px_-20px_rgba(108,17,16,0.55)] ${
+            notice.kind === "error" ? "border-brand/25 text-brand" : "border-brand/15 text-brand"
+          }`}
         >
           <span className="flex size-6 items-center justify-center rounded-full bg-brand text-white" aria-hidden="true">
-            <svg viewBox="0 0 16 16" fill="none" className="size-3.5">
-              <path d="M3.5 8.5 L6.5 11.5 L12.5 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            {notice.kind === "error" ? (
+              <svg viewBox="0 0 16 16" fill="none" className="size-3.5">
+                <path d="M4 4 L12 12 M12 4 L4 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 16 16" fill="none" className="size-3.5">
+                <path d="M3.5 8.5 L6.5 11.5 L12.5 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
           </span>
-          {toast.text}
+          {notice.text}
         </div>
       ) : null}
 
@@ -207,7 +249,7 @@ export function MisirTuruForm({ initial }: { initial: MisirTuruContent }) {
           <AreaField label="Kapanış" value={draft.finale_footer} onChange={(value) => patch("finale_footer", value)} />
         </Group>
       </div>
-    </div>
+    </form>
   );
 }
 
