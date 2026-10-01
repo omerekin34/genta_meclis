@@ -169,18 +169,26 @@ export function TeamDirectory({
               <Reveal>
                 <GroupHeading group={group} />
               </Reveal>
-              <div className="mt-10 flex flex-wrap justify-center gap-5 sm:gap-6">
+              <div
+                className={
+                  group.columns === "grid"
+                    ? "mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-4"
+                    : "mt-10 flex flex-wrap justify-center gap-5 sm:gap-6"
+                }
+              >
                 {group.members.map((member, index) => (
                   <Reveal
                     key={member.id}
                     delay={Math.min(index * 0.06, 0.3)}
                     className={
-                      group.lead
-                        ? "w-full max-w-80 sm:w-[calc((100%-1.5rem)/2)]"
-                        : "w-[calc((100%-1.25rem)/2)] max-w-64 sm:w-[calc((100%-3rem)/3)] lg:w-60"
+                      group.columns === "grid"
+                        ? "min-w-0"
+                        : group.lead
+                          ? "w-full max-w-80 sm:w-[calc((100%-1.5rem)/2)]"
+                          : "w-[calc((100%-1.25rem)/2)] max-w-64 sm:w-[calc((100%-3rem)/3)] lg:w-60"
                     }
                   >
-                    <MemberCard member={member} lead={group.lead} />
+                    <MemberCard member={member} lead={group.cardLead ?? group.lead} />
                   </Reveal>
                 ))}
               </div>

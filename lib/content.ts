@@ -5,7 +5,7 @@ import { commissions, iconNames, type IconName } from "@/data/commissions";
 import { sponsorMarks, sponsors, type SponsorMark } from "@/data/sponsors";
 import { communityJoinMessage, coordinators, navItems, practicalNotes, site, whatsappQuestions } from "@/data/site";
 import { defaultCopy } from "./site-copy";
-import { teamAcademicGroup, teamLeadGroup, teamOrgLeadGroup, type Commission, type Content, type Coordinator, type HomeStat, type NavItem, type Sponsor, type StatSource } from "./content-types";
+import { teamAcademicGroup, teamGeneralAssemblyGroup, teamLeadGroup, teamOrgLeadGroup, type Commission, type Content, type Coordinator, type HomeStat, type NavItem, type Sponsor, type StatSource } from "./content-types";
 import { collapseTeamNav } from "./team";
 
 const settingsId = "live";
@@ -265,9 +265,11 @@ export function normalizeContent(value: unknown): Content {
                 ? teamOrgLeadGroup
                 : /akademik başkan/i.test(text(member.role))
                   ? teamAcademicGroup
-                  : /genel koordinat/i.test(text(member.role))
-                    ? teamLeadGroup
-                    : ""),
+                  : /genel kurul/i.test(text(member.role))
+                    ? teamGeneralAssemblyGroup
+                    : /genel koordinat/i.test(text(member.role))
+                      ? teamLeadGroup
+                      : ""),
             school: text(member.school),
             photo: text(member.photo),
           };

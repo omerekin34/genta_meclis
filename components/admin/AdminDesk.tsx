@@ -9,7 +9,7 @@ import { sponsorMarks, type SponsorMark } from "@/data/sponsors";
 import { InstagramIcon, MailIcon, WhatsAppIcon } from "@/components/layout/SocialIcons";
 import { CommissionIcon } from "@/components/commissions/CommissionIcon";
 import { SchoolPicker } from "@/components/forms/SchoolPicker";
-import { teamAcademicGroup, teamLeadGroup, teamOrgLeadGroup, teamUnits, type Content } from "@/lib/content-types";
+import { teamAcademicGroup, teamGeneralAssemblyGroup, teamLeadGroup, teamOrgLeadGroup, teamUnits, type Content } from "@/lib/content-types";
 import { optimizeImageForUpload, uploadReadyMaxBytes } from "@/lib/optimize-image";
 import { teamGroupRank } from "@/lib/team";
 import { ApplicationsPanel } from "./ApplicationsPanel";
@@ -977,6 +977,7 @@ function AgendaEditor({
 function teamGroupLabel(group: string, commissions: Content["commissions"]) {
   if (group === teamLeadGroup) return "Genel Koordinasyon";
   if (group === teamAcademicGroup) return "Akademik Başkanı";
+  if (group === teamGeneralAssemblyGroup) return "Genel Kurul";
   if (group === teamOrgLeadGroup) return "Organizasyon Başkanı";
   const unit = teamUnits.find((item) => item.value === group);
   if (unit) return unit.label;
@@ -1005,6 +1006,7 @@ function TeamGroupOptions({ commissions }: { commissions: Content["commissions"]
       </optgroup>
       <optgroup label="Akademik">
         <option value={teamAcademicGroup}>Akademik Başkanı</option>
+        <option value={teamGeneralAssemblyGroup}>Genel Kurul</option>
         {commissions.map((commission) => (
           <option key={commission.slug} value={commission.slug}>
             {commission.name || "Adsız komisyon"}
@@ -1037,17 +1039,86 @@ function TeamPanel({
     }));
   }
 
+  function addGenelKurulMember() {
+    announceAdd("Genel Kurul üyesi eklendi. Doldurup Kaydet’e bas.");
+    setDraft((current) => ({
+      ...current,
+      team: [
+        ...current.team,
+        {
+          id: uid("team"),
+          name: "",
+          role: "Genel Kurul Üyesi",
+          group: teamGeneralAssemblyGroup,
+          school: "",
+          photo: "",
+        },
+      ],
+    }));
+  }
+
   const counts = new Map<string, number>();
   for (const member of draft.team) counts.set(member.group, (counts.get(member.group) ?? 0) + 1);
-  const shown = [...(filter === null ? draft.team : draft.team.filter((member) => member.group === filter))].sort(
+  const genelKurul = draft.team.filter((member) => member.group === teamGeneralAssemblyGroup);
+  const rest = draft.team.filter((member) => member.group !== teamGeneralAssemblyGroup);
+  const shown = [...(filter === null ? rest : rest.filter((member) => member.group === filter))].sort(
     (a, b) => teamGroupRank(a.group, draft.commissions) - teamGroupRank(b.group, draft.commissions),
   );
+  const showRest = filter !== teamGeneralAssemblyGroup;
 
   return (
     <div className="space-y-4">
       <p className="text-sm leading-6 text-ink/60">
-        Akademik sayfada sıra Genel Koordinasyon, Akademik Başkanı ve komisyon başkanlarıdır. Organizasyon sayfada sıra Genel Koordinasyon, Organizasyon Başkanı ve Tasarım, Halkla İlişkiler, Lojistik, Sosyal Medya, Basın ekipleridir. Okul için birkaç harf yaz, listeden seç. Değişiklikten sonra Kaydet’e bas.
+        Akademik sayfada sıra Genel Koordinasyon, Akademik Başkanı, Genel Kurul ve komisyon başkanlarıdır. Organizasyon sayfada sıra Genel Koordinasyon, Organizasyon Başkanı ve Tasarım, Halkla İlişkiler, Lojistik, Sosyal Medya, Basın ekipleridir. Okul için birkaç harf yaz, listeden seç. Değişiklikten sonra Kaydet’e bas.
       </p>
+      <Group
+        title="Genel Kurul Üyeleri"
+        hint="Akademik Başkanı’nın hemen altında listelenir. İsim, unvan ve fotoğraf yeterlidir. Yeni üye ekleyip Kaydet’e bas."
+      >
+        {genelKurul.length === 0 ? (
+          <p className="rounded-2xl border border-dashed border-brand/20 bg-ivory px-4 py-3 text-sm text-ink/60">
+            Henüz Genel Kurul üyesi yok. Aşağıdaki düğmeyle ekle.
+          </p>
+        ) : null}
+        <List>
+          {genelKurul.map((member) => (
+            <Card
+              key={member.id}
+              onUp={() => setDraft((current) => ({ ...current, team: moveWithinGroup(current.team, member.id, -1) }))}
+              onDown={() => setDraft((current) => ({ ...current, team: moveWithinGroup(current.team, member.id, 1) }))}
+              onDelete={() => {
+                if (!window.confirm(`${member.name || "Bu kişi"} Genel Kurul’dan çıkarılsın mı?`)) return false;
+                setDraft((current) => ({ ...current, team: current.team.filter((item) => item.id !== member.id) }));
+              }}
+            >
+              <TextField label="İsim" value={member.name} onChange={(value) => patch(member.id, { name: value })} />
+              <TextField
+                label="Unvan"
+                value={member.role}
+                onChange={(value) => patch(member.id, { role: value })}
+                placeholder="Genel Kurul Üyesi"
+              />
+              <ImageField
+                label="Resim"
+                folder="ekip"
+                value={member.photo}
+                round
+                onChange={(value) => patch(member.id, { photo: value })}
+              />
+            </Card>
+          ))}
+        </List>
+        <button
+          type="button"
+          onClick={addGenelKurulMember}
+          className="inline-flex items-center gap-1.5 rounded-full border border-brand bg-white px-4 py-2.5 text-sm font-medium text-brand transition-colors duration-200 hover:bg-brand hover:text-white active:scale-[0.97]"
+        >
+          <svg viewBox="0 0 16 16" fill="none" className="size-3.5" aria-hidden="true">
+            <path d="M8 3 V13 M3 8 H13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+          Yeni Üye Ekle
+        </button>
+      </Group>
       <div className="flex flex-wrap items-center gap-3 rounded-3xl border border-brand/10 bg-white p-4">
         <label className="flex min-w-0 flex-1 items-center gap-3">
           <span className="shrink-0 font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Göster</span>
@@ -1062,6 +1133,7 @@ function TeamPanel({
             </optgroup>
             <optgroup label="Akademik">
               <option value={teamAcademicGroup}>Akademik Başkanı ({counts.get(teamAcademicGroup) ?? 0})</option>
+              <option value={teamGeneralAssemblyGroup}>Genel Kurul ({counts.get(teamGeneralAssemblyGroup) ?? 0})</option>
               {draft.commissions.map((commission) => (
                 <option key={commission.slug} value={commission.slug}>
                   {commission.name || "Adsız komisyon"} ({counts.get(commission.slug) ?? 0})
@@ -1085,56 +1157,58 @@ function TeamPanel({
           </button>
         ) : null}
       </div>
-      {filter !== null ? (
+      {filter !== null && filter !== teamGeneralAssemblyGroup ? (
         <p className="text-sm text-ink/60">
           Kişi ekle, yeni kişiyi doğrudan <strong className="font-medium text-brand">{teamGroupLabel(filter, draft.commissions)}</strong> bölümüne ekler.
         </p>
       ) : null}
-      {shown.length === 0 ? (
+      {showRest && shown.length === 0 ? (
         <p className="rounded-3xl border border-dashed border-brand/20 bg-white p-5 text-sm text-ink/60">
           {filter === null ? "Henüz kimse yok. Sağ üstteki Kişi ekle düğmesiyle başla." : "Bu bölümde henüz kimse yok. Kişi ekle ile başla."}
         </p>
       ) : null}
-      <List>
-        {shown.map((member) => (
-          <Card
-            key={member.id}
-            onUp={() => setDraft((current) => ({ ...current, team: moveWithinGroup(current.team, member.id, -1) }))}
-            onDown={() => setDraft((current) => ({ ...current, team: moveWithinGroup(current.team, member.id, 1) }))}
-            onDelete={() => {
-              if (!window.confirm(`${member.name || "Bu kişi"} ekipten çıkarılsın mı?`)) return false;
-              setDraft((current) => ({ ...current, team: current.team.filter((item) => item.id !== member.id) }));
-            }}
-          >
-            <p className="inline-flex rounded-full bg-brand/8 px-3 py-1 font-display text-[11px] font-semibold tracking-[0.12em] text-brand uppercase">
-              {teamGroupLabel(member.group, draft.commissions)}
-            </p>
-            <TextField label="Ad soyad" value={member.name} onChange={(value) => patch(member.id, { name: value })} />
-            <TextField label="Görevi" value={member.role} onChange={(value) => patch(member.id, { role: value })} />
-            <label className="block">
-              <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Bölümü</span>
-              <select
-                value={member.group}
-                onChange={(event) => patch(member.id, { group: event.target.value })}
-                className="mt-2 w-full rounded-2xl border border-brand/15 bg-ivory px-4 py-3"
-              >
-                <TeamGroupOptions commissions={draft.commissions} />
-              </select>
-            </label>
-            <div className="block">
-              <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Okulu</span>
-              <SchoolPicker variant="box" value={member.school} onChange={(value) => patch(member.id, { school: value })} />
-            </div>
-            <ImageField
-              label="Fotoğraf"
-              folder="ekip"
-              value={member.photo}
-              round
-              onChange={(value) => patch(member.id, { photo: value })}
-            />
-          </Card>
-        ))}
-      </List>
+      {showRest ? (
+        <List>
+          {shown.map((member) => (
+            <Card
+              key={member.id}
+              onUp={() => setDraft((current) => ({ ...current, team: moveWithinGroup(current.team, member.id, -1) }))}
+              onDown={() => setDraft((current) => ({ ...current, team: moveWithinGroup(current.team, member.id, 1) }))}
+              onDelete={() => {
+                if (!window.confirm(`${member.name || "Bu kişi"} ekipten çıkarılsın mı?`)) return false;
+                setDraft((current) => ({ ...current, team: current.team.filter((item) => item.id !== member.id) }));
+              }}
+            >
+              <p className="inline-flex rounded-full bg-brand/8 px-3 py-1 font-display text-[11px] font-semibold tracking-[0.12em] text-brand uppercase">
+                {teamGroupLabel(member.group, draft.commissions)}
+              </p>
+              <TextField label="Ad soyad" value={member.name} onChange={(value) => patch(member.id, { name: value })} />
+              <TextField label="Görevi" value={member.role} onChange={(value) => patch(member.id, { role: value })} />
+              <label className="block">
+                <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Bölümü</span>
+                <select
+                  value={member.group}
+                  onChange={(event) => patch(member.id, { group: event.target.value })}
+                  className="mt-2 w-full rounded-2xl border border-brand/15 bg-ivory px-4 py-3"
+                >
+                  <TeamGroupOptions commissions={draft.commissions} />
+                </select>
+              </label>
+              <div className="block">
+                <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">Okulu</span>
+                <SchoolPicker variant="box" value={member.school} onChange={(value) => patch(member.id, { school: value })} />
+              </div>
+              <ImageField
+                label="Fotoğraf"
+                folder="ekip"
+                value={member.photo}
+                round
+                onChange={(value) => patch(member.id, { photo: value })}
+              />
+            </Card>
+          ))}
+        </List>
+      ) : null}
     </div>
   );
 }

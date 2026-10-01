@@ -5,6 +5,7 @@ import {
   isTeamNavHref,
   teamAcademicGroup,
   teamCommissionCategory,
+  teamGeneralAssemblyGroup,
   teamHubHref,
   teamLeadGroup,
   teamOrgLeadGroup,
@@ -17,6 +18,8 @@ export type TeamGroup = {
   eyebrow?: string;
   icon?: IconName;
   lead: boolean;
+  cardLead?: boolean;
+  columns?: "grid";
   category: string;
   members: TeamMember[];
 };
@@ -53,12 +56,28 @@ function coordinationGroup(members: TeamMember[]): TeamGroup {
 export function teamGroupRank(group: string, commissions: Commission[]) {
   if (group === teamLeadGroup) return 0;
   if (group === teamAcademicGroup) return 1;
+  if (group === teamGeneralAssemblyGroup) return 2;
   const commissionIndex = commissions.findIndex((item) => item.slug === group);
-  if (commissionIndex >= 0) return 2 + commissionIndex;
+  if (commissionIndex >= 0) return 3 + commissionIndex;
   if (group === teamOrgLeadGroup) return 100;
   const unitIndex = teamUnits.findIndex((item) => item.value === group);
   if (unitIndex >= 0) return 101 + unitIndex;
   return group ? 199 : 200;
+}
+
+export function genelKurulMembers(members: TeamMember[]) {
+  return of(members, teamGeneralAssemblyGroup);
+}
+
+export function replaceGenelKurul(team: TeamMember[], next: TeamMember[]): TeamMember[] {
+  const others = team.filter((member) => member.group !== teamGeneralAssemblyGroup);
+  return [
+    ...others,
+    ...next.map((member) => ({
+      ...member,
+      group: teamGeneralAssemblyGroup,
+    })),
+  ];
 }
 
 export function academicTeam(members: TeamMember[], commissions: Commission[]) {
@@ -70,6 +89,15 @@ export function academicTeam(members: TeamMember[], commissions: Commission[]) {
       lead: true,
       category: teamAcademicGroup,
       members: of(members, teamAcademicGroup),
+    },
+    {
+      key: teamGeneralAssemblyGroup,
+      title: "Genel Kurul",
+      lead: true,
+      cardLead: false,
+      columns: "grid" as const,
+      category: teamGeneralAssemblyGroup,
+      members: of(members, teamGeneralAssemblyGroup),
     },
     ...commissions.map((commission) => ({
       key: commission.slug,
@@ -85,6 +113,7 @@ export function academicTeam(members: TeamMember[], commissions: Commission[]) {
   const categories: TeamCategory[] = [
     { value: teamLeadGroup, label: "Genel Koordinasyon" },
     { value: teamAcademicGroup, label: "Akademik Başkanı" },
+    { value: teamGeneralAssemblyGroup, label: "Genel Kurul" },
     { value: teamCommissionCategory, label: "Komisyon Başkanları" },
   ];
 

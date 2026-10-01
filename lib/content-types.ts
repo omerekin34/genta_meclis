@@ -13,6 +13,7 @@ export type Coordinator = {
 
 export const teamLeadGroup = "genel";
 export const teamAcademicGroup = "akademik";
+export const teamGeneralAssemblyGroup = "genel_kurul";
 export const teamOrgLeadGroup = "organizasyon";
 export const teamCommissionCategory = "komisyon-baskanlari";
 

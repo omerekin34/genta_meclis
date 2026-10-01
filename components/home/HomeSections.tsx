@@ -5,13 +5,13 @@ import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/motion/Reveal";
 import { SponsorMarquee } from "@/components/sponsors/SponsorMarquee";
 import { getContent } from "@/lib/content";
-import { teamAcademicGroup, teamAcademicHref, teamLeadGroup, teamOrgHref, teamOrgLeadGroup } from "@/lib/content-types";
+import { teamAcademicGroup, teamAcademicHref, teamGeneralAssemblyGroup, teamLeadGroup, teamOrgHref, teamOrgLeadGroup } from "@/lib/content-types";
 import { Countdown } from "./Countdown";
 import { NovemberCalendar } from "./NovemberCalendar";
 
 function teamPreviewHref(group: string) {
   if (group === teamOrgLeadGroup) return teamOrgHref;
-  if (group === teamAcademicGroup) return teamAcademicHref;
+  if (group === teamAcademicGroup || group === teamGeneralAssemblyGroup) return teamAcademicHref;
   return "/ekibimiz";
 }
 
