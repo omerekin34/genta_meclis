@@ -274,7 +274,7 @@ export function AdminDesk({ initial }: { initial: Content }) {
           </div>
         </div>
         <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:block lg:flex-1 lg:space-y-1 lg:overflow-y-auto lg:pb-0" aria-label="Yönetim bölümleri">
-          {sections.map(([id, label]) => (
+            {sections.map(([id, label]) => (
             <button
               key={id}
               type="button"
@@ -286,6 +286,12 @@ export function AdminDesk({ initial }: { initial: Content }) {
               {label}
             </button>
           ))}
+          <Link
+            href="/admin/misir-turu"
+            className="shrink-0 rounded-xl px-3 py-2.5 text-left text-sm whitespace-nowrap text-white/75 transition-colors duration-300 hover:bg-white/10 lg:block lg:w-full lg:whitespace-normal"
+          >
+            Mısır Turu
+          </Link>
         </nav>
         <div className="hidden space-y-2 border-t border-white/10 p-4 lg:block">
           <Link href="/" className="block text-sm text-white/75 hover:text-white">
