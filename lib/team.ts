@@ -19,7 +19,6 @@ export type TeamGroup = {
   icon?: IconName;
   lead: boolean;
   cardLead?: boolean;
-  columns?: "grid";
   category: string;
   members: TeamMember[];
 };
@@ -95,7 +94,6 @@ export function academicTeam(members: TeamMember[], commissions: Commission[]) {
       title: "Genel Kurul",
       lead: true,
       cardLead: false,
-      columns: "grid" as const,
       category: teamGeneralAssemblyGroup,
       members: of(members, teamGeneralAssemblyGroup),
     },
