@@ -11,6 +11,19 @@ import { resolveCommissionBureau } from "@/lib/team";
 
 export const dynamic = "force-dynamic";
 
+function downloadHref(src: string, fileName: string) {
+  try {
+    const url = new URL(src);
+    if (url.pathname.includes("/storage/v1/object/public/")) {
+      url.searchParams.set("download", fileName);
+      return url.href;
+    }
+  } catch {
+    // göreli veya bozuk adres: olduğu gibi bırak
+  }
+  return src;
+}
+
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
@@ -191,8 +204,8 @@ export default async function CommissionPage({ params }: PageProps) {
                                   PDF’i Aç →
                                 </a>
                                 <a
-                                  href={item.pdf}
-                                  download
+                                  href={downloadHref(item.pdf, `${commission.slug}-gundem-${index + 1}.pdf`)}
+                                  download={`${commission.slug}-gundem-${index + 1}.pdf`}
                                   className="ml-4 inline-flex font-display text-[11px] font-semibold tracking-[0.18em] text-white/75 uppercase underline-offset-4 hover:underline"
                                 >
                                   İndir
