@@ -27,6 +27,7 @@ export type AgendaItem = {
   id: string;
   title: string;
   text: string;
+  pdf?: string;
 };
 
 export type BureauMember = {

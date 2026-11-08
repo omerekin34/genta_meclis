@@ -968,6 +968,7 @@ function AgendaEditor({
           </p>
           <AreaField label="Başlık" value={item.title} onChange={(value) => patch(item.id, { title: value })} />
           <AreaField label="Açıklama" value={item.text} onChange={(value) => patch(item.id, { text: value })} />
+          <PdfField label="Gündem PDF'i" folder="gundem" value={item.pdf ?? ""} onChange={(value) => patch(item.id, { pdf: value || undefined })} />
         </Card>
       ))}
     </div>
@@ -1411,6 +1412,111 @@ function ImageField({
           ) : null}
           {error ? <p className="text-sm text-brand">{error}</p> : null}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function pdfFileName(value: string) {
+  const segment = value.split("?")[0].split("/").filter(Boolean).pop() ?? "";
+  try {
+    return decodeURIComponent(segment) || "PDF yüklü";
+  } catch {
+    return segment || "PDF yüklü";
+  }
+}
+
+function PdfField({
+  label,
+  folder,
+  value,
+  onChange,
+}: {
+  label: string;
+  folder: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const [phase, setPhase] = useState<"idle" | "upload">("idle");
+  const [error, setError] = useState("");
+  const busy = phase !== "idle";
+
+  async function upload(file: File) {
+    setPhase("upload");
+    setError("");
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("folder", folder);
+      const response = await fetch("/api/admin/upload", { method: "POST", body });
+      const result = (await response.json().catch(() => null)) as { url?: string; error?: string } | null;
+      if (!response.ok || !result?.url) {
+        setError(result?.error ?? "PDF yüklenemedi.");
+        return;
+      }
+      onChange(result.url);
+    } catch {
+      setError("PDF yüklenemedi. Bağlantıyı kontrol et.");
+    } finally {
+      setPhase("idle");
+    }
+  }
+
+  return (
+    <div>
+      <span className="font-display text-[11px] tracking-[0.14em] text-ink/50 uppercase">{label}</span>
+      <div className="mt-2 space-y-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-2xl border border-brand/15 bg-ivory text-brand/70">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="size-5">
+              <path
+                d="M7 3.5h7L18.5 8v12a1 1 0 0 1-1 1h-10.5a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z M13.5 3.5V8H18.5"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+          <span className="min-w-0 flex-1 truncate text-sm text-ink/70">{value ? pdfFileName(value) : "PDF yok"}</span>
+          <label
+            className={`inline-flex cursor-pointer items-center rounded-full bg-brand px-4 py-2.5 text-sm font-medium text-white ${busy ? "pointer-events-none opacity-50" : ""}`}
+          >
+            {phase === "upload" ? "Yükleniyor" : "Bilgisayardan PDF seç"}
+            <input
+              type="file"
+              accept="application/pdf"
+              className="sr-only"
+              disabled={busy}
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                event.target.value = "";
+                if (file) void upload(file);
+              }}
+            />
+          </label>
+          {value ? (
+            <>
+              <a href={value} target="_blank" rel="noopener noreferrer" className="text-sm text-brand underline-offset-4 hover:underline">
+                Aç
+              </a>
+              <button type="button" onClick={() => onChange("")} className="text-sm text-ink/55 hover:text-brand" disabled={busy}>
+                PDF’i kaldır
+              </button>
+            </>
+          ) : null}
+        </div>
+        <input
+          value={value}
+          onChange={(event) => onChange(event.target.value.trim())}
+          disabled={busy}
+          placeholder="https:// adresini yapıştır"
+          className="w-full rounded-2xl border border-brand/15 bg-ivory px-4 py-3 text-sm text-ink outline-none focus:border-brand"
+        />
+        <p className="text-xs leading-5 text-ink/50">
+          PDF, en fazla 15 MB. Bu madde için hazırlanan gündem belgesi sitede “Gündem Belgeleri” bölümünde görünür.
+        </p>
+        {error ? <p className="text-sm text-brand">{error}</p> : null}
       </div>
     </div>
   );

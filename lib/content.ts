@@ -163,6 +163,7 @@ function normalizeCommission(value: unknown, index: number): Commission {
         id: text(agendaRow.id) || `gundem-${index + 1}-${agendaIndex + 1}`,
         title: text(agendaRow.title),
         text: text(agendaRow.text),
+        pdf: text(agendaRow.pdf) || undefined,
       };
     })
     .filter((item) => item.title || item.text);

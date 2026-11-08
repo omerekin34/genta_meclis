@@ -9,12 +9,14 @@ export const dynamic = "force-dynamic";
 
 const bucket = "genta-media";
 const maxBytes = 4 * 1024 * 1024;
+const maxPdfBytes = 15 * 1024 * 1024;
 const types: Record<string, string> = {
   "image/jpeg": "jpg",
   "image/png": "png",
   "image/webp": "webp",
   "image/gif": "gif",
   "image/svg+xml": "svg",
+  "application/pdf": "pdf",
 };
 
 export async function POST(request: Request) {
@@ -31,10 +33,12 @@ export async function POST(request: Request) {
   let contentType: string;
 
   if (file instanceof File) {
-    if (file.size > maxBytes) return NextResponse.json({ error: "Dosya en fazla 4 MB olsun." }, { status: 400 });
     bytes = Buffer.from(await file.arrayBuffer());
     const sniffed = sniffType(bytes, file.type);
-    if (!sniffed) return NextResponse.json({ error: "JPG, PNG, WEBP, GIF veya SVG yükleyin." }, { status: 400 });
+    if (!sniffed) return NextResponse.json({ error: "JPG, PNG, WEBP, GIF, SVG veya PDF yükleyin." }, { status: 400 });
+    const limit = sniffed === "application/pdf" ? maxPdfBytes : maxBytes;
+    const message = sniffed === "application/pdf" ? "PDF en fazla 15 MB olsun." : "Dosya en fazla 4 MB olsun.";
+    if (bytes.byteLength > limit) return NextResponse.json({ error: message }, { status: 400 });
     contentType = sniffed;
   } else if (remote) {
     try {
@@ -49,7 +53,7 @@ export async function POST(request: Request) {
   }
 
   const extension = types[contentType];
-  if (!extension) return NextResponse.json({ error: "JPG, PNG, WEBP, GIF veya SVG yükleyin." }, { status: 400 });
+  if (!extension) return NextResponse.json({ error: "JPG, PNG, WEBP, GIF, SVG veya PDF yükleyin." }, { status: 400 });
 
   const existing = await supabase.storage.getBucket(bucket);
   if (existing.error) {
@@ -73,6 +77,7 @@ function sniffType(bytes: Buffer, declared: string) {
   if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) return "image/png";
   if (bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46) return "image/gif";
   if (bytes.toString("ascii", 0, 4) === "RIFF" && bytes.toString("ascii", 8, 12) === "WEBP") return "image/webp";
+  if (bytes.toString("ascii", 0, 5) === "%PDF-") return "application/pdf";
   const head = bytes.toString("utf8", 0, Math.min(512, bytes.length)).trim().toLowerCase();
   if (head.includes("<svg") || (head.startsWith("<?xml") && head.includes("<svg"))) return "image/svg+xml";
   return types[mime] ? mime : null;
@@ -145,7 +150,7 @@ async function downloadPublicImage(raw: string) {
     const bytes = Buffer.from(await response.arrayBuffer());
     if (bytes.byteLength > maxBytes) throw new Error("Dosya en fazla 4 MB olsun.");
     const type = sniffType(bytes, response.headers.get("content-type") ?? "");
-    if (!type) throw new Error("JPG, PNG, WEBP, GIF veya SVG yükleyin.");
+    if (!type || !type.startsWith("image/")) throw new Error("JPG, PNG, WEBP, GIF veya SVG yükleyin.");
     return { bytes, type };
   }
   throw new Error("Bu adresten görsel alınamadı.");
