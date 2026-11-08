@@ -1779,6 +1779,8 @@ const copyGroups = [
       ["applyEyebrow", "Başvuru üst yazı"],
       ["applyTitle", "Başvuru başlığı"],
       ["applyText", "Başvuru metni"],
+      ["applyClosedTitle", "Başvuru kapalı başlığı"],
+      ["applyClosedText", "Başvuru kapalı metni"],
     ],
   },
   {

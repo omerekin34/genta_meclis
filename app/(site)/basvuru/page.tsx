@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { PracticalNotes } from "@/components/content/PracticalNotes";
 import { ApplicationChoice } from "@/components/forms/ApplicationChoice";
+import { ApplicationClosed } from "@/components/forms/ApplicationClosed";
 import { Container } from "@/components/layout/Container";
 import { PageHero } from "@/components/layout/PageHero";
-import { getContent } from "@/lib/content";
+import { applicationsClosed, getContent } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { site } = await getContent();
@@ -14,13 +15,26 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ApplicationPage() {
-  const { copy } = await getContent();
+  const { site, copy } = await getContent();
+  const closed = applicationsClosed(site.applicationDeadlineIso);
   return (
     <>
-      <PageHero eyebrow={copy.pages.applyEyebrow} title={copy.pages.applyTitle} description={copy.pages.applyText} />
+      <PageHero
+        eyebrow={copy.pages.applyEyebrow}
+        title={closed ? copy.pages.applyClosedTitle : copy.pages.applyTitle}
+        description={closed ? copy.pages.applyClosedText : copy.pages.applyText}
+      />
       <section className="bg-ivory py-16 sm:py-24">
         <Container>
-          <ApplicationChoice />
+          {closed ? (
+            <ApplicationClosed
+              title={copy.pages.applyClosedTitle}
+              text={copy.pages.applyClosedText}
+              deadlineLabel={site.applicationDeadlineLabel}
+            />
+          ) : (
+            <ApplicationChoice />
+          )}
         </Container>
         <Container className="mt-16 sm:mt-20">
           <PracticalNotes />

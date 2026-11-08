@@ -68,6 +68,8 @@ export const defaultCopy = {
     applyTitle: "Başvurular açıldı.",
     applyText:
       "Bireysel delege veya okul delegasyonu olarak başvurun. Formlar Google Forms üzerinde yeni sekmede açılır. Son tarih 1 Kasım 2026. Katılım ücreti 800₺.",
+    applyClosedTitle: "Başvurular Bitti.",
+    applyClosedText: "Başvuru süresi sona erdi. Sorularınız için iletişim sayfasından bize ulaşabilirsiniz.",
   },
   frame: {
     applyCta: "Başvuru Yap",

@@ -12,6 +12,11 @@ const settingsId = "live";
 
 const activityStart = new Date("2026-09-28T00:00:00+03:00");
 
+export function applicationsClosed(iso: string, now = new Date()) {
+  const t = new Date(iso).getTime();
+  return Number.isFinite(t) && now.getTime() >= t;
+}
+
 export function activityYears(now = new Date()) {
   let years = now.getFullYear() - activityStart.getFullYear();
   const anniversary = new Date(activityStart);
